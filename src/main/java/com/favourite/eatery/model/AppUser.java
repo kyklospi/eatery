@@ -19,6 +19,8 @@ public class AppUser {
     private String lastName;
     @ElementCollection
     private List<Eatery> favouriteEateries;
+    @ElementCollection
+    private List<Reservation> reservations;
 
     public AppUser(String firstName, String lastName) {
         this.firstName = firstName;
@@ -29,7 +31,8 @@ public class AppUser {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AppUser appUser)) return false;
-        return Objects.equals(id, appUser.id) && Objects.equals(firstName, appUser.firstName) && Objects.equals(lastName, appUser.lastName);
+        return Objects.equals(id, appUser.id) && Objects.equals(firstName, appUser.firstName) &&
+                Objects.equals(lastName, appUser.lastName);
     }
 
     @Override
@@ -44,6 +47,7 @@ public class AppUser {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", favouriteEateries=" + favouriteEateries +
+                ", reservations=" + reservations +
                 '}';
     }
 }
