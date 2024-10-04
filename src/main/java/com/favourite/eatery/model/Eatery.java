@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,18 +17,22 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class Eatery {
-    private @Id
-    @GeneratedValue Long id;
+    private @Id @GeneratedValue Long id;
     private String name;
     private String address;
     private String email;
     private String phoneNumber;
-    @Transient
-    private Set<BusinessDayTime> businessDayTimes;
 
-    public Eatery(String name, String address) {
+    @ManyToMany(mappedBy = "favouriteEateries")
+    private Set<AppUser> favouriteUsers;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Set<BusinessDayTime> businessDayTimes = Set.of();
+
+    public Eatery(String name, String address, Set<BusinessDayTime> businessDayTimes) {
         this.name = name;
         this.address = address;
+        this.businessDayTimes = businessDayTimes;
     }
 
     public boolean isOpen() {

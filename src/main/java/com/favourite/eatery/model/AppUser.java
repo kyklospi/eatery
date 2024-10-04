@@ -13,13 +13,19 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 public class AppUser {
-    private @Id
-    @GeneratedValue Long id;
+    private @Id @GeneratedValue Long id;
     private String firstName;
     private String lastName;
-    @ElementCollection
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "User_Eateries",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "eatery_id") }
+    )
     private List<Eatery> favouriteEateries;
-    @ElementCollection
+
+    @OneToMany(mappedBy = "user")
     private List<Reservation> reservations;
 
     public AppUser(String firstName, String lastName) {

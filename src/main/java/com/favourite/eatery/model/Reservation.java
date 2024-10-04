@@ -13,14 +13,16 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 public class Reservation {
-    private @Id
-    @GeneratedValue Long id;
-    @OneToOne(cascade = CascadeType.ALL)
+    private @Id @GeneratedValue Long id;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "eatery_id", referencedColumnName = "id")
     private Eatery eatery;
+
     @Transient
     private LocalDateTime reservationDateTime;
     private Status status;
