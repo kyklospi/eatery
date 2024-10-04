@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -23,25 +22,19 @@ public class Reservation {
     @JoinColumn(name = "eatery_id", referencedColumnName = "id")
     private Eatery eatery;
     @Transient
-    private DayOfWeek day;
-    @Transient
-    private LocalTime startTime;
-    @Transient
-    private LocalTime endTime;
+    private LocalDateTime reservationDateTime;
     private Status status;
 
-    enum Status {
+    public enum Status {
         CONFIRMED,
         COMPLETED, //
         CANCELLED
     }
 
-    public Reservation(AppUser user, Eatery eatery, DayOfWeek day, LocalTime startTime, LocalTime endTime) {
+    public Reservation(AppUser user, Eatery eatery, LocalDateTime reservationDateTime) {
         this.user = user;
         this.eatery = eatery;
-        this.day = day;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.reservationDateTime = reservationDateTime;
     }
 
     @Override
@@ -49,13 +42,12 @@ public class Reservation {
         if (this == o) return true;
         if (!(o instanceof Reservation that)) return false;
         return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(eatery, that.eatery) &&
-                day == that.day && Objects.equals(startTime, that.startTime) && Objects.equals(endTime, that.endTime) &&
-                status == that.status;
+                Objects.equals(reservationDateTime, that.reservationDateTime) && status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, eatery, day, startTime, endTime, status);
+        return Objects.hash(id, user, eatery, reservationDateTime, status);
     }
 
     @Override
@@ -64,9 +56,7 @@ public class Reservation {
                 "id=" + id +
                 ", user=" + user +
                 ", eatery=" + eatery +
-                ", day=" + day +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
+                ", reservationDateTime=" + reservationDateTime +
                 ", status=" + status +
                 '}';
     }
