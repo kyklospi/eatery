@@ -9,6 +9,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -22,17 +23,24 @@ public class Eatery {
     private String address;
     private String email;
     private String phoneNumber;
+    private int guestCapacity;
 
     @ManyToMany(mappedBy = "favouriteEateries")
     private Set<AppUser> favouriteUsers;
 
+    @OneToMany(mappedBy = "eatery")
+    private List<Reservation> reservationList;
+
     @JdbcTypeCode(SqlTypes.JSON)
     private Set<BusinessDayTime> businessDayTimes = Set.of();
 
-    public Eatery(String name, String address, Set<BusinessDayTime> businessDayTimes) {
+    public Eatery(String name, String address, Set<BusinessDayTime> businessDayTimes, int guestCapacity, String email, String phoneNumber) {
         this.name = name;
         this.address = address;
         this.businessDayTimes = businessDayTimes;
+        this.guestCapacity = guestCapacity;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     public boolean isOpen() {
@@ -43,18 +51,39 @@ public class Eatery {
                 );
     }
 
+    /**
+     * Checks if eatery guest capacity is reached from reservation time until 2 hours after
+     * @param atTime new entry of reservation time
+     * @return true if eatery guest capacity is not reached
+     */
+    public boolean isBookable(LocalDateTime atTime, int guestNumber) {
+        List<Reservation> currentReservations = this.reservationList.stream()
+                .filter(eateryReservation -> eateryReservation.getReservationDateTime().isAfter(atTime) &&
+                        eateryReservation.getReservationDateTime().isBefore(atTime.plusHours(2)) &&
+                        eateryReservation.getStatus().equals(Reservation.Status.CONFIRMED)
+                )
+                .toList();
+
+        int currentGuestNumber = 0;
+        for (Reservation reservation : currentReservations) {
+            currentGuestNumber += reservation.getPersonNumber();
+        }
+        return (currentGuestNumber + guestNumber) <= this.guestCapacity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Eatery eatery)) return false;
-        return Objects.equals(id, eatery.id) && Objects.equals(name, eatery.name) &&
-                Objects.equals(address, eatery.address) && Objects.equals(email, eatery.email) &&
-                Objects.equals(phoneNumber, eatery.phoneNumber);
+        return guestCapacity == eatery.guestCapacity && Objects.equals(id, eatery.id) &&
+                Objects.equals(name, eatery.name) && Objects.equals(address, eatery.address) &&
+                Objects.equals(email, eatery.email) && Objects.equals(phoneNumber, eatery.phoneNumber) &&
+                Objects.equals(businessDayTimes, eatery.businessDayTimes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, email, phoneNumber);
+        return Objects.hash(id, name, address, email, phoneNumber, guestCapacity, businessDayTimes);
     }
 
     @Override
@@ -65,6 +94,9 @@ public class Eatery {
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", guestCapacity=" + guestCapacity +
+                ", favouriteUsers=" + favouriteUsers +
+                ", reservationList=" + reservationList +
                 ", businessDayTimes=" + businessDayTimes +
                 '}';
     }

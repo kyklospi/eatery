@@ -24,13 +24,13 @@ public class FavouriteEateryDatabase {
     CommandLineRunner initDatabase(EateryRepository eateryRepository, AppUserRepository userRepository) {
         return args -> {
             BusinessDayTime restaurant1Opening = new BusinessDayTime(DayOfWeek.MONDAY, LocalTime.of(18, 0), LocalTime.of(23, 0));
-            logger.info("Preloading {}", eateryRepository.save(new Eatery("restaurant-1", "address-restaurant-1", Set.of(restaurant1Opening))));
+            logger.info("Preloading {}", eateryRepository.save(new Eatery("restaurant-1", "address-restaurant-1", Set.of(restaurant1Opening), 100, "service@restaurant-1.com", "030-123-456")));
 
             BusinessDayTime bar1Opening1 = new BusinessDayTime(DayOfWeek.SATURDAY, LocalTime.of(18, 0), LocalTime.MAX);
             BusinessDayTime bar1Opening2 = new BusinessDayTime(DayOfWeek.SUNDAY, LocalTime.MIDNIGHT, LocalTime.of(4, 0));
-            logger.info("Preloading {}", eateryRepository.save(new Eatery("bar-1", "address-bar-1", Set.of(bar1Opening1, bar1Opening2))));
+            logger.info("Preloading {}", eateryRepository.save(new Eatery("bar-1", "address-bar-1", Set.of(bar1Opening1, bar1Opening2), 50, "hello@bar-1.de", "069-123-456")));
 
-            logger.info("Preloading {}", userRepository.save(new AppUser("Max", "Mustermann")));
+            logger.info("Preloading {}", userRepository.save(new AppUser("Max", "Mustermann", "mustermann@example.com", "0152-1234-5678")));
         };
     }
 }

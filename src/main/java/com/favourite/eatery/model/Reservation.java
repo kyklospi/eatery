@@ -19,12 +19,13 @@ public class Reservation {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private AppUser user;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "eatery_id", referencedColumnName = "id")
     private Eatery eatery;
 
     @Transient
     private LocalDateTime reservationDateTime;
+    private int personNumber;
     private Status status;
 
     public enum Status {
@@ -33,23 +34,25 @@ public class Reservation {
         CANCELLED
     }
 
-    public Reservation(AppUser user, Eatery eatery, LocalDateTime reservationDateTime) {
+    public Reservation(AppUser user, Eatery eatery, LocalDateTime reservationDateTime, int personNumber) {
         this.user = user;
         this.eatery = eatery;
         this.reservationDateTime = reservationDateTime;
+        this.personNumber = personNumber;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Reservation that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(eatery, that.eatery) &&
-                Objects.equals(reservationDateTime, that.reservationDateTime) && status == that.status;
+        return personNumber == that.personNumber && Objects.equals(id, that.id) && Objects.equals(user, that.user) &&
+                Objects.equals(eatery, that.eatery) && Objects.equals(reservationDateTime, that.reservationDateTime) &&
+                status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, eatery, reservationDateTime, status);
+        return Objects.hash(id, user, eatery, reservationDateTime, personNumber, status);
     }
 
     @Override
@@ -59,6 +62,7 @@ public class Reservation {
                 ", user=" + user +
                 ", eatery=" + eatery +
                 ", reservationDateTime=" + reservationDateTime +
+                ", personNumber=" + personNumber +
                 ", status=" + status +
                 '}';
     }
