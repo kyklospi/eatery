@@ -1,5 +1,6 @@
 package com.favourite.eatery.controller;
 
+import com.favourite.eatery.dto.UpdateReservationRequest;
 import com.favourite.eatery.exception.ReservationBadRequestException;
 import com.favourite.eatery.exception.ReservationNotFoundException;
 import com.favourite.eatery.model.Reservation;
@@ -27,13 +28,16 @@ public class ReservationController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     Reservation create(@RequestBody Reservation newReservation) {
         LocalDateTime reservationTime = newReservation.getReservationDateTime();
-        if (reservationTime.isAfter(tomorrow) &&
-                newReservation.getEatery().isBookable(reservationTime, newReservation.getPersonNumber()))
-        {
-            newReservation.setStatus(Reservation.Status.CONFIRMED);
-            return repository.save(newReservation);
+        boolean fullyBooked = !newReservation.getEatery().isBookable(reservationTime, newReservation.getPersonNumber());
+
+        if (reservationTime.isBefore(tomorrow)) {
+            throw new ReservationBadRequestException(newReservation.getReservationDateTime());
         }
-        throw new ReservationBadRequestException(newReservation.getReservationDateTime());
+        if (fullyBooked) {
+            throw new ReservationBadRequestException(newReservation.getPersonNumber());
+        }
+        newReservation.setStatus(Reservation.Status.CONFIRMED);
+        return repository.save(newReservation);
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,17 +47,22 @@ public class ReservationController {
     }
 
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Reservation replace(@RequestBody LocalDateTime newDateTime, @PathVariable Long id) {
+    Reservation replace(@RequestBody UpdateReservationRequest updateReservation, @PathVariable Long id) {
         return repository.findById(id)
                 .map(reservation -> {
-                    if (newDateTime.isAfter(tomorrow) &&
-                            reservation.getEatery().isBookable(newDateTime, reservation.getPersonNumber()))
-                    {
-                        reservation.setReservationDateTime(newDateTime);
-                        reservation.setStatus(Reservation.Status.CONFIRMED);
-                        return repository.save(reservation);
+                    if (updateReservation.getDateTime().isBefore(tomorrow)) {
+                        throw new ReservationBadRequestException(updateReservation.getDateTime());
                     }
-                    throw new ReservationBadRequestException(newDateTime);
+
+                    boolean fullyBooked = !reservation.getEatery().isBookable(updateReservation.getDateTime(), updateReservation.getPersonNumber());
+                    if (fullyBooked) {
+                        throw new ReservationBadRequestException(reservation.getPersonNumber());
+                    }
+
+                    reservation.setReservationDateTime(updateReservation.getDateTime());
+                    reservation.setPersonNumber(updateReservation.getPersonNumber());
+                    reservation.setStatus(Reservation.Status.CONFIRMED);
+                    return repository.save(reservation);
                 })
                 .orElseThrow(() -> new ReservationNotFoundException(id));
     }

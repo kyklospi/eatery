@@ -19,7 +19,7 @@ public class AppUser {
     private String email;
     private String phoneNumber;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "User_Eateries",
             joinColumns = { @JoinColumn(name = "user_id") },

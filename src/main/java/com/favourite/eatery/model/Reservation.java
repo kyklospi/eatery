@@ -30,7 +30,7 @@ public class Reservation {
 
     public enum Status {
         CONFIRMED,
-        COMPLETED, //
+        COMPLETED,
         CANCELLED
     }
 
