@@ -20,7 +20,7 @@ public class FavouriteEateryDatabase {
 
     @Bean
     CommandLineRunner initDatabase(EateryRepository eateryRepository, AppUserRepository userRepository) {
-        return args -> {
+        return _ -> {
             BusinessDayTime restaurant1Opening = new BusinessDayTime(DayOfWeek.MONDAY, LocalTime.of(18, 0), LocalTime.of(23, 0));
             logger.info("Preloading {}", eateryRepository.save(new Restaurant("restaurant-1", "address-restaurant-1", Set.of(restaurant1Opening), 100, "service@restaurant-1.com", "030-123-456")));
 
