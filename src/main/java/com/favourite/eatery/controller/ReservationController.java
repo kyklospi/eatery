@@ -69,8 +69,8 @@ public class ReservationController {
             @ApiResponse(responseCode = "500", description = "Reservation could not be canceled")
     })
     @DeleteMapping(path = "/{id}/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
-    void cancel(@PathVariable Long id) {
-        reservationService.cancel(id);
+    Reservation cancel(@PathVariable Long id) {
+        return reservationService.cancel(id);
     }
 
     @ApiResponses(value = {

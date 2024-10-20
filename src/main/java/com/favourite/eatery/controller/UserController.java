@@ -1,5 +1,6 @@
 package com.favourite.eatery.controller;
 
+import com.favourite.eatery.dto.UpdateUserRequest;
 import com.favourite.eatery.exception.UserNotFoundException;
 import com.favourite.eatery.model.Eatery;
 import com.favourite.eatery.model.AppUser;
@@ -46,18 +47,20 @@ public class UserController {
     }
 
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "500", description = "User could not be updated")
     })
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    AppUser replace(@RequestBody AppUser newUser, @PathVariable Long id) {
+    AppUser replace(@RequestBody UpdateUserRequest newUser, @PathVariable Long id) {
         return repository.findById(id)
                 .map(user -> {
                     user.setFirstName(newUser.getFirstName());
                     user.setLastName(newUser.getLastName());
-                    user.setFavouriteEateries(newUser.getFavouriteEateries());
+                    user.setEmail(newUser.getEmail());
+                    user.setPhoneNumber(newUser.getPhoneNumber());
                     return repository.save(user);
                 })
-                .orElseGet(() -> repository.save(newUser));
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @ApiResponses(value = {
@@ -66,18 +69,6 @@ public class UserController {
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
         repository.deleteById(id);
-    }
-
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "500", description = "User favourites could not be fetched")
-    })
-    @GetMapping(path = "/{userId}/favourites", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Eatery> getUserFavourites(@PathVariable Long userId) {
-        AppUser user = repository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
-
-        return user.getFavouriteEateries();
     }
 
     @ApiResponses(value = {
@@ -99,13 +90,13 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "User favourite could not be deleted")
     })
     @DeleteMapping(path = "/{userId}/favourites/{eateryId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<Eatery> deleteUserFavourite(@PathVariable Long userId, @PathVariable Long eateryId) {
+    AppUser deleteUserFavourite(@PathVariable Long userId, @PathVariable Long eateryId) {
         AppUser user = repository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         user.getFavouriteEateries().removeIf(
                 favourite -> favourite.getId().equals(eateryId)
         );
-        return user.getFavouriteEateries();
+        return user;
     }
 }

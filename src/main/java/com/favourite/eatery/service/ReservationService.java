@@ -30,7 +30,7 @@ public class ReservationService {
 
     public Reservation create(CreateReservationRequest reservationRequest) {
         LocalDateTime reservationTime = reservationRequest.getReservationDateTime();
-        boolean fullyBooked = !reservationRequest.getEatery().isBookable(reservationTime, reservationRequest.getPersonNumber());
+        boolean fullyBooked = reservationRequest.getEatery().isFullyBooked(reservationTime, reservationRequest.getPersonNumber());
 
         if (reservationTime.isBefore(tomorrow)) {
             throw new ReservationBadRequestException(reservationRequest.getReservationDateTime());
@@ -56,7 +56,7 @@ public class ReservationService {
                         throw new ReservationBadRequestException(updateReservation.getDateTime());
                     }
 
-                    boolean fullyBooked = !reservation.getEatery().isBookable(
+                    boolean fullyBooked = reservation.getEatery().isFullyBooked(
                             updateReservation.getDateTime(), updateReservation.getPersonNumber()
                     );
                     if (fullyBooked) {
@@ -84,7 +84,7 @@ public class ReservationService {
         return reservation;
     }
 
-    public void cancel(Long id) {
+    public Reservation cancel(Long id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationNotFoundException(id));
 
@@ -92,6 +92,7 @@ public class ReservationService {
             reservation.setStatus(Reservation.Status.CANCELLED);
             reservationRepository.save(reservation);
         }
+        return reservation;
     }
 
     public void delete(Long id) {

@@ -21,17 +21,70 @@ public class FavouriteEateryDatabase {
     @Bean
     CommandLineRunner initDatabase(EateryRepository eateryRepository, AppUserRepository userRepository) {
         return _ -> {
-            BusinessDayTime restaurant1Opening = new BusinessDayTime(DayOfWeek.MONDAY, LocalTime.of(18, 0), LocalTime.of(23, 0));
-            logger.info("Preloading {}", eateryRepository.save(new Restaurant("restaurant-1", "address-restaurant-1", Set.of(restaurant1Opening), 100, "service@restaurant-1.com", "030-123-456")));
+            BusinessDayTime restaurant1Opening = new BusinessDayTime(
+                    DayOfWeek.MONDAY,
+                    LocalTime.of(18, 0),
+                    LocalTime.of(23, 0)
+            );
+            logger.info("Preloading {}", eateryRepository.save(
+                    new Eatery(
+                            Eatery.Type.RESTAURANT,
+                            "restaurant-1",
+                            "address-restaurant-1",
+                            Set.of(restaurant1Opening),
+                            100,
+                            "service@restaurant-1.com",
+                            "030-123-456"
+                    )
+            ));
 
-            BusinessDayTime bar1Opening1 = new BusinessDayTime(DayOfWeek.SATURDAY, LocalTime.of(18, 0), LocalTime.MAX);
-            BusinessDayTime bar1Opening2 = new BusinessDayTime(DayOfWeek.SUNDAY, LocalTime.MIDNIGHT, LocalTime.of(4, 0));
-            logger.info("Preloading {}", eateryRepository.save(new Bar("bar-1", "address-bar-1", Set.of(bar1Opening1, bar1Opening2), 50, "hello@bar-1.de", "069-123-456")));
+            BusinessDayTime bar1Opening1 = new BusinessDayTime(
+                    DayOfWeek.SATURDAY,
+                    LocalTime.of(18, 0),
+                    LocalTime.MAX
+            );
+            BusinessDayTime bar1Opening2 = new BusinessDayTime(
+                    DayOfWeek.SUNDAY,
+                    LocalTime.MIDNIGHT,
+                    LocalTime.of(4, 0)
+            );
+            logger.info("Preloading {}", eateryRepository.save(
+                    new Eatery(
+                            Eatery.Type.BAR,
+                            "bar-1",
+                            "address-bar-1",
+                            Set.of(bar1Opening1, bar1Opening2),
+                            50,
+                            "hello@bar-1.de",
+                            "069-123-456"
+                    )
+            ));
 
-            BusinessDayTime cafe1Opening = new BusinessDayTime(DayOfWeek.FRIDAY, LocalTime.of(7, 0), LocalTime.of(15, 0));
-            logger.info("Preloading {}", eateryRepository.save(new Cafe("cafe-1", "address-cafe-1", Set.of(cafe1Opening), 20, "kontakt@cafe-1.com", "040-123-456")));
+            BusinessDayTime cafe1Opening = new BusinessDayTime(
+                    DayOfWeek.FRIDAY,
+                    LocalTime.of(7, 0),
+                    LocalTime.of(15, 0)
+            );
+            logger.info("Preloading {}", eateryRepository.save(
+                    new Eatery(
+                            Eatery.Type.CAFE,
+                            "cafe-1",
+                            "address-cafe-1",
+                            Set.of(cafe1Opening),
+                            20,
+                            "kontakt@cafe-1.com",
+                            "040-123-456"
+                    )
+            ));
 
-            logger.info("Preloading {}", userRepository.save(new AppUser("Max", "Mustermann", "mustermann@example.com", "0152-1234-5678")));
+            logger.info("Preloading {}", userRepository.save(
+                    new AppUser(
+                            "Max",
+                            "Mustermann",
+                            "mustermann@example.com",
+                            "0152-1234-5678"
+                    )
+            ));
         };
     }
 }

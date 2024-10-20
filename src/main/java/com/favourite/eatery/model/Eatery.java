@@ -19,6 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Eatery {
     private @Id @GeneratedValue Long id;
+    private Type type;
     private String name;
     private String address;
     private String email;
@@ -34,7 +35,8 @@ public class Eatery {
     @JdbcTypeCode(SqlTypes.JSON)
     private Set<BusinessDayTime> businessDayTimes = Set.of();
 
-    public Eatery(String name, String address, Set<BusinessDayTime> businessDayTimes, int guestCapacity, String email, String phoneNumber) {
+    public Eatery(Type type, String name, String address, Set<BusinessDayTime> businessDayTimes, int guestCapacity, String email, String phoneNumber) {
+        this.type = type;
         this.name = name;
         this.address = address;
         this.businessDayTimes = businessDayTimes;
@@ -54,9 +56,9 @@ public class Eatery {
     /**
      * Checks if eatery guest capacity is reached from reservation time until 2 hours after
      * @param atTime new entry of reservation time
-     * @return true if eatery guest capacity is not reached
+     * @return true if eatery guest capacity is reached
      */
-    public boolean isBookable(LocalDateTime atTime, int guestNumber) {
+    public boolean isFullyBooked(LocalDateTime atTime, int newGuestNumber) {
         List<Reservation> currentReservations = this.reservationList.stream()
                 .filter(eateryReservation -> eateryReservation.getReservationDateTime().isAfter(atTime) &&
                         eateryReservation.getReservationDateTime().isBefore(atTime.plusHours(2)) &&
@@ -68,7 +70,7 @@ public class Eatery {
         for (Reservation reservation : currentReservations) {
             currentGuestNumber += reservation.getPersonNumber();
         }
-        return (currentGuestNumber + guestNumber) <= this.guestCapacity;
+        return (currentGuestNumber + newGuestNumber) > this.guestCapacity;
     }
 
     @Override
@@ -76,20 +78,21 @@ public class Eatery {
         if (this == o) return true;
         if (!(o instanceof Eatery eatery)) return false;
         return guestCapacity == eatery.guestCapacity && Objects.equals(id, eatery.id) &&
-                Objects.equals(name, eatery.name) && Objects.equals(address, eatery.address) &&
-                Objects.equals(email, eatery.email) && Objects.equals(phoneNumber, eatery.phoneNumber) &&
-                Objects.equals(businessDayTimes, eatery.businessDayTimes);
+                Objects.equals(type, eatery.type) && Objects.equals(name, eatery.name) &&
+                Objects.equals(address, eatery.address) && Objects.equals(email, eatery.email) &&
+                Objects.equals(phoneNumber, eatery.phoneNumber) && Objects.equals(businessDayTimes, eatery.businessDayTimes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, email, phoneNumber, guestCapacity, businessDayTimes);
+        return Objects.hash(id, type, name, address, email, phoneNumber, guestCapacity, businessDayTimes);
     }
 
     @Override
     public String toString() {
         return "Eatery{" +
                 "id=" + id +
+                ", type=" + type +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", email='" + email + '\'' +
@@ -99,5 +102,11 @@ public class Eatery {
                 ", reservationList=" + reservationList +
                 ", businessDayTimes=" + businessDayTimes +
                 '}';
+    }
+
+    public enum Type {
+        RESTAURANT,
+        CAFE,
+        BAR
     }
 }
