@@ -6,16 +6,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ReservationExceptionHandler {
-    @ExceptionHandler(ReservationNotFoundException.class)
+public class EateryExceptionHandler {
+    @ExceptionHandler(EateryNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String handle(ReservationNotFoundException e) {
-        return e.getMessage();
-    }
-
-    @ExceptionHandler(ReservationBadRequestException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String handle(ReservationBadRequestException e) {
+    String handle(EateryNotFoundException e) {
         return e.getMessage();
     }
 

@@ -35,6 +35,9 @@ public class Eatery {
     @JdbcTypeCode(SqlTypes.JSON)
     private Set<BusinessDayTime> businessDayTimes = Set.of();
 
+    @OneToMany(mappedBy = "eatery")
+    private List<Administrator> admins;
+
     public Eatery(Type type, String name, String address, Set<BusinessDayTime> businessDayTimes, int guestCapacity, String email, String phoneNumber) {
         this.type = type;
         this.name = name;
@@ -101,6 +104,7 @@ public class Eatery {
                 ", favouriteUsers=" + favouriteUsers +
                 ", reservationList=" + reservationList +
                 ", businessDayTimes=" + businessDayTimes +
+                ", admins=" + admins +
                 '}';
     }
 
