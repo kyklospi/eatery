@@ -14,6 +14,10 @@ public class AdminService {
     @Autowired
     AdminRepository adminRepository;
 
+    /**
+     * Get all administrators
+     * @return all administrators
+     */
     public List<Administrator> getAll() {
         return adminRepository.findAll();
     }
