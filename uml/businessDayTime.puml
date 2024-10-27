@@ -1,0 +1,12 @@
+@startuml
+class BusinessDayTime {
+- DayOfWeek openDay
+- LocalTime openTime
+- LocalTime closeTime
++ boolean equals(Object)
++ String toString()
++ LocalTime openTime()
++ DayOfWeek openDay()
++ LocalTime closeTime()
+}
+@enduml

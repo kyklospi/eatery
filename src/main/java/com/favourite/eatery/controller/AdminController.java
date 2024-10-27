@@ -1,9 +1,8 @@
 package com.favourite.eatery.controller;
 
 import com.favourite.eatery.dto.UpdateUserRequest;
-import com.favourite.eatery.exception.AdminNotFoundException;
 import com.favourite.eatery.model.Administrator;
-import com.favourite.eatery.repository.AdminRepository;
+import com.favourite.eatery.service.AdminService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import java.util.List;
 @RequestMapping(path = "/admins")
 public class AdminController {
     @Autowired
-    private AdminRepository repository;
+    private AdminService adminService;
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Admins not found"),
@@ -24,7 +23,7 @@ public class AdminController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     List<Administrator> getAll() {
-        return repository.findAll();
+        return adminService.getAll();
     }
 
     @ApiResponses(value = {
@@ -32,7 +31,7 @@ public class AdminController {
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     Administrator create(@RequestBody Administrator newAdmin) {
-        return repository.save(newAdmin);
+        return adminService.create(newAdmin);
     }
 
     @ApiResponses(value = {
@@ -41,8 +40,7 @@ public class AdminController {
     })
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     Administrator get(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new AdminNotFoundException(id));
+        return adminService.get(id);
     }
 
     @ApiResponses(value = {
@@ -51,15 +49,7 @@ public class AdminController {
     })
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     Administrator replace(@RequestBody UpdateUserRequest newAdmin, @PathVariable Long id) {
-        return repository.findById(id)
-                .map(admin -> {
-                    admin.setFirstName(newAdmin.getFirstName());
-                    admin.setLastName(newAdmin.getLastName());
-                    admin.setEmail(newAdmin.getEmail());
-                    admin.setPhoneNumber(newAdmin.getPhoneNumber());
-                    return repository.save(admin);
-                })
-                .orElseThrow(() -> new AdminNotFoundException(id));
+        return adminService.replace(newAdmin, id);
     }
 
     @ApiResponses(value = {
@@ -67,6 +57,6 @@ public class AdminController {
     })
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
-        repository.deleteById(id);
+        adminService.delete(id);
     }
 }
