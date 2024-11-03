@@ -1,30 +1,27 @@
 package com.favourite.eatery.controller;
 
+import com.favourite.eatery.dto.UpdateUserRequest;
+import com.favourite.eatery.exception.AdminNotFoundException;
 import com.favourite.eatery.model.Administrator;
-import com.favourite.eatery.service.AdminService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AdminControllerTest {
     @Autowired
     AdminController adminController;
-    @MockBean
-    AdminService adminMockService;
 
-    private Administrator testAdmin;
+    private UpdateUserRequest adminRequest;
 
     @BeforeEach
     void setUp() {
-        testAdmin = new Administrator(
+        adminRequest = new UpdateUserRequest(
                 "firstName",
                 "lastName",
                 "email",
@@ -33,31 +30,80 @@ class AdminControllerTest {
     }
 
     @Test
+    void create() {
+        // WHEN
+        Administrator actual = adminController.create(adminRequest);
+
+        // THEN
+        assertNotNull(actual.getId());
+        assertEquals(adminRequest.getFirstName(), actual.getFirstName());
+        assertEquals(adminRequest.getLastName(), actual.getLastName());
+        assertEquals(adminRequest.getEmail(), actual.getEmail());
+        assertEquals(adminRequest.getPhoneNumber(), actual.getPhoneNumber());
+    }
+
+    @Test
     void getAll() {
         // GIVEN
-        List<Administrator> expected = List.of(testAdmin);
-        when(adminMockService.getAll()).thenReturn(expected);
+        adminController.create(adminRequest);
 
         // WHEN
         List<Administrator> actual = adminController.getAll();
 
         // THEN
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void create() {
+        assertNotNull(actual);
+        assertNotNull(actual.getLast().getId());
+        assertEquals(adminRequest.getFirstName(), actual.getLast().getFirstName());
+        assertEquals(adminRequest.getLastName(), actual.getLast().getLastName());
+        assertEquals(adminRequest.getEmail(), actual.getLast().getEmail());
+        assertEquals(adminRequest.getPhoneNumber(), actual.getLast().getPhoneNumber());
     }
 
     @Test
     void get() {
+        // GIVEN
+        Administrator savedAdmin = adminController.create(adminRequest);
+        Long savedAdminId = savedAdmin.getId();
+
+        // WHEN
+        Administrator actual = adminController.get(savedAdminId);
+
+        // THEN
+        assertEquals(savedAdmin, actual);
     }
 
     @Test
     void replace() {
+        // GIVEN
+        Administrator savedAdmin = adminController.create(adminRequest);
+        Long savedAdminId = savedAdmin.getId();
+        UpdateUserRequest updateAdminRequest = new UpdateUserRequest(
+                "updateFirstName",
+                "updateLastName",
+                "updateEmail",
+                "updatePhone"
+        );
+
+        // WHEN
+        Administrator actual = adminController.replace(updateAdminRequest, savedAdminId);
+
+        // THEN
+        assertEquals(updateAdminRequest.getFirstName(), actual.getFirstName());
+        assertEquals(updateAdminRequest.getLastName(), actual.getLastName());
+        assertEquals(updateAdminRequest.getEmail(), actual.getEmail());
+        assertEquals(updateAdminRequest.getPhoneNumber(), actual.getPhoneNumber());
     }
 
     @Test
     void delete() {
+        // GIVEN
+        Administrator savedAdmin = adminController.create(adminRequest);
+        Long savedAdminId = savedAdmin.getId();
+
+        // WHEN
+        adminController.delete(savedAdminId);
+
+        // THEN
+        assertThrows(AdminNotFoundException.class, () -> adminController.get(savedAdminId));
     }
 }

@@ -22,8 +22,14 @@ public class AdminService {
         return adminRepository.findAll();
     }
 
-    public Administrator create(Administrator newAdmin) {
-        return adminRepository.save(newAdmin);
+    public Administrator create(UpdateUserRequest newAdmin) {
+        return adminRepository.save(
+                new Administrator(
+                        newAdmin.getFirstName(),
+                        newAdmin.getLastName(),
+                        newAdmin.getEmail(),
+                        newAdmin.getPhoneNumber()
+                ));
     }
 
     public Administrator get(Long id) {
