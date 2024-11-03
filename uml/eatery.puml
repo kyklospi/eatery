@@ -10,6 +10,7 @@ class Eatery {
 - Set<AppUser> favouriteUsers
 - List<Reservation> reservationList
 - Set<BusinessDayTime> businessDayTimes
+- List<Administrator> admins
 + boolean isOpen()
 + boolean isFullyBooked(LocalDateTime,int)
 + boolean equals(Object)
