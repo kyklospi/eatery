@@ -39,4 +39,6 @@ public class AppUser extends BaseUser {
                 ", reservations=" + reservations +
                 '}';
     }
+
+
 }

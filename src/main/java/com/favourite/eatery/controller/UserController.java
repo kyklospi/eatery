@@ -1,10 +1,10 @@
 package com.favourite.eatery.controller;
 
 import com.favourite.eatery.dto.UpdateUserRequest;
-import com.favourite.eatery.exception.UserNotFoundException;
+import com.favourite.eatery.exception.UserBadRequestException;
 import com.favourite.eatery.model.Eatery;
 import com.favourite.eatery.model.AppUser;
-import com.favourite.eatery.repository.AppUserRepository;
+import com.favourite.eatery.service.AppUserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping(path = "/users")
 public class UserController {
     @Autowired
-    private AppUserRepository repository;
+    private AppUserService userService;
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Users not found"),
@@ -25,7 +25,7 @@ public class UserController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     List<AppUser> getAll() {
-        return repository.findAll();
+        return userService.findAll();
     }
 
     @ApiResponses(value = {
@@ -33,7 +33,7 @@ public class UserController {
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     AppUser create(@RequestBody AppUser newUser) {
-        return repository.save(newUser);
+        return userService.save(newUser);
     }
 
     @ApiResponses(value = {
@@ -41,9 +41,8 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "User could not be fetched")
     })
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    AppUser get(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    public AppUser get(@PathVariable Long id) {
+        return userService.findById(id); // Hier wird die UserNotFoundException bereits in findById behandelt
     }
 
     @ApiResponses(value = {
@@ -51,16 +50,13 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "User could not be updated")
     })
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    AppUser replace(@RequestBody UpdateUserRequest newUser, @PathVariable Long id) {
-        return repository.findById(id)
-                .map(user -> {
-                    user.setFirstName(newUser.getFirstName());
-                    user.setLastName(newUser.getLastName());
-                    user.setEmail(newUser.getEmail());
-                    user.setPhoneNumber(newUser.getPhoneNumber());
-                    return repository.save(user);
-                })
-                .orElseThrow(() -> new UserNotFoundException(id));
+    public AppUser replace(@RequestBody UpdateUserRequest newUser, @PathVariable Long id) {
+        AppUser user = userService.findById(id); // Hol den Benutzer, wirft eine Ausnahme, wenn nicht gefunden
+        user.setFirstName(newUser.getFirstName());
+        user.setLastName(newUser.getLastName());
+        user.setEmail(newUser.getEmail());
+        user.setPhoneNumber(newUser.getPhoneNumber());
+        return userService.save(user); // Speichere die Änderungen und gib den Benutzer zurück
     }
 
     @ApiResponses(value = {
@@ -68,7 +64,7 @@ public class UserController {
     })
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
-        repository.deleteById(id);
+        userService.deleteById(id);
     }
 
     @ApiResponses(value = {
@@ -76,13 +72,10 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "User favourite could not be added")
     })
     @PutMapping(path = "/{userId}/favourites", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    AppUser addUserFavourite(@RequestBody Eatery newEatery, @PathVariable Long userId) {
-        return repository.findById(userId)
-                .map(user -> {
-                    user.getFavouriteEateries().add(newEatery);
-                    return repository.save(user);
-                })
-                .orElseThrow(() -> new UserNotFoundException(userId));
+    public AppUser addUserFavourite(@RequestBody Eatery newEatery, @PathVariable Long userId) {
+        AppUser user = userService.findById(userId); // Benutzer abrufen, Ausnahme wird geworfen, wenn nicht gefunden
+        user.getFavouriteEateries().add(newEatery); // Neue Lieblings-Eatery hinzufügen
+        return userService.save(user); // Benutzer mit aktualisierten Favoriten speichern
     }
 
     @ApiResponses(value = {
@@ -90,13 +83,19 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "User favourite could not be deleted")
     })
     @DeleteMapping(path = "/{userId}/favourites/{eateryId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    AppUser deleteUserFavourite(@PathVariable Long userId, @PathVariable Long eateryId) {
-        AppUser user = repository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+    public AppUser deleteUserFavourite(@PathVariable Long userId, @PathVariable Long eateryId) {
+        AppUser user = userService.findById(userId); // Benutzer abrufen, Ausnahme wird geworfen, wenn nicht gefunden
 
-        user.getFavouriteEateries().removeIf(
+        // Entfernen der Lieblings-Eatery, wenn vorhanden
+        boolean isRemoved = user.getFavouriteEateries().removeIf(
                 favourite -> favourite.getId().equals(eateryId)
         );
-        return user;
+
+        // Wenn die Eatery entfernt wurde, speichern wir den Benutzer
+        if (isRemoved) {
+            return userService.save(user); // Änderungen speichern
+        } else {
+            throw new UserBadRequestException("Eatery not found in favorites."); // Ausnahme werfen, wenn die Eatery nicht gefunden wird
+        }
     }
 }

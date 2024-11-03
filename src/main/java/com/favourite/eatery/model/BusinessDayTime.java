@@ -21,4 +21,10 @@ public record BusinessDayTime(DayOfWeek openDay, LocalTime openTime, LocalTime c
                 ", closeTime=" + closeTime +
                 '}';
     }
+
+    public BusinessDayTime {
+        if (openTime.isAfter(closeTime)) {
+            throw new IllegalArgumentException("Open time must be before close time");
+        }
+    }
 }
