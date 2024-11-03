@@ -30,7 +30,7 @@ public class AdminController {
             @ApiResponse(responseCode = "500", description = "Admin could not be created")
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Administrator create(@RequestBody Administrator newAdmin) {
+    Administrator create(@RequestBody UpdateUserRequest newAdmin) {
         return adminService.create(newAdmin);
     }
 
