@@ -5,12 +5,16 @@ import com.favourite.eatery.dto.UpdateReservationRequest;
 import com.favourite.eatery.exception.ReservationBadRequestException;
 import com.favourite.eatery.exception.ReservationNotFoundException;
 import com.favourite.eatery.model.Reservation;
+import com.favourite.eatery.notification.NotificationHandler;
 import com.favourite.eatery.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.favourite.eatery.model.Reservation.Status.CANCELLED;
+import static com.favourite.eatery.model.Reservation.Status.CONFIRMED;
 
 @Service
 public class ReservationService {
@@ -45,7 +49,8 @@ public class ReservationService {
                 reservationRequest.getReservationDateTime(),
                 reservationRequest.getPersonNumber()
         );
-        newReservation.setStatus(Reservation.Status.CONFIRMED);
+        newReservation.setStatus(CONFIRMED);
+        sendReservationSMS(reservationRequest.getUser().getPhoneNumber(), newReservation);
         return reservationRepository.save(newReservation);
     }
 
@@ -65,7 +70,8 @@ public class ReservationService {
 
                     reservation.setReservationDateTime(updateReservation.getDateTime());
                     reservation.setPersonNumber(updateReservation.getPersonNumber());
-                    reservation.setStatus(Reservation.Status.CONFIRMED);
+                    reservation.setStatus(CONFIRMED);
+                    sendReservationSMS(reservation.getUser().getPhoneNumber(), reservation);
                     return reservationRepository.save(reservation);
                 })
                 .orElseThrow(() -> new ReservationNotFoundException(id));
@@ -76,7 +82,7 @@ public class ReservationService {
                 .orElseThrow(() -> new ReservationNotFoundException(id));
 
         if (reservation.getReservationDateTime().isBefore(LocalDateTime.now()) &&
-                reservation.getStatus().equals(Reservation.Status.CONFIRMED)) {
+                reservation.getStatus().equals(CONFIRMED)) {
 
             reservation.setStatus(Reservation.Status.COMPLETED);
             return reservationRepository.save(reservation);
@@ -88,10 +94,11 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new ReservationNotFoundException(id));
 
-        if (reservation.getStatus().equals(Reservation.Status.CONFIRMED)) {
-            reservation.setStatus(Reservation.Status.CANCELLED);
+        if (reservation.getStatus().equals(CONFIRMED)) {
+            reservation.setStatus(CANCELLED);
             reservationRepository.save(reservation);
         }
+        sendReservationSMS(reservation.getUser().getPhoneNumber(), reservation);
         return reservation;
     }
 
@@ -100,9 +107,36 @@ public class ReservationService {
                 .orElseThrow(() -> new ReservationNotFoundException(id));
 
         if (reservation.getStatus().equals(Reservation.Status.COMPLETED) ||
-                reservation.getStatus().equals(Reservation.Status.CANCELLED)) {
+                reservation.getStatus().equals(CANCELLED)) {
 
             reservationRepository.deleteById(id);
         }
+    }
+
+    private void sendReservationSMS(String userPhoneNumber, Reservation reservation) {
+        String prefixText = getReservationStatusMessage(reservation);
+        switch (reservation.getStatus()) {
+            case CONFIRMED ->
+                    NotificationHandler.sendSMS(
+                            userPhoneNumber,
+                            prefixText + CONFIRMED
+                    );
+            case CANCELLED ->
+                    NotificationHandler.sendSMS(
+                            userPhoneNumber,
+                            prefixText + CANCELLED
+                    );
+            case COMPLETED -> {}
+        }
+    }
+
+    private static String getReservationStatusMessage(Reservation reservation) {
+        LocalDateTime reservationDateTime = reservation.getReservationDateTime();
+
+        // Example: Your reservation on Monday, 1 January 2025 at 17:00 for 4 persons is CONFIRMED
+        return "Your reservation on " + reservationDateTime.getDayOfWeek() + ", " +
+                reservationDateTime.getDayOfMonth() + " " + reservationDateTime.getMonth().getValue() + " " + reservationDateTime.getYear() +
+                " at " + reservationDateTime.getHour() + ":" + reservationDateTime.getMinute() +
+                " for " + reservation.getPersonNumber() + " persons is ";
     }
 }

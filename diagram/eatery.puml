@@ -7,7 +7,6 @@ class Eatery {
 - String email
 - String phoneNumber
 - int guestCapacity
-- Set<AppUser> favouriteUsers
 - List<Reservation> reservationList
 - Set<BusinessDayTime> businessDayTimes
 - List<Administrator> admins

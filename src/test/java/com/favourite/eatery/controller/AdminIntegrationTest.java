@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class AdminControllerTest {
+class AdminIntegrationTest {
     @Autowired
     AdminController adminController;
 

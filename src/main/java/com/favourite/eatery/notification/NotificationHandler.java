@@ -1,0 +1,35 @@
+package com.favourite.eatery.notification;
+
+import com.twilio.type.PhoneNumber;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import org.springframework.beans.factory.annotation.Value;
+
+public class NotificationHandler {
+    // Find your Account SID and Auth Token at twilio.com/console
+    // and set the environment variables. See http://twil.io/secure
+    @Value("${twilio.account.id}")
+    private static String ACCOUNT_SID;
+    @Value("${twilio.auth.token}")
+    public static String AUTH_TOKEN;
+    @Value("${twilio.phone.number}")
+    public static String TWILIO_NUMBER;
+
+    public static boolean sendSMS(String userPhoneNumber, String text) {
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Message message = Message.creator(
+                new PhoneNumber(userPhoneNumber),
+                new PhoneNumber(TWILIO_NUMBER),
+                text
+        ).create();
+
+        if (message.getStatus().equals(Message.Status.FAILED) || message.getStatus().equals(Message.Status.CANCELED) ||
+                message.getStatus().equals(Message.Status.UNDELIVERED)) {
+            return false;
+        }
+
+        System.out.println(message.getBody());
+        System.out.println(message.getStatus());
+        return true;
+    }
+}
