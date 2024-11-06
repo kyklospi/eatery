@@ -27,7 +27,7 @@ public class Eatery {
     private int guestCapacity;
 
     @ManyToMany(mappedBy = "favouriteEateries")
-    private Set<AppUser> favouriteUsers;
+    private Set<Customer> favouriteCustomers;
 
     @OneToMany(mappedBy = "eatery")
     private List<Reservation> reservationList;
@@ -101,7 +101,7 @@ public class Eatery {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", guestCapacity=" + guestCapacity +
-                ", favouriteUsers=" + favouriteUsers +
+                ", favouriteCustomers=" + favouriteCustomers +
                 ", reservationList=" + reservationList +
                 ", businessDayTimes=" + businessDayTimes +
                 ", admins=" + admins +

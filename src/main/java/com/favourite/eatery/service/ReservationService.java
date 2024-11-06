@@ -44,13 +44,13 @@ public class ReservationService {
         }
 
         Reservation newReservation = new Reservation(
-                reservationRequest.getUser(),
+                reservationRequest.getCustomer(),
                 reservationRequest.getEatery(),
                 reservationRequest.getReservationDateTime(),
                 reservationRequest.getPersonNumber()
         );
         newReservation.setStatus(CONFIRMED);
-        sendReservationSMS(reservationRequest.getUser().getPhoneNumber(), newReservation);
+        sendReservationSMS(reservationRequest.getCustomer().getPhoneNumber(), newReservation);
         return reservationRepository.save(newReservation);
     }
 
@@ -71,7 +71,7 @@ public class ReservationService {
                     reservation.setReservationDateTime(updateReservation.getDateTime());
                     reservation.setPersonNumber(updateReservation.getPersonNumber());
                     reservation.setStatus(CONFIRMED);
-                    sendReservationSMS(reservation.getUser().getPhoneNumber(), reservation);
+                    sendReservationSMS(reservation.getCustomer().getPhoneNumber(), reservation);
                     return reservationRepository.save(reservation);
                 })
                 .orElseThrow(() -> new ReservationNotFoundException(id));
@@ -98,7 +98,7 @@ public class ReservationService {
             reservation.setStatus(CANCELLED);
             reservationRepository.save(reservation);
         }
-        sendReservationSMS(reservation.getUser().getPhoneNumber(), reservation);
+        sendReservationSMS(reservation.getCustomer().getPhoneNumber(), reservation);
         return reservation;
     }
 
@@ -113,24 +113,24 @@ public class ReservationService {
         }
     }
 
-    private void sendReservationSMS(String userPhoneNumber, Reservation reservation) {
-        String prefixText = getReservationStatusMessage(reservation);
+    private void sendReservationSMS(String customerPhoneNumber, Reservation reservation) {
+        String prefixText = getTemplateMessage(reservation);
         switch (reservation.getStatus()) {
             case CONFIRMED ->
                     NotificationHandler.sendSMS(
-                            userPhoneNumber,
+                            customerPhoneNumber,
                             prefixText + CONFIRMED
                     );
             case CANCELLED ->
                     NotificationHandler.sendSMS(
-                            userPhoneNumber,
+                            customerPhoneNumber,
                             prefixText + CANCELLED
                     );
             case COMPLETED -> {}
         }
     }
 
-    private static String getReservationStatusMessage(Reservation reservation) {
+    private static String getTemplateMessage(Reservation reservation) {
         LocalDateTime reservationDateTime = reservation.getReservationDateTime();
 
         // Example: Your reservation on Monday, 1 January 2025 at 17:00 for 4 persons is CONFIRMED

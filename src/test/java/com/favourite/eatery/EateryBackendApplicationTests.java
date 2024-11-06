@@ -3,9 +3,9 @@ package com.favourite.eatery;
 import com.favourite.eatery.controller.AdminController;
 import com.favourite.eatery.controller.EateryController;
 import com.favourite.eatery.controller.ReservationController;
-import com.favourite.eatery.controller.UserController;
+import com.favourite.eatery.controller.CustomerController;
 import com.favourite.eatery.repository.AdminRepository;
-import com.favourite.eatery.repository.AppUserRepository;
+import com.favourite.eatery.repository.CustomerRepository;
 import com.favourite.eatery.repository.EateryRepository;
 import com.favourite.eatery.repository.ReservationRepository;
 import com.favourite.eatery.service.AdminService;
@@ -21,7 +21,7 @@ class EateryBackendApplicationTests {
 	@Autowired
 	private EateryController eateryController;
 	@Autowired
-	private UserController userController;
+	private CustomerController customerController;
 	@Autowired
 	private ReservationController reservationController;
 	@Autowired
@@ -35,7 +35,7 @@ class EateryBackendApplicationTests {
 	@Autowired
 	private EateryRepository eateryRepository;
 	@Autowired
-	private AppUserRepository appUserRepository;
+	private CustomerRepository customerRepository;
 	@Autowired
 	private ReservationRepository reservationRepository;
 	@Autowired
@@ -44,7 +44,7 @@ class EateryBackendApplicationTests {
 	@Test
 	void contextLoads() {
 		assertNotNull(eateryController);
-		assertNotNull(userController);
+		assertNotNull(customerController);
 		assertNotNull(reservationController);
 		assertNotNull(adminController);
 
@@ -52,7 +52,7 @@ class EateryBackendApplicationTests {
 		assertNotNull(reservationService);
 
 		assertNotNull(eateryRepository);
-		assertNotNull(appUserRepository);
+		assertNotNull(customerRepository);
 		assertNotNull(reservationRepository);
 		assertNotNull(adminRepository);
 	}

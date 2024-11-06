@@ -2,7 +2,7 @@ package com.favourite.eatery.config;
 
 import com.favourite.eatery.model.*;
 import com.favourite.eatery.repository.AdminRepository;
-import com.favourite.eatery.repository.AppUserRepository;
+import com.favourite.eatery.repository.CustomerRepository;
 import com.favourite.eatery.repository.EateryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class FavouriteEateryDatabase {
     private static final Logger logger = LoggerFactory.getLogger(FavouriteEateryDatabase.class);
 
     @Bean
-    CommandLineRunner initDatabase(EateryRepository eateryRepository, AppUserRepository userRepository, AdminRepository adminRepository) {
+    CommandLineRunner initDatabase(EateryRepository eateryRepository, CustomerRepository customerRepository, AdminRepository adminRepository) {
         return _ -> {
             BusinessDayTime restaurant1Opening = new BusinessDayTime(
                     DayOfWeek.MONDAY,
@@ -78,8 +78,8 @@ public class FavouriteEateryDatabase {
                     )
             ));
 
-            logger.info("Preloading {}", userRepository.save(
-                    new AppUser(
+            logger.info("Preloading {}", customerRepository.save(
+                    new Customer(
                             "Max",
                             "Mustermann",
                             "mustermann@example.com",

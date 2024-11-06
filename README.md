@@ -2,7 +2,7 @@
 
 ## Project Overview
 Eatery Backend project is a Spring Boot-based backend designed to serve as the core application layer for 
-managing user favourite eateries and user eatery reservations, its data persistence, and API services. 
+managing customer favourite eateries and customer eatery reservations, its data persistence, and API services. 
 It is built following modern architectural patterns 
 such as RESTful services, MVC, and Layered Architecture to ensure scalability, maintainability, and ease of testing.
 

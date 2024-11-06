@@ -15,10 +15,10 @@ public class NotificationHandler {
     @Value("${twilio.phone.number}")
     public static String TWILIO_NUMBER;
 
-    public static boolean sendSMS(String userPhoneNumber, String text) {
+    public static boolean sendSMS(String customerPhoneNumber, String text) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
-                new PhoneNumber(userPhoneNumber),
+                new PhoneNumber(customerPhoneNumber),
                 new PhoneNumber(TWILIO_NUMBER),
                 text
         ).create();

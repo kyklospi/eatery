@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class UserExceptionHandler {
-    @ExceptionHandler(UserNotFoundException.class)
+public class CustomerExceptionHandler {
+    @ExceptionHandler(CustomerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String handle(UserNotFoundException e) {
+    String handle(CustomerNotFoundException e) {
         return e.getMessage();
     }
 

@@ -16,8 +16,8 @@ public class Reservation {
     private @Id @GeneratedValue Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private AppUser user;
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    private Customer customer;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "eatery_id", referencedColumnName = "id")
@@ -34,8 +34,8 @@ public class Reservation {
         CANCELLED
     }
 
-    public Reservation(AppUser user, Eatery eatery, LocalDateTime reservationDateTime, int personNumber) {
-        this.user = user;
+    public Reservation(Customer customer, Eatery eatery, LocalDateTime reservationDateTime, int personNumber) {
+        this.customer = customer;
         this.eatery = eatery;
         this.reservationDateTime = reservationDateTime;
         this.personNumber = personNumber;
@@ -45,21 +45,21 @@ public class Reservation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Reservation that)) return false;
-        return personNumber == that.personNumber && Objects.equals(id, that.id) && Objects.equals(user, that.user) &&
+        return personNumber == that.personNumber && Objects.equals(id, that.id) && Objects.equals(customer, that.customer) &&
                 Objects.equals(eatery, that.eatery) && Objects.equals(reservationDateTime, that.reservationDateTime) &&
                 status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, eatery, reservationDateTime, personNumber, status);
+        return Objects.hash(id, customer, eatery, reservationDateTime, personNumber, status);
     }
 
     @Override
     public String toString() {
         return "Reservation{" +
                 "id=" + id +
-                ", user=" + user +
+                ", customer=" + customer +
                 ", eatery=" + eatery +
                 ", reservationDateTime=" + reservationDateTime +
                 ", personNumber=" + personNumber +

@@ -1,6 +1,6 @@
 package com.favourite.eatery.dto;
 
-import com.favourite.eatery.model.AppUser;
+import com.favourite.eatery.model.Customer;
 import com.favourite.eatery.model.Eatery;
 import com.favourite.eatery.model.Reservation;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class CreateReservationRequest {
     @NonNull
-    private AppUser user;
+    private Customer customer;
     @NonNull
     private Eatery eatery;
     @NonNull

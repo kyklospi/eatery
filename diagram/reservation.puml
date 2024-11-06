@@ -1,7 +1,7 @@
 @startuml
 class Reservation {
 - Long id
-- AppUser user
+- Customer customer
 - Eatery eatery
 - LocalDateTime reservationDateTime
 - int personNumber

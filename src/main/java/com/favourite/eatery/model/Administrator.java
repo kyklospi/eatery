@@ -14,7 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Administrator extends BaseUser {
+public class Administrator extends AppUser {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "eatery_id", referencedColumnName = "id")
     private Eatery eatery;
