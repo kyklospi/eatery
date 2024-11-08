@@ -71,7 +71,7 @@ public class Eatery {
 
         int currentGuestNumber = 0;
         for (Reservation reservation : currentReservations) {
-            currentGuestNumber += reservation.getPersonNumber();
+            currentGuestNumber += reservation.getGuestNumber();
         }
         return (currentGuestNumber + newGuestNumber) > this.guestCapacity;
     }

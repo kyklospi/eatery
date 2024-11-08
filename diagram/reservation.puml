@@ -4,7 +4,7 @@ class Reservation {
 - Customer customer
 - Eatery eatery
 - LocalDateTime reservationDateTime
-- int personNumber
+- int guestNumber
 - Status status
 + boolean equals(Object)
 + int hashCode()

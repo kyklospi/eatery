@@ -34,20 +34,20 @@ public class ReservationService {
 
     public Reservation create(CreateReservationRequest reservationRequest) {
         LocalDateTime reservationTime = reservationRequest.getReservationDateTime();
-        boolean fullyBooked = reservationRequest.getEatery().isFullyBooked(reservationTime, reservationRequest.getPersonNumber());
+        boolean fullyBooked = reservationRequest.getEatery().isFullyBooked(reservationTime, reservationRequest.getGuestNumber());
 
         if (reservationTime.isBefore(tomorrow)) {
             throw new ReservationBadRequestException(reservationRequest.getReservationDateTime());
         }
         if (fullyBooked) {
-            throw new ReservationBadRequestException(reservationRequest.getPersonNumber());
+            throw new ReservationBadRequestException(reservationRequest.getGuestNumber());
         }
 
         Reservation newReservation = new Reservation(
                 reservationRequest.getCustomer(),
                 reservationRequest.getEatery(),
                 reservationRequest.getReservationDateTime(),
-                reservationRequest.getPersonNumber()
+                reservationRequest.getGuestNumber()
         );
         newReservation.setStatus(CONFIRMED);
         sendReservationSMS(reservationRequest.getCustomer().getPhoneNumber(), newReservation);
@@ -62,14 +62,14 @@ public class ReservationService {
                     }
 
                     boolean fullyBooked = reservation.getEatery().isFullyBooked(
-                            updateReservation.getDateTime(), updateReservation.getPersonNumber()
+                            updateReservation.getDateTime(), updateReservation.getGuestNumber()
                     );
                     if (fullyBooked) {
-                        throw new ReservationBadRequestException(reservation.getPersonNumber());
+                        throw new ReservationBadRequestException(reservation.getGuestNumber());
                     }
 
                     reservation.setReservationDateTime(updateReservation.getDateTime());
-                    reservation.setPersonNumber(updateReservation.getPersonNumber());
+                    reservation.setGuestNumber(updateReservation.getGuestNumber());
                     reservation.setStatus(CONFIRMED);
                     sendReservationSMS(reservation.getCustomer().getPhoneNumber(), reservation);
                     return reservationRepository.save(reservation);
@@ -137,6 +137,6 @@ public class ReservationService {
         return "Your reservation on " + reservationDateTime.getDayOfWeek() + ", " +
                 reservationDateTime.getDayOfMonth() + " " + reservationDateTime.getMonth().getValue() + " " + reservationDateTime.getYear() +
                 " at " + reservationDateTime.getHour() + ":" + reservationDateTime.getMinute() +
-                " for " + reservation.getPersonNumber() + " persons is ";
+                " for " + reservation.getGuestNumber() + " persons is ";
     }
 }

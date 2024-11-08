@@ -25,7 +25,7 @@ public class Reservation {
 
     @Transient
     private LocalDateTime reservationDateTime;
-    private int personNumber;
+    private int guestNumber;
     private Status status;
 
     public enum Status {
@@ -34,25 +34,25 @@ public class Reservation {
         CANCELLED
     }
 
-    public Reservation(Customer customer, Eatery eatery, LocalDateTime reservationDateTime, int personNumber) {
+    public Reservation(Customer customer, Eatery eatery, LocalDateTime reservationDateTime, int guestNumber) {
         this.customer = customer;
         this.eatery = eatery;
         this.reservationDateTime = reservationDateTime;
-        this.personNumber = personNumber;
+        this.guestNumber = guestNumber;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Reservation that)) return false;
-        return personNumber == that.personNumber && Objects.equals(id, that.id) && Objects.equals(customer, that.customer) &&
+        return guestNumber == that.guestNumber && Objects.equals(id, that.id) && Objects.equals(customer, that.customer) &&
                 Objects.equals(eatery, that.eatery) && Objects.equals(reservationDateTime, that.reservationDateTime) &&
                 status == that.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customer, eatery, reservationDateTime, personNumber, status);
+        return Objects.hash(id, customer, eatery, reservationDateTime, guestNumber, status);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Reservation {
                 ", customer=" + customer +
                 ", eatery=" + eatery +
                 ", reservationDateTime=" + reservationDateTime +
-                ", personNumber=" + personNumber +
+                ", guestNumber=" + guestNumber +
                 ", status=" + status +
                 '}';
     }

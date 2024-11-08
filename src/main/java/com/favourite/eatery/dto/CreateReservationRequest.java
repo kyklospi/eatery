@@ -18,6 +18,6 @@ public class CreateReservationRequest {
     @NonNull
     private LocalDateTime reservationDateTime;
     @Schema(minimum = "2")
-    private int personNumber;
+    private int guestNumber;
     private Reservation.Status status;
 }
