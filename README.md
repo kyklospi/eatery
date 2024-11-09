@@ -2,7 +2,7 @@
 
 ## Project Overview
 Eatery Backend project is a Spring Boot-based backend designed to serve as the core application layer for 
-managing customer favourite eateries and customer eatery reservations, its data persistence, and API services. 
+managing customer eatery reservations, its data persistence, API services and notification about changes in their reservation status.
 It is built following modern architectural patterns 
 such as RESTful services, MVC, and Layered Architecture to ensure scalability, maintainability, and ease of testing.
 
@@ -11,9 +11,10 @@ The backend integrates with an H2 database through JPA for data persistence, and
 ### Key Features
 * REST API: Provides a set of RESTful endpoints for interacting with the backend services.
 * Spring Data JPA: ORM-based database interaction with support for various relational databases (MySQL, PostgreSQL, H2).
+* Notification: Sending of notification using Twilio Java API.
 * Exception Handling: Global exception handling using @ControllerAdvice.
 * Logging: Integrated logging using SLF4J with Logback.
-* Test Coverage: Unit tests and integration tests using JUnit and Mockito.
+* Test Coverage: Integration tests using SpringBoot tests and JUnit.
 * API Documentation: Auto-generated API documentation using Swagger (SpringDoc OpenAPI).
 
 ### Getting Started
