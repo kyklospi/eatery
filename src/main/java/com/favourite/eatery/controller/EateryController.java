@@ -1,8 +1,7 @@
 package com.favourite.eatery.controller;
 
-import com.favourite.eatery.exception.EateryNotFoundException;
 import com.favourite.eatery.model.Eatery;
-import com.favourite.eatery.repository.EateryRepository;
+import com.favourite.eatery.service.EateryService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequestMapping(path = "/eateries")
 public class EateryController {
     @Autowired
-    private EateryRepository repository;
+    private EateryService eateryService;
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Eateries not found"),
@@ -26,7 +25,7 @@ public class EateryController {
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     List<Eatery> getAll() {
-        return repository.findAll();
+        return eateryService.findAll();
     }
 
     @ApiResponses(value = {
@@ -34,7 +33,7 @@ public class EateryController {
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     Eatery create(@RequestBody Eatery newEatery) {
-        return repository.save(newEatery);
+        return eateryService.save(newEatery);
     }
 
     @ApiResponses(value = {
@@ -43,31 +42,13 @@ public class EateryController {
     })
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     Eatery get(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new EateryNotFoundException(id));
+        return eateryService.findById(id);
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "500", description = "Eatery could not be updated")
-    })
-    @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Eatery replace(@RequestBody Eatery newEatery, @PathVariable Long id) {
-        return repository.findById(id)
-                .map(eatery -> {
-                    eatery.setName(newEatery.getName());
-                    eatery.setAddress(newEatery.getAddress());
-                    eatery.setEmail(newEatery.getEmail());
-                    eatery.setPhoneNumber(newEatery.getPhoneNumber());
-                    return repository.save(eatery);
-                })
-                .orElseGet(() -> repository.save(newEatery));
-    }
 
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "500", description = "Eatery could not be deleted")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "500", description = "Eatery could not be updated"), @ApiResponse(responseCode = "500", description = "Eatery could not be deleted")})
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
-        repository.deleteById(id);
+        eateryService.deleteById(id);
     }
 }

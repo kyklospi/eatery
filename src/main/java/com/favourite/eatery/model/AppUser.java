@@ -35,7 +35,6 @@ public class AppUser extends BaseUser {
                 ", lastName='" + this.getLastName() + '\'' +
                 ", email='" + this.getEmail() + '\'' +
                 ", phoneNumber='" + this.getPhoneNumber() + '\'' +
-                ", favouriteEateries=" + favouriteEateries +
                 ", reservations=" + reservations +
                 '}';
     }
