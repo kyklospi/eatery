@@ -1,14 +1,14 @@
 package com.favourite.eatery;
 
-import com.favourite.eatery.controller.AdminController;
+import com.favourite.eatery.controller.EateryManagerController;
 import com.favourite.eatery.controller.EateryController;
 import com.favourite.eatery.controller.ReservationController;
 import com.favourite.eatery.controller.CustomerController;
-import com.favourite.eatery.repository.AdminRepository;
+import com.favourite.eatery.repository.EateryManagerRepository;
 import com.favourite.eatery.repository.CustomerRepository;
 import com.favourite.eatery.repository.EateryRepository;
 import com.favourite.eatery.repository.ReservationRepository;
-import com.favourite.eatery.service.AdminService;
+import com.favourite.eatery.service.EateryManagerService;
 import com.favourite.eatery.service.ReservationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,10 @@ class EateryBackendApplicationTests {
 	@Autowired
 	private ReservationController reservationController;
 	@Autowired
-	private AdminController adminController;
+	private EateryManagerController eateryManagerController;
 
 	@Autowired
-	private AdminService adminService;
+	private EateryManagerService eateryManagerService;
 	@Autowired
 	private ReservationService reservationService;
 
@@ -39,22 +39,22 @@ class EateryBackendApplicationTests {
 	@Autowired
 	private ReservationRepository reservationRepository;
 	@Autowired
-	private AdminRepository adminRepository;
+	private EateryManagerRepository eateryManagerRepository;
 
 	@Test
 	void contextLoads() {
 		assertNotNull(eateryController);
 		assertNotNull(customerController);
 		assertNotNull(reservationController);
-		assertNotNull(adminController);
+		assertNotNull(eateryManagerController);
 
-		assertNotNull(adminService);
+		assertNotNull(eateryManagerService);
 		assertNotNull(reservationService);
 
 		assertNotNull(eateryRepository);
 		assertNotNull(customerRepository);
 		assertNotNull(reservationRepository);
-		assertNotNull(adminRepository);
+		assertNotNull(eateryManagerRepository);
 	}
 
 }

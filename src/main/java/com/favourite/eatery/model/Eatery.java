@@ -35,8 +35,8 @@ public class Eatery {
     @JdbcTypeCode(SqlTypes.JSON)
     private Set<BusinessDayTime> businessDayTimes = Set.of();
 
-    @OneToMany(mappedBy = "eatery")
-    private List<Administrator> admins;
+    @OneToOne(mappedBy = "eatery")
+    private EateryManager eateryManager;
 
     public Eatery(Type type, String name, String address, Set<BusinessDayTime> businessDayTimes, int guestCapacity, String email, String phoneNumber) {
         this.type = type;
@@ -80,15 +80,15 @@ public class Eatery {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Eatery eatery)) return false;
-        return guestCapacity == eatery.guestCapacity && Objects.equals(id, eatery.id) &&
-                Objects.equals(type, eatery.type) && Objects.equals(name, eatery.name) &&
-                Objects.equals(address, eatery.address) && Objects.equals(email, eatery.email) &&
-                Objects.equals(phoneNumber, eatery.phoneNumber) && Objects.equals(businessDayTimes, eatery.businessDayTimes);
+        return guestCapacity == eatery.guestCapacity && Objects.equals(id, eatery.id) && type == eatery.type &&
+                Objects.equals(name, eatery.name) && Objects.equals(address, eatery.address) &&
+                Objects.equals(email, eatery.email) && Objects.equals(phoneNumber, eatery.phoneNumber) &&
+                Objects.equals(eateryManager, eatery.eateryManager);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, name, address, email, phoneNumber, guestCapacity, businessDayTimes);
+        return Objects.hash(id, type, name, address, email, phoneNumber, guestCapacity, eateryManager);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class Eatery {
                 ", favouriteCustomers=" + favouriteCustomers +
                 ", reservationList=" + reservationList +
                 ", businessDayTimes=" + businessDayTimes +
-                ", admins=" + admins +
+                ", eateryManager=" + eateryManager +
                 '}';
     }
 

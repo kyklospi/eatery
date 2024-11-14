@@ -1,5 +1,5 @@
 @startuml
-class Administrator {
+class EateryManager {
 - Long id
 - String firstName
 - String lastName

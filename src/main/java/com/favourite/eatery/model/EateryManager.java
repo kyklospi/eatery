@@ -1,9 +1,6 @@
 package com.favourite.eatery.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,19 +11,19 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Administrator extends AppUser {
-    @ManyToOne(cascade = CascadeType.ALL)
+public class EateryManager extends AppUser {
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "eatery_id", referencedColumnName = "id")
     private Eatery eatery;
 
-    public Administrator(String firstName, String lastName, String email, String phoneNumber) {
+    public EateryManager(String firstName, String lastName, String email, String phoneNumber) {
         super(firstName, lastName, email, phoneNumber);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Administrator that)) return false;
+        if (!(o instanceof EateryManager that)) return false;
         if (!super.equals(o)) return false;
         return Objects.equals(eatery, that.eatery);
     }
@@ -38,7 +35,7 @@ public class Administrator extends AppUser {
 
     @Override
     public String toString() {
-        return "Administrator{" +
+        return "EateryManager{" +
                 "id=" + this.getId() +
                 ", firstName='" + this.getFirstName() + '\'' +
                 ", lastName='" + this.getLastName() + '\'' +

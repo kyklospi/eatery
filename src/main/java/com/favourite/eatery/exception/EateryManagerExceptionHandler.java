@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class AdminExceptionHandler extends RuntimeException {
-    @ExceptionHandler(AdminNotFoundException.class)
+public class EateryManagerExceptionHandler extends RuntimeException {
+    @ExceptionHandler(EateryManagerNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String handle(AdminNotFoundException e) {
+    String handle(EateryManagerNotFoundException e) {
         return e.getMessage();
     }
 
