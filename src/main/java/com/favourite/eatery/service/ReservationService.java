@@ -4,6 +4,8 @@ import com.favourite.eatery.dto.CreateReservationRequest;
 import com.favourite.eatery.dto.UpdateReservationRequest;
 import com.favourite.eatery.exception.ReservationBadRequestException;
 import com.favourite.eatery.exception.ReservationNotFoundException;
+import com.favourite.eatery.model.Customer;
+import com.favourite.eatery.model.Eatery;
 import com.favourite.eatery.model.Reservation;
 import com.favourite.eatery.notification.NotificationHandler;
 import com.favourite.eatery.repository.ReservationRepository;
@@ -34,23 +36,27 @@ public class ReservationService {
 
     public Reservation create(CreateReservationRequest reservationRequest) {
         LocalDateTime reservationTime = reservationRequest.getReservationDateTime();
-        boolean fullyBooked = reservationRequest.getEatery().isFullyBooked(reservationTime, reservationRequest.getGuestNumber());
+        Eatery reservationEatery = reservationRequest.getEatery();
+        int guestNumber = reservationRequest.getGuestNumber();
+        Customer customer = reservationRequest.getCustomer();
 
-        if (reservationTime.isBefore(tomorrow)) {
-            throw new ReservationBadRequestException(reservationRequest.getReservationDateTime());
+        if (!reservationEatery.isOpen(reservationTime) || reservationTime.isBefore(tomorrow)) {
+            throw new ReservationBadRequestException(reservationTime);
         }
+
+        boolean fullyBooked = reservationEatery.isFullyBooked(reservationTime, guestNumber);
         if (fullyBooked) {
-            throw new ReservationBadRequestException(reservationRequest.getGuestNumber());
+            throw new ReservationBadRequestException(guestNumber);
         }
 
         Reservation newReservation = new Reservation(
-                reservationRequest.getCustomer(),
-                reservationRequest.getEatery(),
-                reservationRequest.getReservationDateTime(),
-                reservationRequest.getGuestNumber()
+                customer,
+                reservationEatery,
+                reservationTime,
+                guestNumber
         );
         newReservation.setStatus(CONFIRMED);
-        sendReservationSMS(reservationRequest.getCustomer().getPhoneNumber(), newReservation);
+        sendReservationSMS(customer.getPhoneNumber(), newReservation);
         return reservationRepository.save(newReservation);
     }
 

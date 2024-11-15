@@ -6,6 +6,8 @@ import com.favourite.eatery.repository.EateryRepository;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,34 @@ public class EateryController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     List<Eatery> getAll() {
         return repository.findAll();
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "Eateries not found"),
+            @ApiResponse(responseCode = "500", description = "Eateries could not be fetched")
+    })
+    @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<Eatery> search(
+            @RequestParam(required=false) String name,
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) String type
+    ) {
+        Eatery.Type eateryType = null;
+        ExampleMatcher caseInsensitiveMatcher = ExampleMatcher.matchingAny()
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("address", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+                .withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+
+        if (type != null) {
+            try {
+                eateryType = Eatery.Type.valueOf(type.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new EateryNotFoundException("type " + type);
+            }
+        }
+
+        Example<Eatery> searchSample = Example.of(new Eatery(eateryType, name, address), caseInsensitiveMatcher);
+        return repository.findAll(searchSample);
     }
 
     @ApiResponses(value = {

@@ -9,6 +9,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -20,7 +21,9 @@ import java.util.Set;
 public class Eatery {
     private @Id @GeneratedValue Long id;
     private Type type;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String address;
     private String email;
     private String phoneNumber;
@@ -48,11 +51,26 @@ public class Eatery {
         this.phoneNumber = phoneNumber;
     }
 
+    public Eatery(Type type, String name, String address) {
+        this.type = type;
+        this.name = name;
+        this.address = address;
+    }
+
     public boolean isOpen() {
         return this.businessDayTimes.stream()
                 .anyMatch(it ->
                         it.openDay().equals(LocalDateTime.now().getDayOfWeek()) &&
                         LocalTime.now().isAfter(it.openTime()) && LocalTime.now().isBefore(it.closeTime())
+                );
+    }
+
+    public boolean isOpen(LocalDateTime atDateTime) {
+        return this.businessDayTimes.stream()
+                .anyMatch(it ->
+                        it.openDay().equals(atDateTime.getDayOfWeek()) &&
+                                atDateTime.isAfter(ChronoLocalDateTime.from(it.openTime())) &&
+                                atDateTime.isBefore(ChronoLocalDateTime.from(it.closeTime()))
                 );
     }
 
@@ -111,6 +129,6 @@ public class Eatery {
     public enum Type {
         RESTAURANT,
         CAFE,
-        BAR
+        BAR,
     }
 }
