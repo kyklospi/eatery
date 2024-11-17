@@ -1,0 +1,19 @@
+@startuml
+class Eatery {
+- Long id
+- Type type
+- String name
+- String address
+- String email
+- String phoneNumber
+- int guestCapacity
+- List<Reservation> reservationList
+- Set<BusinessDayTime> businessDayTimes
+- EateryManager eateryManager
++ boolean isOpen()
++ boolean isFullyBooked(LocalDateTime,int)
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+@enduml

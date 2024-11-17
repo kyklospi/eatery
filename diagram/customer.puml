@@ -1,0 +1,13 @@
+@startuml
+class Customer {
+- Long id
+- String firstName
+- String lastName
+- String email
+- String phoneNumber
+- List<Reservation> reservations
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+@enduml

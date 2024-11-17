@@ -1,0 +1,13 @@
+@startuml
+class EateryManager {
+- Long id
+- String firstName
+- String lastName
+- String email
+- String phoneNumber
+- Eatery eatery
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+@enduml
