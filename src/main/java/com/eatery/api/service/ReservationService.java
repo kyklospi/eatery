@@ -46,7 +46,7 @@ public class ReservationService {
         int guestNumber = reservationRequest.getGuestNumber();
         Customer customer = reservationRequest.getCustomer();
 
-        if (!reservationEatery.isOpen(reservationTime) || reservationTime.isBefore(tomorrow)) {
+        if (!reservationEatery.isOpenAt(reservationTime) || reservationTime.isBefore(tomorrow)) {
             throw new ReservationBadRequestException(reservationTime);
         }
 

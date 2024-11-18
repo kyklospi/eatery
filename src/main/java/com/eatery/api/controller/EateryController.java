@@ -55,7 +55,7 @@ public class EateryController {
             }
         }
 
-        Example<Eatery> searchSample = Example.of(new Eatery(eateryType, name, address), caseInsensitiveMatcher);
+        Example<Eatery> searchSample = Example.of(Eatery.from(eateryType, name, address), caseInsensitiveMatcher);
         return repository.findAll(searchSample);
     }
 
