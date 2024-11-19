@@ -18,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Eatery implements Reservable{
+public class Eatery implements Reservable {
     private @Id @GeneratedValue Long id;
     private Type type;
     @Column(nullable = false)
@@ -101,18 +101,28 @@ public class Eatery implements Reservable{
      */
     @Override
     public boolean isFullyBooked(LocalDateTime atTime, int newGuestNumber) {
-        List<Reservation> currentReservations = this.reservationList.stream()
-                .filter(eateryReservation -> eateryReservation.getReservationDateTime().isAfter(atTime) &&
-                        eateryReservation.getReservationDateTime().isBefore(atTime.plusHours(2)) &&
+        List<Reservation> confirmedReservationsAtDuration = getConfirmedReservationsAtDuration(atTime, atTime.plusHours(2));
+        int totalGuestNumberAtDuration = countGuestNumber(confirmedReservationsAtDuration);
+
+        return (totalGuestNumberAtDuration + newGuestNumber) > this.guestCapacity;
+    }
+
+    private List<Reservation> getConfirmedReservationsAtDuration(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return this.reservationList.stream()
+                .filter(eateryReservation -> eateryReservation.getReservationDateTime().equals(startDateTime) &&
+                        eateryReservation.getReservationDateTime().isBefore(endDateTime) &&
                         eateryReservation.getStatus().equals(Reservation.Status.CONFIRMED)
                 )
                 .toList();
 
-        int currentGuestNumber = 0;
-        for (Reservation reservation : currentReservations) {
-            currentGuestNumber += reservation.getGuestNumber();
+    }
+
+    private int countGuestNumber(List<Reservation> reservations) {
+        int sum = 0;
+        for (Reservation reservation : reservations) {
+            sum += reservation.getGuestNumber();
         }
-        return (currentGuestNumber + newGuestNumber) > this.guestCapacity;
+        return sum;
     }
 
     @Override

@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * Composite pattern child class
+ */
 @Entity
 @Getter
 @Setter

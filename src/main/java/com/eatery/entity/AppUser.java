@@ -9,6 +9,9 @@ import lombok.Setter;
 
 import java.util.Objects;
 
+/**
+ * Composite pattern parent class
+ */
 @Entity
 @Getter
 @Setter

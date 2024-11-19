@@ -2,6 +2,7 @@ package com.eatery.api.service;
 
 import com.eatery.api.dto.CreateReservationRequest;
 import com.eatery.api.dto.UpdateReservationRequest;
+import com.eatery.entity.Reservable;
 import com.eatery.exception.ReservationBadRequestException;
 import com.eatery.exception.ReservationNotFoundException;
 import com.eatery.entity.Customer;
@@ -29,8 +30,6 @@ public class ReservationService {
     @Autowired
     private NotificationHandler notificationHandler;
 
-    private final LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
-
     public List<Reservation> getAll() {
         return reservationRepository.findAll();
     }
@@ -46,14 +45,7 @@ public class ReservationService {
         int guestNumber = reservationRequest.getGuestNumber();
         Customer customer = reservationRequest.getCustomer();
 
-        if (!reservationEatery.isOpenAt(reservationTime) || reservationTime.isBefore(tomorrow)) {
-            throw new ReservationBadRequestException(reservationTime);
-        }
-
-        boolean fullyBooked = reservationEatery.isFullyBooked(reservationTime, guestNumber);
-        if (fullyBooked) {
-            throw new ReservationBadRequestException(guestNumber);
-        }
+        checkAvailability(reservationEatery, reservationTime, guestNumber);
 
         Reservation newReservation = new Reservation(
                 customer,
@@ -62,28 +54,21 @@ public class ReservationService {
                 guestNumber
         );
         newReservation.setStatus(CONFIRMED);
-        sendReservationSMS(customer.getPhoneNumber(), newReservation);
+        sendMessage(customer.getPhoneNumber(), newReservation);
         return reservationRepository.save(newReservation);
     }
 
     public Reservation replace(UpdateReservationRequest updateReservation, Long id) {
+        LocalDateTime updatedTime = updateReservation.getDateTime();
+        int updatedGuestNumber = updateReservation.getGuestNumber();
         return reservationRepository.findById(id)
                 .map(reservation -> {
-                    if (updateReservation.getDateTime().isBefore(tomorrow)) {
-                        throw new ReservationBadRequestException(updateReservation.getDateTime());
-                    }
+                    checkAvailability(reservation.getEatery(), updatedTime, updatedGuestNumber);
 
-                    boolean fullyBooked = reservation.getEatery().isFullyBooked(
-                            updateReservation.getDateTime(), updateReservation.getGuestNumber()
-                    );
-                    if (fullyBooked) {
-                        throw new ReservationBadRequestException(reservation.getGuestNumber());
-                    }
-
-                    reservation.setReservationDateTime(updateReservation.getDateTime());
-                    reservation.setGuestNumber(updateReservation.getGuestNumber());
+                    reservation.setReservationDateTime(updatedTime);
+                    reservation.setGuestNumber(updatedGuestNumber);
                     reservation.setStatus(CONFIRMED);
-                    sendReservationSMS(reservation.getCustomer().getPhoneNumber(), reservation);
+                    sendMessage(reservation.getCustomer().getPhoneNumber(), reservation);
                     return reservationRepository.save(reservation);
                 })
                 .orElseThrow(() -> new ReservationNotFoundException(id));
@@ -110,7 +95,7 @@ public class ReservationService {
             reservation.setStatus(CANCELLED);
             reservationRepository.save(reservation);
         }
-        sendReservationSMS(reservation.getCustomer().getPhoneNumber(), reservation);
+        sendMessage(reservation.getCustomer().getPhoneNumber(), reservation);
         return reservation;
     }
 
@@ -125,9 +110,33 @@ public class ReservationService {
         }
     }
 
-    private void sendReservationSMS(String customerPhoneNumber, Reservation reservation) {
-        String prefixText = getTemplateMessage(reservation);
-        switch (reservation.getStatus()) {
+    /**
+     * Check availability of Eatery by using strategy pattern Reservable
+     * @param reservableObject Reservable interface object
+     * @param atDateTime time to check availability
+     * @param guestNumber guest number to check availability
+     */
+    private void checkAvailability(Reservable reservableObject, LocalDateTime atDateTime, int guestNumber) {
+        final LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+
+        if (!reservableObject.isOpenAt(atDateTime) || atDateTime.isBefore(tomorrow)) {
+            throw new ReservationBadRequestException(atDateTime);
+        }
+
+        boolean fullyBooked = reservableObject.isFullyBooked(atDateTime, guestNumber);
+        if (fullyBooked) {
+            throw new ReservationBadRequestException(guestNumber);
+        }
+    }
+
+    /**
+     * send message to customer about his reservation by using command pattern via NotificationHandler
+     * @param customerPhoneNumber customer phone number
+     * @param customerReservation customer's reservation
+     */
+    private void sendMessage(String customerPhoneNumber, Reservation customerReservation) {
+        String prefixText = getTemplateMessage(customerReservation);
+        switch (customerReservation.getStatus()) {
             case CONFIRMED ->
                     notificationHandler.sendSMS(
                             customerPhoneNumber,
