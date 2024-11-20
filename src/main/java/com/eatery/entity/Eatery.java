@@ -95,21 +95,21 @@ public class Eatery implements Reservable {
 
     /**
      * Strategy pattern implementation
-     * Checks if eatery guest capacity is reached from reservation time until 2 hours after
+     * Checks if eatery guest capacity is reached from 2 hours before reservation time until 2 hours after reservation time
      * @param atTime new entry of reservation time
      * @return true when eatery guest capacity is reached
      */
     @Override
     public boolean isFullyBooked(LocalDateTime atTime, int newGuestNumber) {
-        List<Reservation> confirmedReservationsAtDuration = getConfirmedReservationsAtDuration(atTime, atTime.plusHours(2));
+        List<Reservation> confirmedReservationsAtDuration = getConfirmedReservationsAtTimeSlot(atTime.minusHours(2), atTime.plusHours(2));
         int totalGuestNumberAtDuration = countGuestNumber(confirmedReservationsAtDuration);
 
         return (totalGuestNumberAtDuration + newGuestNumber) > this.guestCapacity;
     }
 
-    private List<Reservation> getConfirmedReservationsAtDuration(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    private List<Reservation> getConfirmedReservationsAtTimeSlot(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return this.reservationList.stream()
-                .filter(eateryReservation -> eateryReservation.getReservationDateTime().equals(startDateTime) &&
+                .filter(eateryReservation -> eateryReservation.getReservationDateTime().isAfter(startDateTime) &&
                         eateryReservation.getReservationDateTime().isBefore(endDateTime) &&
                         eateryReservation.getStatus().equals(Reservation.Status.CONFIRMED)
                 )

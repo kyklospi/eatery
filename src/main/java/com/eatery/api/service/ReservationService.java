@@ -9,6 +9,8 @@ import com.eatery.entity.Customer;
 import com.eatery.entity.Eatery;
 import com.eatery.entity.Reservation;
 import com.eatery.notification.NotificationHandler;
+import com.eatery.repository.CustomerRepository;
+import com.eatery.repository.EateryRepository;
 import com.eatery.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,10 @@ import static com.eatery.entity.Reservation.Status.CONFIRMED;
 public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
-
+    @Autowired
+    private EateryRepository eateryRepository;
+    @Autowired
+    CustomerRepository customerRepository;
     @Autowired
     private NotificationHandler notificationHandler;
 
@@ -40,11 +45,14 @@ public class ReservationService {
     }
 
     public Reservation create(CreateReservationRequest reservationRequest) {
-        LocalDateTime reservationTime = reservationRequest.getReservationDateTime();
-        Eatery reservationEatery = reservationRequest.getEatery();
-        int guestNumber = reservationRequest.getGuestNumber();
-        Customer customer = reservationRequest.getCustomer();
+        Eatery reservationEatery = eateryRepository.findById(reservationRequest.getEateryId())
+                .orElseThrow(() -> new ReservationBadRequestException("eateryId"));
 
+        Customer customer = customerRepository.findById(reservationRequest.getCustomerId())
+                .orElseThrow(() -> new ReservationBadRequestException("customerId"));
+
+        LocalDateTime reservationTime = reservationRequest.getReservationDateTime();
+        int guestNumber = reservationRequest.getGuestNumber();
         checkAvailability(reservationEatery, reservationTime, guestNumber);
 
         Reservation newReservation = new Reservation(
