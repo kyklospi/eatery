@@ -18,7 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Eatery {
+public class Eatery implements Reservable {
     private @Id @GeneratedValue Long id;
     private Type type;
     @Column(nullable = false)
@@ -51,10 +51,22 @@ public class Eatery {
         this.phoneNumber = phoneNumber;
     }
 
-    public Eatery(Type type, String name, String address) {
+    private Eatery(Type type, String name, String address) {
         this.type = type;
         this.name = name;
         this.address = address;
+    }
+
+    /**
+     * Static factory pattern
+     * Creates Eatery object while isolating constructor
+     * @param type Eatery type
+     * @param name Eatery name
+     * @param address Eatery address
+     * @return Eatery object
+      */
+    public static Eatery from(Type type, String name, String address) {
+        return new Eatery(type, name, address);
     }
 
     public boolean isOpen() {
@@ -65,33 +77,52 @@ public class Eatery {
                 );
     }
 
-    public boolean isOpen(LocalDateTime atDateTime) {
+    /**
+     * Strategy pattern implementation
+     * Checks if eatery is open at reservation time
+     * @param reservationTime reservation time
+     * @return true when eatery is open at reservation time
+     */
+    @Override
+    public boolean isOpenAt(LocalDateTime reservationTime) {
         return this.businessDayTimes.stream()
                 .anyMatch(it ->
-                        it.openDay().equals(atDateTime.getDayOfWeek()) &&
-                                atDateTime.isAfter(ChronoLocalDateTime.from(it.openTime())) &&
-                                atDateTime.isBefore(ChronoLocalDateTime.from(it.closeTime()))
+                        it.openDay().equals(reservationTime.getDayOfWeek()) &&
+                                reservationTime.isAfter(ChronoLocalDateTime.from(it.openTime())) &&
+                                reservationTime.isBefore(ChronoLocalDateTime.from(it.closeTime()))
                 );
     }
 
     /**
-     * Checks if eatery guest capacity is reached from reservation time until 2 hours after
+     * Strategy pattern implementation
+     * Checks if eatery guest capacity is reached from 2 hours before reservation time until 2 hours after reservation time
      * @param atTime new entry of reservation time
-     * @return true if eatery guest capacity is reached
+     * @return true when eatery guest capacity is reached
      */
+    @Override
     public boolean isFullyBooked(LocalDateTime atTime, int newGuestNumber) {
-        List<Reservation> currentReservations = this.reservationList.stream()
-                .filter(eateryReservation -> eateryReservation.getReservationDateTime().isAfter(atTime) &&
-                        eateryReservation.getReservationDateTime().isBefore(atTime.plusHours(2)) &&
+        List<Reservation> confirmedReservationsAtDuration = getConfirmedReservationsAtTimeSlot(atTime.minusHours(2), atTime.plusHours(2));
+        int totalGuestNumberAtDuration = countGuestNumber(confirmedReservationsAtDuration);
+
+        return (totalGuestNumberAtDuration + newGuestNumber) > this.guestCapacity;
+    }
+
+    private List<Reservation> getConfirmedReservationsAtTimeSlot(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return this.reservationList.stream()
+                .filter(eateryReservation -> eateryReservation.getReservationDateTime().isAfter(startDateTime) &&
+                        eateryReservation.getReservationDateTime().isBefore(endDateTime) &&
                         eateryReservation.getStatus().equals(Reservation.Status.CONFIRMED)
                 )
                 .toList();
 
-        int currentGuestNumber = 0;
-        for (Reservation reservation : currentReservations) {
-            currentGuestNumber += reservation.getGuestNumber();
+    }
+
+    private int countGuestNumber(List<Reservation> reservations) {
+        int sum = 0;
+        for (Reservation reservation : reservations) {
+            sum += reservation.getGuestNumber();
         }
-        return (currentGuestNumber + newGuestNumber) > this.guestCapacity;
+        return sum;
     }
 
     @Override

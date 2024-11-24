@@ -19,7 +19,7 @@ public class EateryManagerService {
 
     /**
      * Get all eatery managers
-     * @return all eatery managaers
+     * @return all eatery managers
      */
     public List<EateryManager> getAll() {
         return eateryManagerRepository.findAll();

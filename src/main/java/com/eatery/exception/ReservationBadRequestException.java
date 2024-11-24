@@ -10,4 +10,8 @@ public class ReservationBadRequestException extends RuntimeException {
     public ReservationBadRequestException(int guestNumber) {
         super("Too many guest number " + guestNumber);
     }
+
+    public ReservationBadRequestException(String s) {
+        super("Invalid request parameter " + s);
+    }
 }

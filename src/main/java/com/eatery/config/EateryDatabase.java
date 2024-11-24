@@ -27,7 +27,7 @@ public class EateryDatabase {
 
     @Bean
     CommandLineRunner initDatabase(EateryRepository eateryRepository, CustomerRepository customerRepository, EateryManagerRepository eateryManagerRepository) {
-        return _ -> {
+        return args -> {
             BusinessDayTime restaurant1Opening = new BusinessDayTime(
                     DayOfWeek.MONDAY,
                     LocalTime.of(18, 0),
