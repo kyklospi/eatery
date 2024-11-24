@@ -27,6 +27,7 @@ public class CustomerController {
     }
 
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
             @ApiResponse(responseCode = "500", description = "Customer could not be created")
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,6 +45,7 @@ public class CustomerController {
     }
 
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
             @ApiResponse(responseCode = "404", description = "Customer not found"),
             @ApiResponse(responseCode = "500", description = "Customer could not be updated")
     })

@@ -41,7 +41,7 @@ public class ReservationService {
 
     public Reservation get(Long id) {
         return reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+                .orElseThrow(ReservationNotFoundException::new);
     }
 
     public Reservation create(CreateReservationRequest reservationRequest) {
@@ -79,12 +79,12 @@ public class ReservationService {
                     sendMessage(reservation.getCustomer().getPhoneNumber(), reservation);
                     return reservationRepository.save(reservation);
                 })
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+                .orElseThrow(ReservationNotFoundException::new);
     }
 
     public Reservation complete(Long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+                .orElseThrow(ReservationNotFoundException::new);
 
         if (reservation.getReservationDateTime().isBefore(LocalDateTime.now()) &&
                 reservation.getStatus().equals(CONFIRMED)) {
@@ -97,7 +97,7 @@ public class ReservationService {
 
     public Reservation cancel(Long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+                .orElseThrow(ReservationNotFoundException::new);
 
         if (reservation.getStatus().equals(CONFIRMED)) {
             reservation.setStatus(CANCELLED);
@@ -109,7 +109,7 @@ public class ReservationService {
 
     public void delete(Long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+                .orElseThrow(ReservationNotFoundException::new);
 
         if (reservation.getStatus().equals(Reservation.Status.COMPLETED) ||
                 reservation.getStatus().equals(CANCELLED)) {

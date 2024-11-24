@@ -37,7 +37,7 @@ public class EateryManagerService {
 
     public EateryManager get(Long id) {
         return eateryManagerRepository.findById(id)
-                .orElseThrow(() -> new EateryManagerNotFoundException(id));
+                .orElseThrow(EateryManagerNotFoundException::new);
     }
 
     public EateryManager replace(UpdateUserRequest newManager, Long id) {
@@ -49,12 +49,12 @@ public class EateryManagerService {
                     eateryManager.setPhoneNumber(newManager.getPhoneNumber());
                     return eateryManagerRepository.save(eateryManager);
                 })
-                .orElseThrow(() -> new EateryManagerNotFoundException(id));
+                .orElseThrow(EateryManagerNotFoundException::new);
     }
 
     public void delete(Long id) {
         EateryManager eateryManager = eateryManagerRepository.findById(id)
-                        .orElseThrow(() -> new EateryManagerNotFoundException(id));
+                        .orElseThrow(EateryManagerNotFoundException::new);
         eateryManagerRepository.delete(eateryManager);
     }
 }

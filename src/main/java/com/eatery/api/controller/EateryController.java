@@ -1,5 +1,6 @@
 package com.eatery.api.controller;
 
+import com.eatery.api.dto.UpdateEateryRequest;
 import com.eatery.entity.Eatery;
 import com.eatery.api.service.EateryService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +35,7 @@ public class EateryController {
     })
     @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     List<Eatery> search(
-            @RequestParam(required=false) String name,
+            @RequestParam(required = false) String name,
             @RequestParam(required = false) String address,
             @RequestParam(required = false) String type
     ) {
@@ -42,11 +43,12 @@ public class EateryController {
     }
 
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
             @ApiResponse(responseCode = "500", description = "Eatery could not be created")
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Eatery create(@RequestBody Eatery newEatery) {
-        return eateryService.save(newEatery);
+    Eatery create(@RequestBody UpdateEateryRequest newEatery) {
+        return eateryService.create(newEatery);
     }
 
     @ApiResponses(value = {
@@ -59,16 +61,21 @@ public class EateryController {
     }
 
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
+            @ApiResponse(responseCode = "404", description = "Eatery not found"),
             @ApiResponse(responseCode = "500", description = "Eatery could not be updated")
     })
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Eatery replace(@RequestBody Eatery newEatery, @PathVariable Long id) {
+    Eatery replace(@RequestBody UpdateEateryRequest newEatery, @PathVariable Long id) {
         return eateryService.replace(newEatery, id);
     }
 
-    @ApiResponses(value = {@ApiResponse(responseCode = "500", description = "Eatery could not be updated"), @ApiResponse(responseCode = "500", description = "Eatery could not be deleted")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "Eatery not found"),
+            @ApiResponse(responseCode = "500", description = "Eatery could not be updated"), @ApiResponse(responseCode = "500", description = "Eatery could not be deleted")
+    })
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
-        eateryService.deleteById(id);
+        eateryService.delete(id);
     }
 }

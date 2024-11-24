@@ -1,5 +1,6 @@
 package com.eatery.api.service;
 
+import com.eatery.api.dto.UpdateEateryRequest;
 import com.eatery.exception.EateryBadRequestException;
 import com.eatery.exception.EateryNotFoundException;
 import com.eatery.entity.Eatery;
@@ -23,7 +24,7 @@ public class EateryService {
 
     public Eatery findById(Long id) {
         return eateryRepository.findById(id)
-                .orElseThrow(() -> new EateryNotFoundException(id));
+                .orElseThrow(EateryNotFoundException::new);
     }
 
     public List<Eatery> search(String name, String address, String type) {
@@ -47,39 +48,73 @@ public class EateryService {
 
     }
 
-    public Eatery save(Eatery newEatery) {
+    public Eatery create(UpdateEateryRequest newEatery) {
         validateEatery(newEatery);
-        return eateryRepository.save(newEatery);
+        Eatery eatery = new Eatery(
+                Eatery.Type.valueOf(newEatery.getType()),
+                newEatery.getName(),
+                newEatery.getAddress(),
+                newEatery.getBusinessDayTimes(),
+                newEatery.getGuestCapacity(),
+                newEatery.getEmail(),
+                newEatery.getPhoneNumber()
+        );
+        return eateryRepository.save(eatery);
     }
 
-    public Eatery replace(Eatery newEatery, Long id) {
+    public Eatery replace(UpdateEateryRequest newEatery, Long id) {
+        validateEatery(newEatery);
         return eateryRepository.findById(id)
                 .map(eatery -> {
+                    eatery.setType(Eatery.Type.valueOf(newEatery.getType()));
                     eatery.setName(newEatery.getName());
                     eatery.setAddress(newEatery.getAddress());
                     eatery.setEmail(newEatery.getEmail());
                     eatery.setPhoneNumber(newEatery.getPhoneNumber());
+                    eatery.setGuestCapacity(newEatery.getGuestCapacity());
+                    eatery.setBusinessDayTimes(newEatery.getBusinessDayTimes());
                     return eateryRepository.save(eatery);
                 })
-                .orElseGet(() -> eateryRepository.save(newEatery));
+                .orElseThrow(EateryNotFoundException::new);
     }
 
-    public void deleteById(Long id) {
-        eateryRepository.findById(id)
-                .orElseThrow(() -> new EateryNotFoundException(id));
-
-        eateryRepository.deleteById(id);
+    public void delete(Long id) {
+        Eatery eatery = eateryRepository.findById(id)
+                .orElseThrow(EateryNotFoundException::new);
+        eateryRepository.delete(eatery);
     }
 
-    private void validateEatery(Eatery eatery) {
+    private void validateEatery(UpdateEateryRequest eatery) {
+        if (eatery == null) {
+            throw new EateryBadRequestException("Eatery request must not be null.");
+        }
+
+        if (eatery.getType() == null || eatery.getType().isBlank()) {
+            throw new EateryBadRequestException("Type must not be null or empty.");
+        }
+        try {
+            Eatery.Type.valueOf(eatery.getType());
+        } catch (Exception e) {
+            throw new EateryBadRequestException("Type is invalid.");
+        }
+
         if (eatery.getGuestCapacity() <= 0) {
             throw new EateryBadRequestException("Guest capacity must be greater than 0");
         }
-        if (eatery.getName() == null || eatery.getName().isEmpty()) {
-            throw new EateryBadRequestException("Name must not be empty");
+        if (eatery.getName() == null || eatery.getName().isBlank()) {
+            throw new EateryBadRequestException("Name must not be null or empty.");
         }
-        if (eatery.getAddress() == null || eatery.getAddress().isEmpty()) {
-            throw new EateryBadRequestException("Address must not be empty");
+        if (eatery.getAddress() == null || eatery.getAddress().isBlank()) {
+            throw new EateryBadRequestException("Address must not be null or empty.");
+        }
+        if (eatery.getEmail() == null || eatery.getEmail().isBlank()) {
+            throw new EateryBadRequestException("Email must not be null or empty.");
+        }
+        if (eatery.getPhoneNumber() == null || eatery.getPhoneNumber().isBlank()) {
+            throw new EateryBadRequestException("Phone Number must not be null or empty.");
+        }
+        if (eatery.getBusinessDayTimes() == null || eatery.getBusinessDayTimes().isEmpty()) {
+            throw new EateryBadRequestException("Business day times must not be null or empty.");
         }
     }
 }

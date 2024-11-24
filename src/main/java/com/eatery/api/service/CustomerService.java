@@ -32,16 +32,17 @@ public class CustomerService {
 
     public void delete(Long id) {
         Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException(id));
+                .orElseThrow(CustomerNotFoundException::new);
         customerRepository.delete(customer);
     }
 
     public Customer get(Long id) {
         return customerRepository.findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException(id));
+                .orElseThrow(CustomerNotFoundException::new);
     }
 
     public Customer replace(UpdateUserRequest newCustomer, Long id) {
+        validateCustomer(newCustomer);
         return customerRepository.findById(id)
                 .map(customer -> {
                     customer.setFirstName(newCustomer.getFirstName());
@@ -50,21 +51,24 @@ public class CustomerService {
                     customer.setPhoneNumber(newCustomer.getPhoneNumber());
                     return customerRepository.save(customer);
                 })
-                .orElseThrow(() -> new CustomerNotFoundException(id));
+                .orElseThrow(CustomerNotFoundException::new);
     }
 
     private void validateCustomer(UpdateUserRequest customer) {
-        if (customer.getEmail() == null || customer.getEmail().isEmpty()) {
-            throw new CustomerBadRequestException("Email cannot be null or empty.");
+        if (customer == null) {
+            throw new CustomerBadRequestException("Customer request must not be null.");
         }
-        if (customer.getFirstName() == null || customer.getFirstName().isEmpty()) {
-            throw new CustomerBadRequestException("First Name cannot be null or empty.");
+        if (customer.getEmail() == null || customer.getEmail().isBlank()) {
+            throw new CustomerBadRequestException("Email must not be null or empty.");
         }
-        if (customer.getLastName() == null || customer.getLastName().isEmpty()) {
-            throw new CustomerBadRequestException("Last Name cannot be null or empty.");
+        if (customer.getFirstName() == null || customer.getFirstName().isBlank()) {
+            throw new CustomerBadRequestException("First Name must not be null or empty.");
         }
-        if (customer.getPhoneNumber() == null || customer.getPhoneNumber().isEmpty()) {
-            throw new CustomerBadRequestException("Phone Number cannot be null or empty.");
+        if (customer.getLastName() == null || customer.getLastName().isBlank()) {
+            throw new CustomerBadRequestException("Last Name must not be null or empty.");
+        }
+        if (customer.getPhoneNumber() == null || customer.getPhoneNumber().isBlank()) {
+            throw new CustomerBadRequestException("Phone Number must not be null or empty.");
         }
     }
 }
