@@ -53,6 +53,7 @@ public class EateryManagerController {
     }
 
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "Eatery manager not found"),
             @ApiResponse(responseCode = "500", description = "Eatery manager could not be deleted")
     })
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -53,6 +53,8 @@ public class EateryManagerService {
     }
 
     public void delete(Long id) {
-        eateryManagerRepository.deleteById(id);
+        EateryManager eateryManager = eateryManagerRepository.findById(id)
+                        .orElseThrow(() -> new EateryManagerNotFoundException(id));
+        eateryManagerRepository.delete(eateryManager);
     }
 }
