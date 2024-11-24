@@ -13,39 +13,39 @@ import java.util.List;
 public class CustomerService {
 
     @Autowired
-    CustomerRepository userRepository;
+    CustomerRepository customerRepository;
 
     public List<Customer> getAll() {
-        return userRepository.findAll();
+        return customerRepository.findAll();
     }
 
     public Customer create(Customer newUser) {
-        validateUser(newUser);
-        return userRepository.save(newUser);
+        validateCustomer(newUser);
+        return customerRepository.save(newUser);
     }
 
     public void deleteById(Long id) {
-        Customer user = userRepository.findById(id)
+        Customer user = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
-        userRepository.delete(user);
+        customerRepository.delete(user);
     }
 
     public Customer findById(Long id) {
-        return userRepository.findById(id)
+        return customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
     }
 
-    private void validateUser(Customer user) {
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+    private void validateCustomer(Customer customer) {
+        if (customer.getEmail() == null || customer.getEmail().isEmpty()) {
             throw new CustomerBadRequestException("Email cannot be null or empty.");
         }
-        if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
+        if (customer.getFirstName() == null || customer.getFirstName().isEmpty()) {
             throw new CustomerBadRequestException("First Name cannot be null or empty.");
         }
-        if (user.getLastName() == null || user.getLastName().isEmpty()) {
+        if (customer.getLastName() == null || customer.getLastName().isEmpty()) {
             throw new CustomerBadRequestException("Last Name cannot be null or empty.");
         }
-        if (user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) {
+        if (customer.getPhoneNumber() == null || customer.getPhoneNumber().isEmpty()) {
             throw new CustomerBadRequestException("Phone Number cannot be null or empty.");
         }
 

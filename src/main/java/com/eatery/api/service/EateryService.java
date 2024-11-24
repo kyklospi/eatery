@@ -41,8 +41,10 @@ public class EateryService {
             }
         }
 
-        Example<Eatery> searchSample = Example.of(new Eatery(eateryType, name, address), caseInsensitiveMatcher);
+        Example<Eatery> searchSample = Example.of(Eatery.from(eateryType, name, address), caseInsensitiveMatcher);
         return eateryRepository.findAll(searchSample);
+
+
     }
 
     public Eatery save(Eatery newEatery) {
