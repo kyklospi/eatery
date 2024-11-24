@@ -38,7 +38,6 @@ public class Customer extends AppUser {
                 ", lastName='" + this.getLastName() + '\'' +
                 ", email='" + this.getEmail() + '\'' +
                 ", phoneNumber='" + this.getPhoneNumber() + '\'' +
-                ", favouriteEateries=" + favouriteEateries +
                 ", reservations=" + reservations +
                 '}';
     }
