@@ -19,18 +19,21 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class Eatery implements Reservable {
-    private @Id @GeneratedValue Long id;
+    @Column(unique = true, nullable = false)
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+
+    @Enumerated(EnumType.STRING)
     private Type type;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String address;
+
     private String email;
     private String phoneNumber;
     private int guestCapacity;
-
-    @ManyToMany(mappedBy = "favouriteEateries")
-    private Set<Customer> favouriteCustomers;
 
     @OneToMany(mappedBy = "eatery")
     private List<Reservation> reservationList;
@@ -150,7 +153,6 @@ public class Eatery implements Reservable {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", guestCapacity=" + guestCapacity +
-                ", favouriteCustomers=" + favouriteCustomers +
                 ", reservationList=" + reservationList +
                 ", businessDayTimes=" + businessDayTimes +
                 ", eateryManager=" + eateryManager +

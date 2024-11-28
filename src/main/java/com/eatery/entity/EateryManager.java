@@ -15,6 +15,9 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 public class EateryManager extends AppUser {
+    @Column(unique = true, nullable = false)
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "eatery_id", referencedColumnName = "id")
     private Eatery eatery;
