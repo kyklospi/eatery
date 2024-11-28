@@ -79,10 +79,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<profiles>
-						<profile>test</profile>
-					</profiles>
-					<useTestClasspath>true</useTestClasspath>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
