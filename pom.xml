@@ -8,7 +8,7 @@
 		<version>3.3.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.favourite</groupId>
+	<groupId>com.eatery</groupId>
 	<artifactId>eatery</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>eatery</name>
@@ -79,9 +79,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<profiles>
-						<profile>test</profile>
-					</profiles>
+					<useTestClasspath>true</useTestClasspath>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -91,11 +89,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<testResources>
-			<testResource>
-				<directory>${project.basedir}/src/test/resources</directory>
-			</testResource>
-		</testResources>
 	</build>
 
 </project>
