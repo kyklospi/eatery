@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -79,6 +79,10 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<profiles>
+						<profile>test</profile>
+					</profiles>
+					<useTestClasspath>true</useTestClasspath>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
