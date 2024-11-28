@@ -31,6 +31,6 @@ jobs:
       run: mvn -B compile --file pom.xml
     - name: Test with Maven
       working-directory: src/test
-      run: mvn -B test compile --file pom.xml
+      run: mvn -B test --file pom.xml
     - name: Package with Maven
       run: mvn -B package --file pom.xml
