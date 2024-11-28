@@ -69,7 +69,11 @@ class EateryManagerControllerIntegrationTest {
         EateryManager actual = eateryManagerController.get(savedManagerId);
 
         // THEN
-        assertEquals(savedManager, actual);
+        assertEquals(savedManagerId, actual.getId());
+        assertEquals(savedManager.getFirstName(), actual.getFirstName());
+        assertEquals(savedManager.getLastName(), actual.getLastName());
+        assertEquals(savedManager.getEmail(), actual.getEmail());
+        assertEquals(savedManager.getPhoneNumber(), actual.getPhoneNumber());
     }
 
     @Test
