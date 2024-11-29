@@ -27,12 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class EateryManagerControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     @Autowired
     private EateryManagerController eateryManagerController;
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private UpdateUserRequest managerRequest;
 
     @BeforeEach
@@ -84,8 +82,7 @@ class EateryManagerControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<EateryManager> actual = MAPPER.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
-        });
+        List<EateryManager> actual = MAPPER.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
 
         // THEN
         assertNotNull(actual);

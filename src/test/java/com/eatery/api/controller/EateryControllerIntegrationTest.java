@@ -4,11 +4,18 @@ import com.eatery.api.dto.UpdateEateryRequest;
 import com.eatery.entity.BusinessDayTime;
 import com.eatery.entity.Eatery;
 import com.eatery.exception.EateryNotFoundException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -16,13 +23,18 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ActiveProfiles("local")
+@AutoConfigureMockMvc
 class EateryControllerIntegrationTest {
     @Autowired
-    EateryController eateryController;
+    private MockMvc mockMvc;
+    @Autowired
+    private EateryController eateryController;
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private UpdateEateryRequest eateryRequest;
 
     @BeforeEach
@@ -45,9 +57,21 @@ class EateryControllerIntegrationTest {
     }
 
     @Test
-    void create() {
+    void create() throws Exception {
         // WHEN
-        Eatery actual = eateryController.create(eateryRequest);
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/eateries")
+                                .content(
+                                        MAPPER.writeValueAsString(eateryRequest)
+                                )
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Eatery actual = MAPPER.readValue(result.getResponse().getContentAsString(), Eatery.class);
 
         // THEN
         assertNotNull(actual.getId());
@@ -61,12 +85,20 @@ class EateryControllerIntegrationTest {
     }
 
     @Test
-    void getAll() {
+    void getAll() throws Exception {
         // GIVEN
         eateryController.create(eateryRequest);
 
         // WHEN
-        List<Eatery> actual = eateryController.getAll();
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/eateries")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<Eatery> actual = MAPPER.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
 
         // THEN
         assertNotNull(actual);
@@ -81,9 +113,21 @@ class EateryControllerIntegrationTest {
     }
 
     @Test
-    void search() {
+    void search() throws Exception {
+        // GIVEN
+        eateryController.create(eateryRequest);
+
         // WHEN
-        List<Eatery> actual = eateryController.search("restaurantName", null, null);
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/eateries")
+                                .param("name", "restaurantName")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<Eatery> actual = MAPPER.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
 
         // THEN
         assertNotNull(actual);
@@ -93,20 +137,28 @@ class EateryControllerIntegrationTest {
     }
 
     @Test
-    void get() {
+    void get() throws Exception {
         // GIVEN
         Eatery savedEatery = eateryController.create(eateryRequest);
         Long savedEateryId = savedEatery.getId();
 
         // WHEN
-        Eatery actual = eateryController.get(savedEateryId);
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/eateries/{id}", savedEateryId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Eatery actual = MAPPER.readValue(result.getResponse().getContentAsString(), Eatery.class);
 
         // THEN
         assertEquals(savedEatery, actual);
     }
 
     @Test
-    void replace() {
+    void replace() throws Exception {
         // GIVEN
         Eatery savedEatery = eateryController.create(eateryRequest);
         Long savedEateryId = savedEatery.getId();
@@ -127,7 +179,19 @@ class EateryControllerIntegrationTest {
         );
 
         // WHEN
-        Eatery actual = eateryController.replace(updateEateryRequest, savedEateryId);
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .put("/eateries/{id}", savedEateryId)
+                                .content(
+                                        MAPPER.writeValueAsString(updateEateryRequest)
+                                )
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Eatery actual = MAPPER.readValue(result.getResponse().getContentAsString(), Eatery.class);
 
         // THEN
         assertEquals(updateEateryRequest.getType(), actual.getType().name());
@@ -140,13 +204,19 @@ class EateryControllerIntegrationTest {
     }
 
     @Test
-    void delete() {
+    void delete() throws Exception {
         // GIVEN
         Eatery savedEatery = eateryController.create(eateryRequest);
         Long savedEateryId = savedEatery.getId();
 
         // WHEN
-        eateryController.delete(savedEateryId);
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .delete("/eateries/{id}", savedEateryId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
 
         // THEN
         assertThrows(EateryNotFoundException.class, () -> eateryController.get(savedEateryId));
