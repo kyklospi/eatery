@@ -3,21 +3,35 @@ package com.eatery.api.controller;
 import com.eatery.api.dto.UpdateUserRequest;
 import com.eatery.exception.EateryManagerNotFoundException;
 import com.eatery.entity.EateryManager;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ActiveProfiles("local")
+@AutoConfigureMockMvc
 class EateryManagerControllerIntegrationTest {
     @Autowired
-    EateryManagerController eateryManagerController;
+    private MockMvc mockMvc;
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    @Autowired
+    private EateryManagerController eateryManagerController;
 
     private UpdateUserRequest managerRequest;
 
@@ -32,9 +46,21 @@ class EateryManagerControllerIntegrationTest {
     }
 
     @Test
-    void create() {
+    void create() throws Exception {
         // WHEN
-        EateryManager actual = eateryManagerController.create(managerRequest);
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/managers")
+                                .content(
+                                        MAPPER.writeValueAsString(managerRequest)
+                                )
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        EateryManager actual = MAPPER.readValue(result.getResponse().getContentAsString(), EateryManager.class);
 
         // THEN
         assertNotNull(actual.getId());
@@ -45,12 +71,21 @@ class EateryManagerControllerIntegrationTest {
     }
 
     @Test
-    void getAll() {
+    void getAll() throws Exception {
         // GIVEN
         eateryManagerController.create(managerRequest);
 
         // WHEN
-        List<EateryManager> actual = eateryManagerController.getAll();
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/managers")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<EateryManager> actual = MAPPER.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+        });
 
         // THEN
         assertNotNull(actual);
@@ -62,13 +97,21 @@ class EateryManagerControllerIntegrationTest {
     }
 
     @Test
-    void get() {
+    void get() throws Exception {
         // GIVEN
         EateryManager savedManager = eateryManagerController.create(managerRequest);
         Long savedManagerId = savedManager.getId();
 
         // WHEN
-        EateryManager actual = eateryManagerController.get(savedManagerId);
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/managers/{id}", savedManagerId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        EateryManager actual = MAPPER.readValue(result.getResponse().getContentAsString(), EateryManager.class);
 
         // THEN
         assertEquals(savedManagerId, actual.getId());
@@ -79,7 +122,7 @@ class EateryManagerControllerIntegrationTest {
     }
 
     @Test
-    void replace() {
+    void replace() throws Exception {
         // GIVEN
         EateryManager savedManager = eateryManagerController.create(managerRequest);
         Long savedManagerId = savedManager.getId();
@@ -91,7 +134,19 @@ class EateryManagerControllerIntegrationTest {
         );
 
         // WHEN
-        EateryManager actual = eateryManagerController.replace(updateManagerRequest, savedManagerId);
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .put("/managers/{id}", savedManagerId)
+                                .content(
+                                        MAPPER.writeValueAsString(updateManagerRequest)
+                                )
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        EateryManager actual = MAPPER.readValue(result.getResponse().getContentAsString(), EateryManager.class);
 
         // THEN
         assertEquals(updateManagerRequest.getFirstName(), actual.getFirstName());
@@ -101,13 +156,19 @@ class EateryManagerControllerIntegrationTest {
     }
 
     @Test
-    void delete() {
+    void delete() throws Exception {
         // GIVEN
         EateryManager savedManager = eateryManagerController.create(managerRequest);
         Long savedManagerId = savedManager.getId();
 
         // WHEN
-        eateryManagerController.delete(savedManagerId);
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .delete("/managers/{id}", savedManagerId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
 
         // THEN
         assertThrows(EateryManagerNotFoundException.class, () -> eateryManagerController.get(savedManagerId));
