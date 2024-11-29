@@ -18,7 +18,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("local")
 class EateryControllerIntegrationTest {
     @Autowired
     EateryController eateryController;

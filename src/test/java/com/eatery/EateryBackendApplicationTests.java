@@ -18,7 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("local")
 class EateryBackendApplicationTests {
 	@Autowired
 	private EateryController eateryController;
