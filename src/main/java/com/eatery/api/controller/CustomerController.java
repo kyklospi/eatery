@@ -11,12 +11,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller for handling customer-related operations, including
+ * fetching all customers, creating a new customer, updating a customer,
+ * retrieving a customer by ID, and deleting a customer.
+ */
 @RestController
 @RequestMapping(path = "/customers")
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    /**
+     * Fetches all customers from the database.
+     * @return A list of all customers.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Customers not found"),
             @ApiResponse(responseCode = "500", description = "Customers could not be fetched")
@@ -26,6 +35,11 @@ public class CustomerController {
         return customerService.getAll();
     }
 
+    /**
+     * Creates a new customer based on the provided details.
+     * @param newCustomer The customer data to create a new customer.
+     * @return The created customer.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "500", description = "Customer could not be created")
     })
@@ -34,6 +48,11 @@ public class CustomerController {
         return customerService.create(newCustomer);
     }
 
+    /**
+     * Fetches a customer by their ID.
+     * @param id The ID of the customer to retrieve.
+     * @return The customer with the specified ID.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Customer not found"),
             @ApiResponse(responseCode = "500", description = "Customer could not be fetched")
@@ -43,6 +62,12 @@ public class CustomerController {
         return customerService.findById(id);
     }
 
+    /**
+     * Updates an existing customer with the provided new customer details.
+     * @param newCustomer The new details for the customer.
+     * @param id The ID of the customer to update.
+     * @return The updated customer.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Customer not found"),
             @ApiResponse(responseCode = "500", description = "Customer could not be updated")
@@ -52,6 +77,10 @@ public class CustomerController {
         return customerService.findById(id);
     }
 
+    /**
+     * Deletes the customer with the specified ID.
+     * @param id The ID of the customer to delete.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "500", description = "Customer could not be deleted")
     })

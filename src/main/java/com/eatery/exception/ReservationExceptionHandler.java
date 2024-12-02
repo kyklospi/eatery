@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Exception handler for reservation-related exceptions.
+ * This class is responsible for handling different exceptions related to reservations
+ * and returning appropriate HTTP responses.
+ */
 @RestControllerAdvice
 public class ReservationExceptionHandler {
     @ExceptionHandler(ReservationNotFoundException.class)

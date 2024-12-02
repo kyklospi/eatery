@@ -17,6 +17,10 @@ public class EateryManagerController {
     @Autowired
     private EateryManagerService eateryManagerService;
 
+    /**
+     * Fetches all eatery managers from the database.
+     * @return A list of all eatery managers.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Eatery managers not found"),
             @ApiResponse(responseCode = "500", description = "Eatery managers could not be fetched")
@@ -26,6 +30,11 @@ public class EateryManagerController {
         return eateryManagerService.getAll();
     }
 
+    /**
+     * Creates a new eatery manager.
+     * @param newManager The data for the new eatery manager to be created.
+     * @return The created eatery manager.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "500", description = "Eatery manager could not be created")
     })
@@ -34,6 +43,11 @@ public class EateryManagerController {
         return eateryManagerService.create(newManager);
     }
 
+    /**
+     * Fetches an eatery manager by their ID.
+     * @param id The ID of the eatery manager to retrieve.
+     * @return The eatery manager with the specified ID.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Eatery manager not found"),
             @ApiResponse(responseCode = "500", description = "Eatery manager could not be fetched")
@@ -43,6 +57,12 @@ public class EateryManagerController {
         return eateryManagerService.get(id);
     }
 
+    /**
+     * Updates an existing eatery manager with the provided new details.
+     * @param newManager The new details for the eatery manager.
+     * @param id The ID of the eatery manager to update.
+     * @return The updated eatery manager.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "404", description = "Eatery manager not found"),
             @ApiResponse(responseCode = "500", description = "Eatery manager could not be updated")
@@ -52,6 +72,10 @@ public class EateryManagerController {
         return eateryManagerService.replace(newManager, id);
     }
 
+    /**
+     * Deletes the eatery manager with the specified ID.
+     * @param id The ID of the eatery manager to delete.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "500", description = "Eatery manager could not be deleted")
     })

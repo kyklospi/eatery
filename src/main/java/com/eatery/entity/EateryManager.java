@@ -8,21 +8,39 @@ import lombok.Setter;
 import java.util.Objects;
 
 /**
- * Composite pattern child class
+ * Represents the manager of an eatery.
+ * This class is a child of the `AppUser` class and is part of the composite pattern.
+ * The `EateryManager` manages an `Eatery` and has the same attributes as a regular user, such as first name, last name, email, and phone number.
  */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class EateryManager extends AppUser {
+    /**
+     * The eatery managed by this manager.
+     * A one-to-one relationship with the `Eatery` entity.
+     */
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "eatery_id", referencedColumnName = "id")
     private Eatery eatery;
-
+    /**
+     * Constructor to create an `EateryManager` with the given user details.
+     * @param firstName  The first name of the manager.
+     * @param lastName   The last name of the manager.
+     * @param email      The email address of the manager.
+     * @param phoneNumber The phone number of the manager.
+     */
     public EateryManager(String firstName, String lastName, String email, String phoneNumber) {
         super(firstName, lastName, email, phoneNumber);
     }
 
+    /**
+     * Compares this `EateryManager` with another object for equality.
+     * Two `EateryManager` objects are considered equal if their attributes (including `eatery`) are equal.
+     * @param o The object to compare this instance with.
+     * @return `true` if both objects are equal, `false` otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -31,11 +49,21 @@ public class EateryManager extends AppUser {
         return Objects.equals(eatery, that.eatery);
     }
 
+    /**
+     * Generates a hash code for this `EateryManager` based on its attributes.
+     * The hash code is computed using the attributes of the `AppUser` superclass and the `eatery` field.
+     * @return The hash code of this `EateryManager`.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), eatery);
     }
 
+    /**
+     * Returns a string representation of this `EateryManager`.
+     * The string contains details about the manager and the managed eatery.
+     * @return A string representation of this `EateryManager`.
+     */
     @Override
     public String toString() {
         return "EateryManager{" +

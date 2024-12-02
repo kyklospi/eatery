@@ -7,6 +7,10 @@ import lombok.NonNull;
 
 import java.time.LocalDateTime;
 
+/**
+ * Data Transfer Object (DTO) used for creating a new reservation.
+ * This class captures the data necessary for making a reservation request.
+ */
 @Data
 public class CreateReservationRequest {
     private long customerId;
