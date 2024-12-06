@@ -18,9 +18,7 @@ public class EateryManager extends AppUser {
     @Column(unique = true, nullable = false)
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "eatery_id", referencedColumnName = "id")
-    private Eatery eatery;
+    private long eateryId;
 
     public EateryManager(String firstName, String lastName, String email, String phoneNumber) {
         super(firstName, lastName, email, phoneNumber);
@@ -30,13 +28,12 @@ public class EateryManager extends AppUser {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof EateryManager that)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(eatery, that.eatery);
+        return eateryId == that.eateryId && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), eatery);
+        return Objects.hash(id, eateryId);
     }
 
     @Override
@@ -47,7 +44,7 @@ public class EateryManager extends AppUser {
                 ", lastName='" + this.getLastName() + '\'' +
                 ", email='" + this.getEmail() + '\'' +
                 ", phoneNumber='" + this.getPhoneNumber() + '\'' +
-                "eatery=" + eatery +
+                "eateryId=" + eateryId +
                 '}';
     }
 }

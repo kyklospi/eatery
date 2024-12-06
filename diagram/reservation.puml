@@ -1,11 +1,11 @@
 @startuml
 class Reservation {
 - Long id
-- Customer customer
-- Eatery eatery
+- Long customerId
+- Long eateryId
 - LocalDateTime reservationDateTime
 - int guestNumber
-- Status status
+- ReservationStatus status
 + boolean equals(Object)
 + int hashCode()
 + String toString()

@@ -1,7 +1,7 @@
 @startuml
 class Eatery {
 - Long id
-- Type type
+- EateryType type
 - String name
 - String address
 - String email
@@ -9,7 +9,7 @@ class Eatery {
 - int guestCapacity
 - List<Reservation> reservationList
 - Set<BusinessDayTime> businessDayTimes
-- EateryManager eateryManager
+- Long managerId
 + boolean isOpen()
 + boolean isFullyBooked(LocalDateTime,int)
 + boolean equals(Object)

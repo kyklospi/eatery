@@ -10,7 +10,6 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -37,14 +36,13 @@ public class Eatery implements Reservable {
     private String phoneNumber;
     private int guestCapacity;
 
-    @OneToMany(mappedBy = "eatery")
+    @OneToMany(mappedBy = "eateryId")
     private List<Reservation> reservationList;
 
     @JdbcTypeCode(SqlTypes.JSON)
     private Set<BusinessDayTime> businessDayTimes = Set.of();
 
-    @OneToOne(mappedBy = "eatery")
-    private EateryManager eateryManager;
+    private long managerId;
 
     public Eatery(Type type, String name, String address, Set<BusinessDayTime> businessDayTimes, int guestCapacity, String email, String phoneNumber) {
         this.type = type;
@@ -93,8 +91,10 @@ public class Eatery implements Reservable {
         return this.businessDayTimes.stream()
                 .anyMatch(it ->
                         it.openDay().equals(reservationTime.getDayOfWeek()) &&
-                                reservationTime.isAfter(ChronoLocalDateTime.from(it.openTime())) &&
-                                reservationTime.isBefore(ChronoLocalDateTime.from(it.closeTime()))
+                                reservationTime.getHour() >= it.openTime().getHour() &&
+                                reservationTime.getMinute() >= it.openTime().getMinute() &&
+                                reservationTime.getHour() <= it.closeTime().getHour() &&
+                                reservationTime.getMinute() <= it.closeTime().getMinute()
                 );
     }
 
@@ -137,12 +137,12 @@ public class Eatery implements Reservable {
         return guestCapacity == eatery.guestCapacity && Objects.equals(id, eatery.id) && type == eatery.type &&
                 Objects.equals(name, eatery.name) && Objects.equals(address, eatery.address) &&
                 Objects.equals(email, eatery.email) && Objects.equals(phoneNumber, eatery.phoneNumber) &&
-                Objects.equals(eateryManager, eatery.eateryManager);
+                Objects.equals(managerId, eatery.managerId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, name, address, email, phoneNumber, guestCapacity, eateryManager);
+        return Objects.hash(id, type, name, address, email, phoneNumber, guestCapacity, managerId);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class Eatery implements Reservable {
                 ", guestCapacity=" + guestCapacity +
                 ", reservationList=" + reservationList +
                 ", businessDayTimes=" + businessDayTimes +
-                ", eateryManager=" + eateryManager +
+                ", eateryManagerId=" + managerId +
                 '}';
     }
 

@@ -56,8 +56,8 @@ public class ReservationService {
         checkAvailability(reservationEatery, reservationTime, guestNumber);
 
         Reservation newReservation = new Reservation(
-                customer,
-                reservationEatery,
+                customer.getId(),
+                reservationEatery.getId(),
                 reservationTime,
                 guestNumber
         );
@@ -69,17 +69,23 @@ public class ReservationService {
     public Reservation replace(UpdateReservationRequest updateReservation, Long id) {
         LocalDateTime updatedTime = updateReservation.getDateTime();
         int updatedGuestNumber = updateReservation.getGuestNumber();
-        return reservationRepository.findById(id)
-                .map(reservation -> {
-                    checkAvailability(reservation.getEatery(), updatedTime, updatedGuestNumber);
 
-                    reservation.setReservationDateTime(updatedTime);
-                    reservation.setGuestNumber(updatedGuestNumber);
-                    reservation.setStatus(CONFIRMED);
-                    sendMessage(reservation.getCustomer().getPhoneNumber(), reservation);
-                    return reservationRepository.save(reservation);
-                })
-                .orElseThrow(ReservationNotFoundException::new);
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
+
+        Customer customer = customerRepository.findById(reservation.getCustomerId())
+                .orElseThrow(() -> new ReservationBadRequestException("customerId"));
+
+        Eatery reservedEatery = eateryRepository.findById(reservation.getEateryId())
+                .orElseThrow(() -> new ReservationBadRequestException("eateryId"));
+
+        checkAvailability(reservedEatery, updatedTime, updatedGuestNumber);
+
+        reservation.setReservationDateTime(updatedTime);
+        reservation.setGuestNumber(updatedGuestNumber);
+        reservation.setStatus(CONFIRMED);
+        sendMessage(customer.getPhoneNumber(), reservation);
+
+        return reservation;
     }
 
     public Reservation complete(Long id) {
@@ -99,11 +105,14 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(ReservationNotFoundException::new);
 
+        Customer customer = customerRepository.findById(reservation.getCustomerId())
+                .orElseThrow(() -> new ReservationBadRequestException("customerId"));
+
         if (reservation.getStatus().equals(CONFIRMED)) {
             reservation.setStatus(CANCELLED);
             reservationRepository.save(reservation);
         }
-        sendMessage(reservation.getCustomer().getPhoneNumber(), reservation);
+        sendMessage(customer.getPhoneNumber(), reservation);
         return reservation;
     }
 

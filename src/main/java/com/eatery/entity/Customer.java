@@ -19,7 +19,7 @@ public class Customer extends AppUser {
     @Column(unique = true, nullable = false)
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customerId")
     private List<Reservation> reservations;
 
     public Customer(String firstName, String lastName, String email, String phoneNumber) {
