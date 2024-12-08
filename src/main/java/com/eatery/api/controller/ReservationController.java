@@ -4,9 +4,11 @@ import com.eatery.api.dto.CreateReservationRequest;
 import com.eatery.api.dto.UpdateReservationRequest;
 import com.eatery.entity.Reservation;
 import com.eatery.api.service.ReservationService;
+import com.eatery.entity.ReservationHistory;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,7 @@ public class ReservationController {
      * @return A list of all reservations.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Reservations not found"),
             @ApiResponse(responseCode = "500", description = "Reservations could not be fetched")
     })
@@ -37,9 +40,11 @@ public class ReservationController {
      * @return The created reservation.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Successfully created"),
             @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
             @ApiResponse(responseCode = "500", description = "Reservation could not be created")
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     Reservation create(@RequestBody CreateReservationRequest newReservation) {
         return reservationService.create(newReservation);
@@ -51,6 +56,7 @@ public class ReservationController {
      * @return The reservation with the specified ID.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Reservation not found"),
             @ApiResponse(responseCode = "500", description = "Reservation could not be fetched")
     })
@@ -66,6 +72,7 @@ public class ReservationController {
      * @return The updated reservation.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully modified"),
             @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
             @ApiResponse(responseCode = "404", description = "Reservation not found"),
             @ApiResponse(responseCode = "500", description = "Reservation could not be updated")
@@ -81,6 +88,7 @@ public class ReservationController {
      * @return The updated reservation after it is marked as completed.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully modified"),
             @ApiResponse(responseCode = "404", description = "Reservation not found"),
             @ApiResponse(responseCode = "500", description = "Reservation could not be set to complete")
     })
@@ -95,10 +103,11 @@ public class ReservationController {
      * @return The reservation that was canceled.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully modified"),
             @ApiResponse(responseCode = "404", description = "Reservation not found"),
             @ApiResponse(responseCode = "500", description = "Reservation could not be canceled")
     })
-    @DeleteMapping(path = "/{id}/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/{id}/cancel", produces = MediaType.APPLICATION_JSON_VALUE)
     Reservation cancel(@PathVariable Long id) {
         return reservationService.cancel(id);
     }
@@ -108,11 +117,22 @@ public class ReservationController {
      * @param id The ID of the reservation to delete.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Reservation not found"),
             @ApiResponse(responseCode = "500", description = "Reservation could not be deleted")
     })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
         reservationService.delete(id);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully returned"),
+            @ApiResponse(responseCode = "500", description = "Reservation history could not be fetched")
+    })
+    @GetMapping(path = "{id}/history", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<ReservationHistory> getHistory(@PathVariable Long id) {
+       return reservationService.history(id);
     }
 }

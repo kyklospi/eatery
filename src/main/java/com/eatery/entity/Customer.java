@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * Entity representing a Customer in the system.
  * A `Customer` is a specialized type of `AppUser` that includes relationships to
- * their favorite eateries and reservations. This class is part of a composite pattern.
+ * their reservations. This class is part of a composite pattern.
  */
 @Entity
 @Getter
@@ -26,7 +26,7 @@ public class Customer extends AppUser {
      * This is a one-to-many relationship where the `Reservation` entity contains a `customer` field
      * mapped to this class.
      */
-    @OneToMany(mappedBy = "customerId")
+    @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
     /**
