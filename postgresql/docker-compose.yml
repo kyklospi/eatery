@@ -1,0 +1,43 @@
+# 1 service = 1 docker container.
+# service can be a service, a server, a client, a database, etc.
+services:
+
+  postgres:
+    # Official Postgres latest image from DockerHub
+    image: 'postgres:latest'
+    restart: always
+
+    # Postgres database is running by default on the 5432 port.
+    # To access the database from host machine (outside the container),
+    # share the database port with host machine's port.
+    # [port on host machine]:[port to retrieve in the container]
+    ports:
+      - "5432:5432"
+
+    env_file:
+      - .env # The name of your environment file
+
+    # The `volumes` tag allows to share a folder with the container
+    # [folder path on host machine]:[folder path to retrieve in the container]
+    volumes:
+      # Share the folder `postgres-data` in repository, with the default PostgreSQL data path
+      # Every time the repository is modifying the data inside `/var/lib/postgresql/data`,
+      # `postgres-data` folder is automatically created with the change appear in the folder
+      - postgres-data:/var/lib/postgresql/data
+
+  # Access postgreSQL database via a browser and quickly inspect or manage data from there.
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    # Map port between host machine 15432 and container 80.
+    ports:
+      - "15433:80"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  postgres-data:
+  pgadmin-data:

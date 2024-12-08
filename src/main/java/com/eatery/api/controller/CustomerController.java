@@ -41,10 +41,11 @@ public class CustomerController {
      * @return The created customer.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
             @ApiResponse(responseCode = "500", description = "Customer could not be created")
     })
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Customer create(@RequestBody Customer newCustomer) {
+    Customer create(@RequestBody UpdateUserRequest newCustomer) {
         return customerService.create(newCustomer);
     }
 
@@ -59,7 +60,7 @@ public class CustomerController {
     })
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     Customer get(@PathVariable Long id) {
-        return customerService.findById(id);
+        return customerService.get(id);
     }
 
     /**
@@ -69,12 +70,13 @@ public class CustomerController {
      * @return The updated customer.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
             @ApiResponse(responseCode = "404", description = "Customer not found"),
             @ApiResponse(responseCode = "500", description = "Customer could not be updated")
     })
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     Customer replace(@RequestBody UpdateUserRequest newCustomer, @PathVariable Long id) {
-        return customerService.findById(id);
+        return customerService.replace(newCustomer, id);
     }
 
     /**
@@ -82,11 +84,11 @@ public class CustomerController {
      * @param id The ID of the customer to delete.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "404", description = "Customer not found"),
             @ApiResponse(responseCode = "500", description = "Customer could not be deleted")
     })
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
-        customerService.deleteById(id);
+        customerService.delete(id);
     }
-
 }

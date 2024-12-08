@@ -1,5 +1,6 @@
 package com.eatery.api.service;
 
+import com.eatery.api.dto.UpdateUserRequest;
 import com.eatery.exception.CustomerBadRequestException;
 import com.eatery.exception.CustomerNotFoundException;
 import com.eatery.entity.Customer;
@@ -15,7 +16,6 @@ import java.util.List;
  */
 @Service
 public class CustomerService {
-
     @Autowired
     CustomerRepository customerRepository;
 
@@ -29,13 +29,19 @@ public class CustomerService {
 
     /**
      * Creates a new customer after validating the provided data.
-     * @param newUser The customer object to be created.
+     * @param newCustomerRequest The customer object to be created.
      * @return The created customer object.
      * @throws CustomerBadRequestException if the provided customer data is invalid.
      */
-    public Customer create(Customer newUser) {
-        validateCustomer(newUser);
-        return customerRepository.save(newUser);
+    public Customer create(UpdateUserRequest newCustomerRequest) {
+        validateCustomer(newCustomerRequest);
+        Customer customer = new Customer(
+                newCustomerRequest.getFirstName(),
+                newCustomerRequest.getLastName(),
+                newCustomerRequest.getEmail(),
+                newCustomerRequest.getPhoneNumber()
+        );
+        return customerRepository.save(customer);
     }
 
     /**
@@ -43,10 +49,10 @@ public class CustomerService {
      * @param id The ID of the customer to be deleted.
      * @throws CustomerNotFoundException if the customer with the specified ID does not exist.
      */
-    public void deleteById(Long id) {
-        Customer user = customerRepository.findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException(id));
-        customerRepository.delete(user);
+    public void delete(Long id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(CustomerNotFoundException::new);
+        customerRepository.delete(customer);
     }
 
     /**
@@ -55,32 +61,44 @@ public class CustomerService {
      * @return The customer object with the specified ID.
      * @throws CustomerNotFoundException if the customer with the specified ID does not exist.
      */
-    public Customer findById(Long id) {
+    public Customer get(Long id) {
         return customerRepository.findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException(id));
+                .orElseThrow(CustomerNotFoundException::new);
     }
 
     /**
      * Validates the customer data to ensure required fields are not null or empty.
-     * @param customer The customer object to be validated.
+     * @param newCustomer The customer object to be validated.
      * @throws CustomerBadRequestException if any required field is missing or empty.
      */
-    private void validateCustomer(Customer customer) {
-        if (customer.getEmail() == null || customer.getEmail().isEmpty()) {
-            throw new CustomerBadRequestException("Email cannot be null or empty.");
-        }
-        if (customer.getFirstName() == null || customer.getFirstName().isEmpty()) {
-            throw new CustomerBadRequestException("First Name cannot be null or empty.");
-        }
-        if (customer.getLastName() == null || customer.getLastName().isEmpty()) {
-            throw new CustomerBadRequestException("Last Name cannot be null or empty.");
-        }
-        if (customer.getPhoneNumber() == null || customer.getPhoneNumber().isEmpty()) {
-            throw new CustomerBadRequestException("Phone Number cannot be null or empty.");
-        }
-
+    public Customer replace(UpdateUserRequest newCustomer, Long id) {
+        validateCustomer(newCustomer);
+        return customerRepository.findById(id)
+                .map(customer -> {
+                    customer.setFirstName(newCustomer.getFirstName());
+                    customer.setLastName(newCustomer.getLastName());
+                    customer.setEmail(newCustomer.getEmail());
+                    customer.setPhoneNumber(newCustomer.getPhoneNumber());
+                    return customerRepository.save(customer);
+                })
+                .orElseThrow(CustomerNotFoundException::new);
     }
 
-
-
+    private void validateCustomer(UpdateUserRequest customer) {
+        if (customer == null) {
+            throw new CustomerBadRequestException("Customer request must not be null.");
+        }
+        if (customer.getEmail() == null || customer.getEmail().isBlank()) {
+            throw new CustomerBadRequestException("Email must not be null or empty.");
+        }
+        if (customer.getFirstName() == null || customer.getFirstName().isBlank()) {
+            throw new CustomerBadRequestException("First Name must not be null or empty.");
+        }
+        if (customer.getLastName() == null || customer.getLastName().isBlank()) {
+            throw new CustomerBadRequestException("Last Name must not be null or empty.");
+        }
+        if (customer.getPhoneNumber() == null || customer.getPhoneNumber().isBlank()) {
+            throw new CustomerBadRequestException("Phone Number must not be null or empty.");
+        }
+    }
 }

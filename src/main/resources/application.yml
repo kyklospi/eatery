@@ -1,0 +1,30 @@
+server:
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: eatery
+  jpa:
+    database: postgresql
+    generate-ddl: true
+    # create: Hibernate first drops existing tables and then creates new tables.
+    # update: The object model created based on the mappings (annotations or XML) is compared with the existing schema,
+    # then Hibernate updates the schema according to the diff.
+    # It never deletes the existing tables or columns even if they are no longer required by the application.
+    hibernate:
+      ddl-auto: update # create
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: "jdbc:postgresql://localhost:5432/postgres"
+    username: "username"
+    password: "password"
+
+# TODO: update account credentials via Twilio website
+twilio:
+  account:
+    id: twilioAccountId
+  auth:
+    token: twilioAuthToken
+  phone:
+    number: twilioPhoneNumber

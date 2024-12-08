@@ -5,7 +5,7 @@ package com.eatery.exception;
  * This exception is thrown when a customer with a specific ID is not found in the system.
  */
 public class CustomerNotFoundException extends RuntimeException {
-    public CustomerNotFoundException(Long id) {
-        super("Could not find customer " + id);
+    public CustomerNotFoundException() {
+        super("Could not find customer");
     }
 }

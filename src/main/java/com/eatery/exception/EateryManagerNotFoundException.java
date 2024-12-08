@@ -5,7 +5,7 @@ package com.eatery.exception;
  * This exception is thrown when an EateryManager is not found in the database.
  */
 public class EateryManagerNotFoundException extends RuntimeException {
-    public EateryManagerNotFoundException(Long id) {
-        super("Could not find eatery manager " + id);
+    public EateryManagerNotFoundException() {
+        super("Could not find eatery manager ");
     }
 }

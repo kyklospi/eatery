@@ -1,10 +1,12 @@
 package com.eatery.api.controller;
 
+import com.eatery.api.dto.UpdateEateryRequest;
 import com.eatery.entity.Eatery;
 import com.eatery.api.service.EateryService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class EateryController {
      * @return A list of all eateries.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Eateries not found"),
             @ApiResponse(responseCode = "500", description = "Eateries could not be fetched")
     })
@@ -40,12 +43,13 @@ public class EateryController {
      * @return A list of eateries that match the search criteria.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Eateries not found"),
             @ApiResponse(responseCode = "500", description = "Eateries could not be fetched")
     })
     @GetMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     List<Eatery> search(
-            @RequestParam(required=false) String name,
+            @RequestParam(required = false) String name,
             @RequestParam(required = false) String address,
             @RequestParam(required = false) String type
     ) {
@@ -58,11 +62,14 @@ public class EateryController {
      * @return The created eatery.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
             @ApiResponse(responseCode = "500", description = "Eatery could not be created")
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Eatery create(@RequestBody Eatery newEatery) {
-        return eateryService.save(newEatery);
+    Eatery create(@RequestBody UpdateEateryRequest newEatery) {
+        return eateryService.create(newEatery);
     }
 
     /**
@@ -71,6 +78,7 @@ public class EateryController {
      * @return The eatery with the specified ID.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Eatery not found"),
             @ApiResponse(responseCode = "500", description = "Eatery could not be fetched")
     })
@@ -86,10 +94,13 @@ public class EateryController {
      * @return The updated eatery.
      */
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully modified"),
+            @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
+            @ApiResponse(responseCode = "404", description = "Eatery not found"),
             @ApiResponse(responseCode = "500", description = "Eatery could not be updated")
     })
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Eatery replace(@RequestBody Eatery newEatery, @PathVariable Long id) {
+    Eatery replace(@RequestBody UpdateEateryRequest newEatery, @PathVariable Long id) {
         return eateryService.replace(newEatery, id);
     }
 
@@ -97,9 +108,14 @@ public class EateryController {
      * Deletes the eatery with the specified ID.
      * @param id The ID of the eatery to delete.
      */
-    @ApiResponses(value = {@ApiResponse(responseCode = "500", description = "Eatery could not be updated"), @ApiResponse(responseCode = "500", description = "Eatery could not be deleted")})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "Eatery not found"),
+            @ApiResponse(responseCode = "500", description = "Eatery could not be updated"), @ApiResponse(responseCode = "500", description = "Eatery could not be deleted")
+    })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
-        eateryService.deleteById(id);
+        eateryService.delete(id);
     }
 }

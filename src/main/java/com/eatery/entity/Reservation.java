@@ -1,5 +1,10 @@
 package com.eatery.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,29 +26,27 @@ public class Reservation {
      * Unique identifier for the reservation.
      */
     private @Id @GeneratedValue Long id;
-
     /**
      * The customer who made the reservation.
      * Many reservations can belong to the same customer.
      */
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
-    private Customer customer;
+    private long customerId;
 
     /**
      * The eatery where the reservation was made.
      * Many reservations can belong to the same eatery.
      */
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "eatery_id", referencedColumnName = "id")
-    private Eatery eatery;
+    private long eateryId;
 
     /**
      * The date and time when the reservation was made.
      * This field is not stored in the database, marked with `@Transient`.
      */
-    @Transient
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime reservationDateTime;
+
     private int guestNumber;
     private Status status;
 
@@ -55,16 +58,16 @@ public class Reservation {
 
     /**
      * Constructor to create a new reservation with the given details.
-     * @param customer The customer who made the reservation.
-     * @param eatery   The eatery where the reservation was made.
+     * @param customerId The customer who made the reservation.
+     * @param eateryId   The eatery where the reservation was made.
      * @param reservationDateTime The date and time when the reservation was made.
      * @param guestNumber The number of guests for the reservation.
      */
-    public Reservation(Customer customer, Eatery eatery, LocalDateTime reservationDateTime, int guestNumber) {
-        this.customer = customer;
-        this.eatery = eatery;
-        this.reservationDateTime = reservationDateTime;
+    public Reservation(long customerId, long eateryId, LocalDateTime reservationDateTime, int guestNumber) {
         this.guestNumber = guestNumber;
+        this.reservationDateTime = reservationDateTime;
+        this.eateryId = eateryId;
+        this.customerId = customerId;
     }
 
     /**
@@ -77,8 +80,8 @@ public class Reservation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Reservation that)) return false;
-        return guestNumber == that.guestNumber && Objects.equals(id, that.id) && Objects.equals(customer, that.customer) &&
-                Objects.equals(eatery, that.eatery) && Objects.equals(reservationDateTime, that.reservationDateTime) &&
+        return customerId == that.customerId && eateryId == that.eateryId && guestNumber == that.guestNumber &&
+                Objects.equals(id, that.id) && Objects.equals(reservationDateTime, that.reservationDateTime) &&
                 status == that.status;
     }
 
@@ -89,7 +92,7 @@ public class Reservation {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, customer, eatery, reservationDateTime, guestNumber, status);
+        return Objects.hash(id, customerId, eateryId, reservationDateTime, guestNumber, status);
     }
 
     /**
@@ -101,8 +104,8 @@ public class Reservation {
     public String toString() {
         return "Reservation{" +
                 "id=" + id +
-                ", customer=" + customer +
-                ", eatery=" + eatery +
+                ", customerId=" + customerId +
+                ", eateryId=" + eateryId +
                 ", reservationDateTime=" + reservationDateTime +
                 ", guestNumber=" + guestNumber +
                 ", status=" + status +

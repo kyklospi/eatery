@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Entity representing a Customer in the system.
@@ -17,25 +18,15 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Customer extends AppUser {
-    /**
-     * List of eateries marked as favorites by the customer.
-     * This is a many-to-many relationship, represented by a join table `Customer_Eateries`.
-     * Cascade operations include DETACH, MERGE, PERSIST, and REFRESH to manage entity state transitions.
-     */
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(
-            name = "Customer_Eateries",
-            joinColumns = { @JoinColumn(name = "customer_id") },
-            inverseJoinColumns = { @JoinColumn(name = "eatery_id") }
-    )
-    private List<Eatery> favouriteEateries;
+    @Column(unique = true, nullable = false)
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
     /**
      * List of reservations associated with the customer.
      * This is a one-to-many relationship where the `Reservation` entity contains a `customer` field
      * mapped to this class.
      */
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customerId")
     private List<Reservation> reservations;
 
     /**
@@ -63,5 +54,18 @@ public class Customer extends AppUser {
                 ", phoneNumber='" + this.getPhoneNumber() + '\'' +
                 ", reservations=" + reservations +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Customer customer)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(reservations, customer.reservations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), reservations);
     }
 }

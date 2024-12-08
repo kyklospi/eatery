@@ -51,7 +51,7 @@ public class ReservationService {
      */
     public Reservation get(Long id) {
         return reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+                .orElseThrow(ReservationNotFoundException::new);
     }
 
     /**
@@ -73,8 +73,8 @@ public class ReservationService {
         checkAvailability(reservationEatery, reservationTime, guestNumber);
 
         Reservation newReservation = new Reservation(
-                customer,
-                reservationEatery,
+                customer.getId(),
+                reservationEatery.getId(),
                 reservationTime,
                 guestNumber
         );
@@ -94,17 +94,23 @@ public class ReservationService {
     public Reservation replace(UpdateReservationRequest updateReservation, Long id) {
         LocalDateTime updatedTime = updateReservation.getDateTime();
         int updatedGuestNumber = updateReservation.getGuestNumber();
-        return reservationRepository.findById(id)
-                .map(reservation -> {
-                    checkAvailability(reservation.getEatery(), updatedTime, updatedGuestNumber);
 
-                    reservation.setReservationDateTime(updatedTime);
-                    reservation.setGuestNumber(updatedGuestNumber);
-                    reservation.setStatus(CONFIRMED);
-                    sendMessage(reservation.getCustomer().getPhoneNumber(), reservation);
-                    return reservationRepository.save(reservation);
-                })
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
+
+        Customer customer = customerRepository.findById(reservation.getCustomerId())
+                .orElseThrow(() -> new ReservationBadRequestException("customerId"));
+
+        Eatery reservedEatery = eateryRepository.findById(reservation.getEateryId())
+                .orElseThrow(() -> new ReservationBadRequestException("eateryId"));
+
+        checkAvailability(reservedEatery, updatedTime, updatedGuestNumber);
+
+        reservation.setReservationDateTime(updatedTime);
+        reservation.setGuestNumber(updatedGuestNumber);
+        reservation.setStatus(CONFIRMED);
+        sendMessage(customer.getPhoneNumber(), reservation);
+
+        return reservation;
     }
 
     /**
@@ -115,7 +121,7 @@ public class ReservationService {
      */
     public Reservation complete(Long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+                .orElseThrow(ReservationNotFoundException::new);
 
         if (reservation.getReservationDateTime().isBefore(LocalDateTime.now()) &&
                 reservation.getStatus().equals(CONFIRMED)) {
@@ -135,13 +141,16 @@ public class ReservationService {
      */
     public Reservation cancel(Long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+                .orElseThrow(ReservationNotFoundException::new);
+
+        Customer customer = customerRepository.findById(reservation.getCustomerId())
+                .orElseThrow(() -> new ReservationBadRequestException("customerId"));
 
         if (reservation.getStatus().equals(CONFIRMED)) {
             reservation.setStatus(CANCELLED);
             reservationRepository.save(reservation);
         }
-        sendMessage(reservation.getCustomer().getPhoneNumber(), reservation);
+        sendMessage(customer.getPhoneNumber(), reservation);
         return reservation;
     }
 
@@ -152,7 +161,7 @@ public class ReservationService {
      */
     public void delete(Long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException(id));
+                .orElseThrow(ReservationNotFoundException::new);
 
         if (reservation.getStatus().equals(Reservation.Status.COMPLETED) ||
                 reservation.getStatus().equals(CANCELLED)) {

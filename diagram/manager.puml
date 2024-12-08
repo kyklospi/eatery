@@ -5,7 +5,7 @@ class EateryManager {
 - String lastName
 - String email
 - String phoneNumber
-- Eatery eatery
+- Long eateryId
 + boolean equals(Object)
 + int hashCode()
 + String toString()

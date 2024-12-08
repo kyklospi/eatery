@@ -1,5 +1,6 @@
 package com.eatery.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,6 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -18,28 +18,31 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Eatery implements Reservable {
-    private @Id @GeneratedValue Long id;
+    @Column(unique = true, nullable = false)
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+
+    @Enumerated(EnumType.STRING)
     private Type type;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String address;
+
     private String email;
     private String phoneNumber;
     private int guestCapacity;
 
-    @ManyToMany(mappedBy = "favouriteEateries")
-    private Set<Customer> favouriteCustomers;
-
-    @OneToMany(mappedBy = "eatery")
+    @OneToMany(mappedBy = "eateryId")
     private List<Reservation> reservationList;
 
     @JdbcTypeCode(SqlTypes.JSON)
     private Set<BusinessDayTime> businessDayTimes = Set.of();
 
-    @OneToOne(mappedBy = "eatery")
-    private EateryManager eateryManager;
+    private long managerId;
 
     public Eatery(Type type, String name, String address, Set<BusinessDayTime> businessDayTimes, int guestCapacity, String email, String phoneNumber) {
         this.type = type;
@@ -88,8 +91,10 @@ public class Eatery implements Reservable {
         return this.businessDayTimes.stream()
                 .anyMatch(it ->
                         it.openDay().equals(reservationTime.getDayOfWeek()) &&
-                                reservationTime.isAfter(ChronoLocalDateTime.from(it.openTime())) &&
-                                reservationTime.isBefore(ChronoLocalDateTime.from(it.closeTime()))
+                                reservationTime.getHour() >= it.openTime().getHour() &&
+                                reservationTime.getMinute() >= it.openTime().getMinute() &&
+                                reservationTime.getHour() <= it.closeTime().getHour() &&
+                                reservationTime.getMinute() <= it.closeTime().getMinute()
                 );
     }
 
@@ -132,12 +137,12 @@ public class Eatery implements Reservable {
         return guestCapacity == eatery.guestCapacity && Objects.equals(id, eatery.id) && type == eatery.type &&
                 Objects.equals(name, eatery.name) && Objects.equals(address, eatery.address) &&
                 Objects.equals(email, eatery.email) && Objects.equals(phoneNumber, eatery.phoneNumber) &&
-                Objects.equals(eateryManager, eatery.eateryManager);
+                Objects.equals(managerId, eatery.managerId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, name, address, email, phoneNumber, guestCapacity, eateryManager);
+        return Objects.hash(id, type, name, address, email, phoneNumber, guestCapacity, managerId);
     }
 
     @Override
@@ -150,10 +155,9 @@ public class Eatery implements Reservable {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", guestCapacity=" + guestCapacity +
-                ", favouriteCustomers=" + favouriteCustomers +
                 ", reservationList=" + reservationList +
                 ", businessDayTimes=" + businessDayTimes +
-                ", eateryManager=" + eateryManager +
+                ", eateryManagerId=" + managerId +
                 '}';
     }
 

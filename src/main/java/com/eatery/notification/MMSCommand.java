@@ -14,11 +14,11 @@ public class MMSCommand {
     // Find your Account SID and Auth Token at twilio.com/console
     // and set the environment variables. See http://twil.io/secure
     @Value("${twilio.account.id}")
-    private static String ACCOUNT_SID;
+    private String ACCOUNT_SID;
     @Value("${twilio.auth.token}")
-    public static String AUTH_TOKEN;
+    private String AUTH_TOKEN;
     @Value("${twilio.phone.number}")
-    public static String TWILIO_NUMBER;
+    private String TWILIO_NUMBER;
 
     public boolean send(String customerPhoneNumber, String text, String mediaURL) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);

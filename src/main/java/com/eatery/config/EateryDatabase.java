@@ -109,6 +109,15 @@ public class EateryDatabase {
             ));
 
             // Preload an eatery manager entity into the database
+            logger.info("Preloading {}", customerRepository.save(
+                    new Customer(
+                            "Alexandra",
+                            "Ullrich",
+                            "ullrich-alexandra@test.de",
+                            "0153-1234-5678"
+                    )
+            ));
+
             logger.info("Preloading {}", eateryManagerRepository.save(
                     new EateryManager(
                             "Erika",

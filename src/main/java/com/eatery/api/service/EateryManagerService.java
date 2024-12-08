@@ -53,7 +53,7 @@ public class EateryManagerService {
      */
     public EateryManager get(Long id) {
         return eateryManagerRepository.findById(id)
-                .orElseThrow(() -> new EateryManagerNotFoundException(id));
+                .orElseThrow(EateryManagerNotFoundException::new);
     }
 
     /**
@@ -75,7 +75,7 @@ public class EateryManagerService {
                     validateEateryManager(eateryManager); // Validierung vor dem Speichern
                     return eateryManagerRepository.save(eateryManager);
                 })
-                .orElseThrow(() -> new EateryManagerNotFoundException(id));
+                .orElseThrow(EateryManagerNotFoundException::new);
     }
 
     /**
@@ -103,6 +103,8 @@ public class EateryManagerService {
      * @param id The ID of the EateryManager to delete.
      */
     public void delete(Long id) {
-        eateryManagerRepository.deleteById(id);
+        EateryManager eateryManager = eateryManagerRepository.findById(id)
+                        .orElseThrow(EateryManagerNotFoundException::new);
+        eateryManagerRepository.delete(eateryManager);
     }
 }
