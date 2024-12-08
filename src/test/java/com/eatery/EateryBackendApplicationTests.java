@@ -4,10 +4,10 @@ import com.eatery.api.controller.EateryManagerController;
 import com.eatery.api.controller.EateryController;
 import com.eatery.api.controller.ReservationController;
 import com.eatery.api.controller.CustomerController;
-import com.eatery.repository.EateryManagerRepository;
-import com.eatery.repository.CustomerRepository;
-import com.eatery.repository.EateryRepository;
-import com.eatery.repository.ReservationRepository;
+import com.eatery.api.service.CustomerService;
+import com.eatery.api.service.EateryService;
+import com.eatery.notification.NotificationHandler;
+import com.eatery.repository.*;
 import com.eatery.api.service.EateryManagerService;
 import com.eatery.api.service.ReservationService;
 import org.junit.jupiter.api.Test;
@@ -30,6 +30,10 @@ class EateryBackendApplicationTests {
 	private EateryManagerController eateryManagerController;
 
 	@Autowired
+	private EateryService eateryService;
+	@Autowired
+	private CustomerService customerService;
+	@Autowired
 	private EateryManagerService eateryManagerService;
 	@Autowired
 	private ReservationService reservationService;
@@ -42,6 +46,11 @@ class EateryBackendApplicationTests {
 	private ReservationRepository reservationRepository;
 	@Autowired
 	private EateryManagerRepository eateryManagerRepository;
+	@Autowired
+	private ReservationHistoryRepository historyRepository;
+
+	@Autowired
+	private NotificationHandler notificationHandler;
 
 	@Test
 	void contextLoads() {
@@ -50,6 +59,8 @@ class EateryBackendApplicationTests {
 		assertNotNull(reservationController);
 		assertNotNull(eateryManagerController);
 
+		assertNotNull(eateryService);
+		assertNotNull(customerService);
 		assertNotNull(eateryManagerService);
 		assertNotNull(reservationService);
 
@@ -57,6 +68,9 @@ class EateryBackendApplicationTests {
 		assertNotNull(customerRepository);
 		assertNotNull(reservationRepository);
 		assertNotNull(eateryManagerRepository);
+		assertNotNull(historyRepository);
+
+		assertNotNull(notificationHandler);
 	}
 
 }

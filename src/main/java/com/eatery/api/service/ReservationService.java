@@ -2,20 +2,20 @@ package com.eatery.api.service;
 
 import com.eatery.api.dto.CreateReservationRequest;
 import com.eatery.api.dto.UpdateReservationRequest;
-import com.eatery.entity.Reservable;
+import com.eatery.entity.*;
 import com.eatery.exception.ReservationBadRequestException;
 import com.eatery.exception.ReservationNotFoundException;
-import com.eatery.entity.Customer;
-import com.eatery.entity.Eatery;
-import com.eatery.entity.Reservation;
 import com.eatery.notification.NotificationHandler;
 import com.eatery.repository.CustomerRepository;
 import com.eatery.repository.EateryRepository;
+import com.eatery.repository.ReservationHistoryRepository;
 import com.eatery.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import static com.eatery.entity.Reservation.Status.CANCELLED;
@@ -32,6 +32,8 @@ public class ReservationService {
     private EateryRepository eateryRepository;
     @Autowired
     CustomerRepository customerRepository;
+    @Autowired
+    ReservationHistoryRepository historyRepository;
     @Autowired
     private NotificationHandler notificationHandler;
 
@@ -62,6 +64,7 @@ public class ReservationService {
                 guestNumber
         );
         newReservation.setStatus(CONFIRMED);
+        historyRepository.save(new ReservationHistory(newReservation, Date.from(Instant.now())));
         sendMessage(customer.getPhoneNumber(), newReservation);
         return reservationRepository.save(newReservation);
     }
@@ -83,22 +86,22 @@ public class ReservationService {
         reservation.setReservationDateTime(updatedTime);
         reservation.setGuestNumber(updatedGuestNumber);
         reservation.setStatus(CONFIRMED);
+        historyRepository.save(new ReservationHistory(reservation, Date.from(Instant.now())));
         sendMessage(customer.getPhoneNumber(), reservation);
-
-        return reservation;
+        return reservationRepository.save(reservation);
     }
 
     public Reservation complete(Long id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(ReservationNotFoundException::new);
 
-        if (reservation.getReservationDateTime().isBefore(LocalDateTime.now()) &&
-                reservation.getStatus().equals(CONFIRMED)) {
-
-            reservation.setStatus(Reservation.Status.COMPLETED);
-            return reservationRepository.save(reservation);
+        if (reservation.getReservationDateTime().isAfter(LocalDateTime.now()) && !reservation.getStatus().equals(CONFIRMED)) {
+            throw new ReservationBadRequestException("reservationDateTime or status");
         }
-        return reservation;
+
+        reservation.setStatus(Reservation.Status.COMPLETED);
+        historyRepository.save(new ReservationHistory(reservation, Date.from(Instant.now())));
+        return reservationRepository.save(reservation);
     }
 
     public Reservation cancel(Long id) {
@@ -108,12 +111,14 @@ public class ReservationService {
         Customer customer = customerRepository.findById(reservation.getCustomerId())
                 .orElseThrow(() -> new ReservationBadRequestException("customerId"));
 
-        if (reservation.getStatus().equals(CONFIRMED)) {
-            reservation.setStatus(CANCELLED);
-            reservationRepository.save(reservation);
+        if (!reservation.getStatus().equals(CONFIRMED)) {
+            throw new ReservationBadRequestException("status");
         }
+
+        reservation.setStatus(CANCELLED);
+        historyRepository.save(new ReservationHistory(reservation, Date.from(Instant.now())));
         sendMessage(customer.getPhoneNumber(), reservation);
-        return reservation;
+        return reservationRepository.save(reservation);
     }
 
     public void delete(Long id) {
@@ -123,8 +128,16 @@ public class ReservationService {
         if (reservation.getStatus().equals(Reservation.Status.COMPLETED) ||
                 reservation.getStatus().equals(CANCELLED)) {
 
+            historyRepository.save(new ReservationHistory(reservation, Date.from(Instant.now())));
             reservationRepository.deleteById(id);
         }
+    }
+
+    public List<ReservationHistory> history(Long id) {
+        return historyRepository.findAll().stream()
+                .filter(record -> record.getReservation().getId().equals(id))
+                .sorted()
+                .toList();
     }
 
     /**
@@ -153,17 +166,26 @@ public class ReservationService {
      */
     private void sendMessage(String customerPhoneNumber, Reservation customerReservation) {
         String prefixText = getTemplateMessage(customerReservation);
+
         switch (customerReservation.getStatus()) {
-            case CONFIRMED ->
-                    notificationHandler.sendSMS(
-                            customerPhoneNumber,
-                            prefixText + CONFIRMED
-                    );
-            case CANCELLED ->
-                    notificationHandler.sendSMS(
-                            customerPhoneNumber,
-                            prefixText + CANCELLED
-                    );
+            case CONFIRMED -> {
+                String message = prefixText + CONFIRMED;
+                notificationHandler.sendSMS(
+                        customerPhoneNumber,
+                        message
+                );
+                notificationHandler.save(customerReservation.getCustomerId(), customerReservation.getId(), message);
+            }
+
+            case CANCELLED -> {
+                String message = prefixText + CANCELLED;
+                notificationHandler.sendSMS(
+                        customerPhoneNumber,
+                        message
+                );
+                notificationHandler.save(customerReservation.getCustomerId(), customerReservation.getId(), message);
+            }
+
             case COMPLETED -> {}
         }
     }
