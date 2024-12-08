@@ -5,6 +5,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Global exception handler for EateryManager-related exceptions.
+ * This class handles exceptions related to EateryManager and sends the appropriate HTTP responses.
+ */
 @RestControllerAdvice
 public class EateryManagerExceptionHandler extends RuntimeException {
     @ExceptionHandler(EateryManagerNotFoundException.class)
