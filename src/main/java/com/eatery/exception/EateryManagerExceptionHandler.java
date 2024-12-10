@@ -17,6 +17,12 @@ public class EateryManagerExceptionHandler extends RuntimeException {
         return e.getMessage();
     }
 
+    @ExceptionHandler(EateryManagerBadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String handle(EateryManagerBadRequestException e) {
+        return e.getMessage();
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     String handle(RuntimeException e) {

@@ -84,16 +84,16 @@ public class EateryManagerService {
      * @throws EateryManagerBadRequestException if any required field is missing or empty.
      */
     private void validateEateryManager(EateryManager manager) {
-        if (manager.getEmail() == null || manager.getEmail().isEmpty()) {
+        if (manager.getEmail() == null || manager.getEmail().isBlank()) {
             throw new EateryManagerBadRequestException("Email cannot be null or empty.");
         }
-        if (manager.getFirstName() == null || manager.getFirstName().isEmpty()) {
+        if (manager.getFirstName() == null || manager.getFirstName().isBlank()) {
             throw new EateryManagerBadRequestException("First Name cannot be null or empty.");
         }
-        if (manager.getLastName() == null || manager.getLastName().isEmpty()) {
+        if (manager.getLastName() == null || manager.getLastName().isBlank()) {
             throw new EateryManagerBadRequestException("Last Name cannot be null or empty.");
         }
-        if (manager.getPhoneNumber() == null || manager.getPhoneNumber().isEmpty()) {
+        if (manager.getPhoneNumber() == null || manager.getPhoneNumber().isBlank()) {
             throw new EateryManagerBadRequestException("Phone Number cannot be null or empty.");
         }
     }

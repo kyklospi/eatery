@@ -3,24 +3,38 @@ package com.eatery.api.controller;
 import com.eatery.api.dto.UpdateUserRequest;
 import com.eatery.entity.Customer;
 import com.eatery.exception.CustomerNotFoundException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Integration tests for the CustomerController class.
  * This class tests the controller's functionality with real database interactions.
  */
 @SpringBootTest
+@ActiveProfiles("local")
+@AutoConfigureMockMvc
 class CustomerControllerIntegrationTest {
     @Autowired
-    CustomerController customerController;
+    private MockMvc mockMvc;
+    @Autowired
+    private CustomerController customerController;
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private UpdateUserRequest customerRequest;
 
     /**
@@ -30,28 +44,29 @@ class CustomerControllerIntegrationTest {
     @BeforeEach
     void setUp() {
         customerRequest = new UpdateUserRequest(
-                "John",
-                "Doe",
-                "john.doe@example.com",
-                "123456789"
+                "firstName",
+                "lastName",
+                "email",
+                "phoneNumber"
         );
     }
 
-    /**
-     * Test the creation of a new Customer.
-     * Verifies that the new Customer is correctly created with the expected values.
-     */
     @Test
-    void create() {
-        // WHEN
-        Customer actual = customerController.create(new Customer(
-                customerRequest.getFirstName(),
-                customerRequest.getLastName(),
-                customerRequest.getEmail(),
-                customerRequest.getPhoneNumber()
-        ));
+    void create() throws Exception {
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/customers")
+                                .content(
+                                        MAPPER.writeValueAsString(customerRequest)
+                                )
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isCreated())
+                .andReturn();
 
-        // THEN
+        Customer actual = MAPPER.readValue(result.getResponse().getContentAsString(), Customer.class);
+
         assertNotNull(actual.getId());
         assertEquals(customerRequest.getFirstName(), actual.getFirstName());
         assertEquals(customerRequest.getLastName(), actual.getLastName());
@@ -59,105 +74,94 @@ class CustomerControllerIntegrationTest {
         assertEquals(customerRequest.getPhoneNumber(), actual.getPhoneNumber());
     }
 
-    /**
-     * Test retrieving all Customers.
-     * Ensures that the created Customer is included in the list returned by the controller.
-     */
     @Test
-    void getAll() {
-        // GIVEN
-        customerController.create(new Customer(
-                customerRequest.getFirstName(),
-                customerRequest.getLastName(),
-                customerRequest.getEmail(),
-                customerRequest.getPhoneNumber()
-        ));
+    void getAll() throws Exception {
+        customerController.create(customerRequest);
 
-        // WHEN
-        List<Customer> actual = customerController.getAll();
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/customers")
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // THEN
+        List<Customer> actual = MAPPER.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+
         assertNotNull(actual);
-        Customer lastCustomer = actual.get(actual.size() - 1);
-        assertNotNull(lastCustomer.getId());
-        assertEquals(customerRequest.getFirstName(), lastCustomer.getFirstName());
-        assertEquals(customerRequest.getLastName(), lastCustomer.getLastName());
-        assertEquals(customerRequest.getEmail(), lastCustomer.getEmail());
-        assertEquals(customerRequest.getPhoneNumber(), lastCustomer.getPhoneNumber());
+        assertNotNull(actual.get(actual.size() - 1).getId());
+        assertEquals(customerRequest.getFirstName(), actual.get(actual.size() - 1).getFirstName());
+        assertEquals(customerRequest.getLastName(), actual.get(actual.size() - 1).getLastName());
+        assertEquals(customerRequest.getEmail(), actual.get(actual.size() - 1).getEmail());
+        assertEquals(customerRequest.getPhoneNumber(), actual.get(actual.size() - 1).getPhoneNumber());
     }
 
-    /**
-     * Test retrieving a specific Customer by ID.
-     * Verifies that the correct Customer is returned based on the ID.
-     */
     @Test
-    void get() {
-        // GIVEN
-        Customer savedCustomer = customerController.create(new Customer(
-                customerRequest.getFirstName(),
-                customerRequest.getLastName(),
-                customerRequest.getEmail(),
-                customerRequest.getPhoneNumber()
-        ));
+    void get() throws Exception {
+        Customer savedCustomer = customerController.create(customerRequest);
         Long savedCustomerId = savedCustomer.getId();
 
-        // WHEN
-        Customer actual = customerController.get(savedCustomerId);
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/customers/{id}", savedCustomerId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // THEN
-        assertEquals(savedCustomer, actual);
+        Customer actual = MAPPER.readValue(result.getResponse().getContentAsString(), Customer.class);
+
+        assertEquals(savedCustomerId, actual.getId());
+        assertEquals(savedCustomer.getFirstName(), actual.getFirstName());
+        assertEquals(savedCustomer.getLastName(), actual.getLastName());
+        assertEquals(savedCustomer.getEmail(), actual.getEmail());
+        assertEquals(savedCustomer.getPhoneNumber(), actual.getPhoneNumber());
     }
 
-    /**
-     * Test updating an existing Customer.
-     * Ensures that the Customer's properties are correctly updated.
-     */
     @Test
-    void replace() {
-        // GIVEN
-        Customer savedCustomer = customerController.create(new Customer(
-                customerRequest.getFirstName(),
-                customerRequest.getLastName(),
-                customerRequest.getEmail(),
-                customerRequest.getPhoneNumber()
-        ));
+    void replace() throws Exception {
+        Customer savedCustomer = customerController.create(customerRequest);
         Long savedCustomerId = savedCustomer.getId();
         UpdateUserRequest updateCustomerRequest = new UpdateUserRequest(
-                "Jane",
-                "Smith",
-                "jane.smith@example.com",
-                "987654321"
+                "updateFirstName",
+                "updateLastName",
+                "updateEmail",
+                "updatePhone"
         );
 
-        // WHEN
-        Customer actual = customerController.replace(updateCustomerRequest, savedCustomerId);
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .put("/customers/{id}", savedCustomerId)
+                                .content(
+                                        MAPPER.writeValueAsString(updateCustomerRequest)
+                                )
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // THEN
+        Customer actual = MAPPER.readValue(result.getResponse().getContentAsString(), Customer.class);
+
         assertEquals(updateCustomerRequest.getFirstName(), actual.getFirstName());
         assertEquals(updateCustomerRequest.getLastName(), actual.getLastName());
         assertEquals(updateCustomerRequest.getEmail(), actual.getEmail());
         assertEquals(updateCustomerRequest.getPhoneNumber(), actual.getPhoneNumber());
     }
 
-    /**
-     * Test deleting an existing Customer.
-     * Verifies that after deletion, an exception is thrown when trying to retrieve the deleted customer.
-     */
     @Test
-    void delete() {
-        // GIVEN
-        Customer savedCustomer = customerController.create(new Customer(
-                customerRequest.getFirstName(),
-                customerRequest.getLastName(),
-                customerRequest.getEmail(),
-                customerRequest.getPhoneNumber()
-        ));
+    void delete() throws Exception {
+        Customer savedCustomer = customerController.create(customerRequest);
         Long savedCustomerId = savedCustomer.getId();
 
-        // WHEN
-        customerController.delete(savedCustomerId);
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .delete("/customers/{id}", savedCustomerId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isNoContent())
+                .andReturn();
 
-        // THEN
         assertThrows(CustomerNotFoundException.class, () -> customerController.get(savedCustomerId));
     }
 }
