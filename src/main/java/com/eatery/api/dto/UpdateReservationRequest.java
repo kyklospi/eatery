@@ -9,6 +9,10 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * Data Transfer Object (DTO) used for updating an existing reservation.
+ * This class captures the data that can be modified in a reservation request.
+ */
 @Data
 public class UpdateReservationRequest {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

@@ -20,6 +20,10 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    /**
+     * Fetches all reservations from the database.
+     * @return A list of all reservations.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Reservations not found"),
@@ -30,6 +34,11 @@ public class ReservationController {
         return reservationService.getAll();
     }
 
+    /**
+     * Creates a new reservation based on the provided request data.
+     * @param newReservation The data for the new reservation.
+     * @return The created reservation.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successfully created"),
             @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
@@ -41,6 +50,11 @@ public class ReservationController {
         return reservationService.create(newReservation);
     }
 
+    /**
+     * Fetches a specific reservation by its ID.
+     * @param id The ID of the reservation to retrieve.
+     * @return The reservation with the specified ID.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Reservation not found"),
@@ -51,6 +65,12 @@ public class ReservationController {
         return reservationService.get(id);
     }
 
+    /**
+     * Updates an existing reservation with the provided updated details.
+     * @param updateReservation The new details for the reservation.
+     * @param id The ID of the reservation to update.
+     * @return The updated reservation.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully modified"),
             @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
@@ -62,6 +82,11 @@ public class ReservationController {
         return reservationService.replace(updateReservation, id);
     }
 
+    /**
+     * Marks the reservation as completed.
+     * @param id The ID of the reservation to mark as completed.
+     * @return The updated reservation after it is marked as completed.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully modified"),
             @ApiResponse(responseCode = "404", description = "Reservation not found"),
@@ -72,6 +97,11 @@ public class ReservationController {
         return reservationService.complete(id);
     }
 
+    /**
+     * Cancels a reservation.
+     * @param id The ID of the reservation to cancel.
+     * @return The reservation that was canceled.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully modified"),
             @ApiResponse(responseCode = "404", description = "Reservation not found"),
@@ -82,6 +112,10 @@ public class ReservationController {
         return reservationService.cancel(id);
     }
 
+    /**
+     * Deletes a reservation by its ID.
+     * @param id The ID of the reservation to delete.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Reservation not found"),

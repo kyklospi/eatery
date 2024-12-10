@@ -21,6 +21,10 @@ public class EateryController {
     @Autowired
     private EateryService eateryService;
 
+    /**
+     * Fetches all eateries from the database.
+     * @return A list of all eateries.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Eateries not found"),
@@ -31,6 +35,13 @@ public class EateryController {
         return eateryService.findAll();
     }
 
+    /**
+     * Searches for eateries based on the provided optional parameters.
+     * @param name The name of the eatery to search for (optional).
+     * @param address The address of the eatery to search for (optional).
+     * @param type The type of the eatery to search for (optional).
+     * @return A list of eateries that match the search criteria.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Eateries not found"),
@@ -45,6 +56,11 @@ public class EateryController {
         return eateryService.search(name, address, type);
     }
 
+    /**
+     * Creates a new eatery.
+     * @param newEatery The data for the new eatery to be created.
+     * @return The created eatery.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successfully created"),
             @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
@@ -56,6 +72,11 @@ public class EateryController {
         return eateryService.create(newEatery);
     }
 
+    /**
+     * Fetches an eatery by its ID.
+     * @param id The ID of the eatery to retrieve.
+     * @return The eatery with the specified ID.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "404", description = "Eatery not found"),
@@ -66,6 +87,12 @@ public class EateryController {
         return eateryService.findById(id);
     }
 
+    /**
+     * Updates an existing eatery with the provided new details.
+     * @param newEatery The new details for the eatery.
+     * @param id The ID of the eatery to update.
+     * @return The updated eatery.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully modified"),
             @ApiResponse(responseCode = "400", description = "Invalid request parameters"),
@@ -77,6 +104,10 @@ public class EateryController {
         return eateryService.replace(newEatery, id);
     }
 
+    /**
+     * Deletes the eatery with the specified ID.
+     * @param id The ID of the eatery to delete.
+     */
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully deleted"),
             @ApiResponse(responseCode = "404", description = "Eatery not found"),
