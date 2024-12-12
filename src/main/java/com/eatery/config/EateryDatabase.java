@@ -23,16 +23,26 @@ import java.util.Set;
 @Configuration
 public class EateryDatabase {
 
+    // Logger to log information during the initialization process
     private static final Logger logger = LoggerFactory.getLogger(EateryDatabase.class);
 
+    /**
+     * CommandLineRunner bean to preload data into the database when the application starts.
+     * @param eateryRepository Repository to handle Eatery entities
+     * @param customerRepository Repository to handle Customer entities
+     * @param eateryManagerRepository Repository to handle EateryManager entities
+     * @return CommandLineRunner that initializes the database with predefined data
+     */
     @Bean
     CommandLineRunner initDatabase(EateryRepository eateryRepository, CustomerRepository customerRepository, EateryManagerRepository eateryManagerRepository) {
         return args -> {
+            // Create BusinessDayTime instance for a restaurant's opening hours
             BusinessDayTime restaurant1Opening = new BusinessDayTime(
                     DayOfWeek.MONDAY,
                     LocalTime.of(18, 0),
                     LocalTime.of(23, 0)
             );
+            // Preload a restaurant entity into the database
             logger.info("Preloading {}", eateryRepository.save(
                     new Eatery(
                             Eatery.Type.RESTAURANT,
@@ -45,6 +55,7 @@ public class EateryDatabase {
                     )
             ));
 
+            // Create BusinessDayTime instances for a bar's opening hours on Saturday and Sunday
             BusinessDayTime bar1Opening1 = new BusinessDayTime(
                     DayOfWeek.SATURDAY,
                     LocalTime.of(18, 0),
@@ -55,6 +66,7 @@ public class EateryDatabase {
                     LocalTime.MIDNIGHT,
                     LocalTime.of(4, 0)
             );
+            // Preload a bar entity into the database
             logger.info("Preloading {}", eateryRepository.save(
                     new Eatery(
                             Eatery.Type.BAR,
@@ -67,11 +79,13 @@ public class EateryDatabase {
                     )
             ));
 
+            // Create BusinessDayTime instance for a cafe's opening hours
             BusinessDayTime cafe1Opening = new BusinessDayTime(
                     DayOfWeek.FRIDAY,
                     LocalTime.of(7, 0),
                     LocalTime.of(15, 0)
             );
+            // Preload a cafe entity into the database
             logger.info("Preloading {}", eateryRepository.save(
                     new Eatery(
                             Eatery.Type.CAFE,
@@ -84,6 +98,7 @@ public class EateryDatabase {
                     )
             ));
 
+            // Preload a customer entity into the database
             logger.info("Preloading {}", customerRepository.save(
                     new Customer(
                             "Max",
@@ -93,6 +108,7 @@ public class EateryDatabase {
                     )
             ));
 
+            // Preload an eatery manager entity into the database
             logger.info("Preloading {}", customerRepository.save(
                     new Customer(
                             "Alexandra",

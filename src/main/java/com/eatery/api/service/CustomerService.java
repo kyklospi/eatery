@@ -10,15 +10,29 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service class responsible for handling business logic related to customers.
+ * This class interacts with the repository to perform CRUD operations on customer data.
+ */
 @Service
 public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
+    /**
+     * Retrieves all customers from the database.
+     * @return A list of all customers.
+     */
     public List<Customer> getAll() {
         return customerRepository.findAll();
     }
 
+    /**
+     * Creates a new customer after validating the provided data.
+     * @param newCustomerRequest The customer object to be created.
+     * @return The created customer object.
+     * @throws CustomerBadRequestException if the provided customer data is invalid.
+     */
     public Customer create(UpdateUserRequest newCustomerRequest) {
         validateCustomer(newCustomerRequest);
         Customer customer = new Customer(
@@ -30,17 +44,33 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
+    /**
+     * Deletes a customer by their ID.
+     * @param id The ID of the customer to be deleted.
+     * @throws CustomerNotFoundException if the customer with the specified ID does not exist.
+     */
     public void delete(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(CustomerNotFoundException::new);
         customerRepository.delete(customer);
     }
 
+    /**
+     * Retrieves a customer by their ID.
+     * @param id The ID of the customer to retrieve.
+     * @return The customer object with the specified ID.
+     * @throws CustomerNotFoundException if the customer with the specified ID does not exist.
+     */
     public Customer get(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(CustomerNotFoundException::new);
     }
 
+    /**
+     * Validates the customer data to ensure required fields are not null or empty.
+     * @param newCustomer The customer object to be validated.
+     * @throws CustomerBadRequestException if any required field is missing or empty.
+     */
     public Customer replace(UpdateUserRequest newCustomer, Long id) {
         validateCustomer(newCustomer);
         return customerRepository.findById(id)

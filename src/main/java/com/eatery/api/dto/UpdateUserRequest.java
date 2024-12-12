@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Data Transfer Object (DTO) used for updating user information.
+ * This class captures the data that can be modified in a user update request.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
