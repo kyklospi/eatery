@@ -1,0 +1,16 @@
+@startuml
+class ReservationHistory {
+- Long id
+- Long reservationId
+- Long customerId
+- Long eateryId
+- LocalDateTime reservationDateTime
+- int guestNumber
+- Reservation.Status status
+- Date timestamp
++ boolean equals(Object)
++ int hashCode()
++ String toString()
++ int compareTo(ReservationHistory)
+}
+@enduml
