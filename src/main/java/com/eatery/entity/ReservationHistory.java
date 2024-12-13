@@ -1,10 +1,17 @@
 package com.eatery.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,55 +20,74 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 public class ReservationHistory implements Comparable<ReservationHistory> {
-    private @Id Long id;
+    @Column(unique = true, nullable = false)
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Reservation reservation;
+    private Long reservationId;
+    private Long customerId;
+    private Long eateryId;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", insertable = false, updatable = false)
-    private Date createdAt;
+    /**
+     * The date and time of the reservation.
+     */
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    private LocalDateTime reservationDateTime;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date updatedAt;
+    private int guestNumber;
+    private Reservation.Status status;
 
-    public ReservationHistory(Reservation reservation, Date updatedAt) {
-        this.reservation = reservation;
-        this.updatedAt = updatedAt;
+    @CreationTimestamp
+    private Date timestamp;
+
+    public ReservationHistory(
+            Long reservationId,
+            Long customerId,
+            Long eateryId,
+            LocalDateTime reservationDateTime,
+            int guestNumber,
+            Reservation.Status status
+    ) {
+        this.reservationId = reservationId;
+        this.customerId = customerId;
+        this.eateryId = eateryId;
+        this.reservationDateTime = reservationDateTime;
+        this.guestNumber = guestNumber;
+        this.status = status;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ReservationHistory that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(reservation, that.reservation) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
+        return reservationId.equals(that.reservationId) && customerId.equals(that.customerId) && eateryId.equals(that.eateryId) &&
+                guestNumber == that.guestNumber && Objects.equals(id, that.id) &&
+                Objects.equals(reservationDateTime, that.reservationDateTime) && status == that.status &&
+                Objects.equals(timestamp, that.timestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, reservation, createdAt, updatedAt);
+        return Objects.hash(id, reservationId, customerId, eateryId, reservationDateTime, guestNumber, status, timestamp);
     }
 
     @Override
     public String toString() {
         return "ReservationHistory{" +
                 "id=" + id +
-                ", reservation=" + reservation +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
+                ", reservationId=" + reservationId +
+                ", customerId=" + customerId +
+                ", eateryId=" + eateryId +
+                ", reservationDateTime=" + reservationDateTime +
+                ", guestNumber=" + guestNumber +
+                ", status=" + status +
+                ", timestamp=" + timestamp +
                 '}';
     }
 
     @Override
     public int compareTo(ReservationHistory history) {
-        // compare by updateAt timestamp
-        if (this.getUpdatedAt().compareTo(history.getUpdatedAt()) != 0) {
-            return this.getUpdatedAt().compareTo(history.updatedAt);
-        }
-        // no update yet, then compare by createdAt timestamp
-        else {
-            return this.createdAt.compareTo(history.createdAt);
-        }
+        return this.getTimestamp().compareTo(history.timestamp);
     }
 }

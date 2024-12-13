@@ -25,22 +25,23 @@ public class Reservation {
     /**
      * Unique identifier for the reservation.
      */
-    private @Id @GeneratedValue Long id;
+    @Column(unique = true, nullable = false)
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
+
     /**
      * The customer who made the reservation.
      * Many reservations can belong to the same customer.
      */
-    private long customerId;
+    private Long customerId;
 
     /**
      * The eatery where the reservation was made.
      * Many reservations can belong to the same eatery.
      */
-    private long eateryId;
+    private Long eateryId;
 
     /**
-     * The date and time when the reservation was made.
-     * This field is not stored in the database, marked with `@Transient`.
+     * The date and time of the reservation.
      */
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -53,7 +54,8 @@ public class Reservation {
     public enum Status {
         CONFIRMED,
         COMPLETED,
-        CANCELLED
+        CANCELLED,
+        DELETED
     }
 
     /**
@@ -63,7 +65,7 @@ public class Reservation {
      * @param reservationDateTime The date and time when the reservation was made.
      * @param guestNumber The number of guests for the reservation.
      */
-    public Reservation(long customerId, long eateryId, LocalDateTime reservationDateTime, int guestNumber) {
+    public Reservation(Long customerId, Long eateryId, LocalDateTime reservationDateTime, int guestNumber) {
         this.guestNumber = guestNumber;
         this.reservationDateTime = reservationDateTime;
         this.eateryId = eateryId;
@@ -80,7 +82,7 @@ public class Reservation {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Reservation that)) return false;
-        return customerId == that.customerId && eateryId == that.eateryId && guestNumber == that.guestNumber &&
+        return customerId.equals(that.customerId) && eateryId.equals(that.eateryId) && guestNumber == that.guestNumber &&
                 Objects.equals(id, that.id) && Objects.equals(reservationDateTime, that.reservationDateTime) &&
                 status == that.status;
     }

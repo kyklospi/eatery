@@ -13,13 +13,10 @@ import com.eatery.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
-import static com.eatery.entity.Reservation.Status.CANCELLED;
-import static com.eatery.entity.Reservation.Status.CONFIRMED;
+import static com.eatery.entity.Reservation.Status.*;
 
 /**
  * Service class for handling change request of Reservation object
@@ -81,9 +78,18 @@ public class ReservationService {
                 guestNumber
         );
         newReservation.setStatus(CONFIRMED);
-        historyRepository.save(new ReservationHistory(newReservation, Date.from(Instant.now())));
         sendMessage(customer.getPhoneNumber(), newReservation);
-        return reservationRepository.save(newReservation);
+        Reservation savedReservation = reservationRepository.save(newReservation);
+        ReservationHistory history = new ReservationHistory(
+                savedReservation.getId(),
+                savedReservation.getCustomerId(),
+                savedReservation.getEateryId(),
+                savedReservation.getReservationDateTime(),
+                savedReservation.getGuestNumber(),
+                savedReservation.getStatus()
+        );
+        historyRepository.save(history);
+        return savedReservation;
     }
 
     /**
@@ -111,10 +117,17 @@ public class ReservationService {
         reservation.setReservationDateTime(updatedTime);
         reservation.setGuestNumber(updatedGuestNumber);
         reservation.setStatus(CONFIRMED);
-        historyRepository.save(new ReservationHistory(reservation, Date.from(Instant.now())));
         sendMessage(customer.getPhoneNumber(), reservation);
-        return reservationRepository.save(reservation);
-    }
+        ReservationHistory history = new ReservationHistory(
+                reservation.getId(),
+                reservation.getCustomerId(),
+                reservation.getEateryId(),
+                reservation.getReservationDateTime(),
+                reservation.getGuestNumber(),
+                reservation.getStatus()
+        );
+        historyRepository.save(history);
+        return reservationRepository.save(reservation);}
 
     /**
      * Marks a reservation as completed if the reservation time has passed and the status is CONFIRMED.
@@ -131,7 +144,15 @@ public class ReservationService {
         }
 
         reservation.setStatus(Reservation.Status.COMPLETED);
-        historyRepository.save(new ReservationHistory(reservation, Date.from(Instant.now())));
+        ReservationHistory history = new ReservationHistory(
+                reservation.getId(),
+                reservation.getCustomerId(),
+                reservation.getEateryId(),
+                reservation.getReservationDateTime(),
+                reservation.getGuestNumber(),
+                reservation.getStatus()
+        );
+        historyRepository.save(history);
         return reservationRepository.save(reservation);
     }
 
@@ -154,8 +175,16 @@ public class ReservationService {
         }
 
         reservation.setStatus(CANCELLED);
-        historyRepository.save(new ReservationHistory(reservation, Date.from(Instant.now())));
         sendMessage(customer.getPhoneNumber(), reservation);
+        ReservationHistory history = new ReservationHistory(
+                reservation.getId(),
+                reservation.getCustomerId(),
+                reservation.getEateryId(),
+                reservation.getReservationDateTime(),
+                reservation.getGuestNumber(),
+                reservation.getStatus()
+        );
+        historyRepository.save(history);
         return reservationRepository.save(reservation);
     }
 
@@ -171,14 +200,23 @@ public class ReservationService {
         if (reservation.getStatus().equals(Reservation.Status.COMPLETED) ||
                 reservation.getStatus().equals(CANCELLED)) {
 
-            historyRepository.save(new ReservationHistory(reservation, Date.from(Instant.now())));
+            reservation.setStatus(DELETED);
+            ReservationHistory history = new ReservationHistory(
+                    reservation.getId(),
+                    reservation.getCustomerId(),
+                    reservation.getEateryId(),
+                    reservation.getReservationDateTime(),
+                    reservation.getGuestNumber(),
+                    reservation.getStatus()
+            );
+            historyRepository.save(history);
             reservationRepository.deleteById(id);
         }
     }
 
     public List<ReservationHistory> history(Long id) {
         return historyRepository.findAll().stream()
-                .filter(record -> record.getReservation().getId().equals(id))
+                .filter(record -> record.getReservationId().equals(id))
                 .sorted()
                 .toList();
     }
