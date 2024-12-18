@@ -1,6 +1,6 @@
 package com.eatery.service;
 
-import com.eatery.api.dto.UpdateUserRequest;
+import com.eatery.api.dto.UpdatePersonRequest;
 import com.eatery.exception.EateryManagerBadRequestException;
 import com.eatery.exception.EateryManagerNotFoundException;
 import com.eatery.entity.EateryManager;
@@ -33,7 +33,7 @@ public class EateryManagerService {
      * @return The created EateryManager object.
      * @throws EateryManagerBadRequestException if the provided manager data is invalid.
      */
-    public EateryManager create(UpdateUserRequest newManager) {
+    public EateryManager create(UpdatePersonRequest newManager) {
         EateryManager manager = new EateryManager(
                 newManager.getFirstName(),
                 newManager.getLastName(),
@@ -65,7 +65,7 @@ public class EateryManagerService {
      * @throws EateryManagerNotFoundException if the manager with the specified ID does not exist.
      * @throws EateryManagerBadRequestException if the provided manager data is invalid.
      */
-    public EateryManager replace(UpdateUserRequest newManager, Long id) {
+    public EateryManager replace(UpdatePersonRequest newManager, Long id) {
         return eateryManagerRepository.findById(id)
                 .map(eateryManager -> {
                     eateryManager.setFirstName(newManager.getFirstName());

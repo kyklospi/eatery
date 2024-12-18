@@ -1,5 +1,7 @@
 package com.eatery.exception;
 
+import java.time.LocalDateTime;
+
 /**
  * Custom exception to indicate bad requests for reservations.
  * This exception is thrown when a reservation request does not meet the necessary criteria.
@@ -9,7 +11,11 @@ public class ReservationBadRequestException extends RuntimeException {
         super("Invalid request parameter " + s);
     }
 
-    public ReservationBadRequestException() {
-        super("Reservation date time must be within opening hours, later than tomorrow and within eatery guest capacity");
+    public ReservationBadRequestException(LocalDateTime dateTime) {
+        super("Reservation date time " + dateTime.toString() + " must be later than tomorrow and within opening hours");
+    }
+
+    public ReservationBadRequestException(int guestNumber) {
+        super("Too many guest number " + guestNumber);
     }
 }

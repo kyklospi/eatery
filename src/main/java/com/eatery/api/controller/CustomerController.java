@@ -1,6 +1,6 @@
 package com.eatery.api.controller;
 
-import com.eatery.api.dto.UpdateUserRequest;
+import com.eatery.api.dto.UpdatePersonRequest;
 import com.eatery.service.CustomerService;
 import com.eatery.entity.Customer;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -49,7 +49,7 @@ public class CustomerController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Customer create(@RequestBody UpdateUserRequest newCustomer) {
+    Customer create(@RequestBody UpdatePersonRequest newCustomer) {
         return customerService.create(newCustomer);
     }
 
@@ -81,7 +81,7 @@ public class CustomerController {
             @ApiResponse(responseCode = "500", description = "Customer could not be updated")
     })
     @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Customer replace(@RequestBody UpdateUserRequest newCustomer, @PathVariable Long id) {
+    Customer replace(@RequestBody UpdatePersonRequest newCustomer, @PathVariable Long id) {
         return customerService.replace(newCustomer, id);
     }
 
