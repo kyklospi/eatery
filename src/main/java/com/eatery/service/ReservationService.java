@@ -10,6 +10,10 @@ import com.eatery.repository.CustomerRepository;
 import com.eatery.repository.EateryRepository;
 import com.eatery.repository.ReservationHistoryRepository;
 import com.eatery.repository.ReservationRepository;
+import com.eatery.validator.EateryBusinessTimeStrategy;
+import com.eatery.validator.EateryCapacityStrategy;
+import com.eatery.validator.ReservationContext;
+import com.eatery.validator.TimeBoundaryStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -222,75 +226,30 @@ public class ReservationService {
     }
 
     /**
-     * Check availability of Eatery by using strategy pattern EateryReservationStrategy
+     * Check availability of Eatery by using strategy pattern ReservationStrategy
      * @param eatery eatery to be reserved
      * @param reservationDateTime reservation time to check availability
      * @param guestNumber guest number to check availability
      * @throws ReservationBadRequestException if eatery is not available for reservation request
      */
     private void checkAvailability(Eatery eatery, LocalDateTime reservationDateTime, int guestNumber) {
-        // Create ReservationContext using EateryReservationStrategy
-        final ReservationContext reservationContext = new ReservationContext(new EateryReservationStrategy());
-        final LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
-
-        boolean isReservable = reservationContext.isReservable(
-                reservationDateTime.isAfter(tomorrow),
-                isOpenAt(eatery, reservationDateTime),
-                isFullyBooked(eatery, reservationDateTime, guestNumber)
-        );
-
-        if (!isReservable) {
-            throw new ReservationBadRequestException();
+        // Create ReservationContext using TimeBoundaryStrategy
+        final ReservationContext reservationContext = new ReservationContext(new TimeBoundaryStrategy());
+        if (!reservationContext.isReservable(eatery, reservationDateTime, guestNumber)) {
+            throw new ReservationBadRequestException(reservationDateTime);
         }
-    }
 
-    /**
-     * Checks if eatery is open at reservation time
-     * @param eatery eatery to be reserved
-     * @param reservationTime reservation time
-     * @return true when eatery is open at reservation time
-     */
-    private boolean isOpenAt(Eatery eatery, LocalDateTime reservationTime) {
-        return eatery.getBusinessDayTimes().stream()
-                .anyMatch(it ->
-                        it.openDay().equals(reservationTime.getDayOfWeek()) &&
-                                reservationTime.getHour() >= it.openTime().getHour() &&
-                                reservationTime.getMinute() >= it.openTime().getMinute() &&
-                                reservationTime.getHour() <= it.closeTime().getHour() &&
-                                reservationTime.getMinute() <= it.closeTime().getMinute()
-                );
-    }
-
-    /**
-     * Checks if eatery guest capacity is reached from 2 hours before reservation time until 2 hours after reservation time
-     * @param eatery eatery to be booked
-     * @param atTime new entry of reservation time
-     * @param newGuestNumber new entry of guest number
-     * @return true when eatery guest capacity is reached
-     */
-    private boolean isFullyBooked(Eatery eatery, LocalDateTime atTime, int newGuestNumber) {
-        List<Reservation> confirmedReservationsAtDuration = getConfirmedReservationsAtTimeSlot(eatery, atTime.minusHours(2), atTime.plusHours(2));
-        int totalGuestNumberAtDuration = countGuestNumber(confirmedReservationsAtDuration);
-
-        return (totalGuestNumberAtDuration + newGuestNumber) > eatery.getGuestCapacity();
-    }
-
-    private List<Reservation> getConfirmedReservationsAtTimeSlot(Eatery eatery, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return eatery.getReservationList().stream()
-                .filter(eateryReservation -> eateryReservation.getReservationDateTime().isAfter(startDateTime) &&
-                        eateryReservation.getReservationDateTime().isBefore(endDateTime) &&
-                        eateryReservation.getStatus().equals(Reservation.Status.CONFIRMED)
-                )
-                .toList();
-
-    }
-
-    private int countGuestNumber(List<Reservation> reservations) {
-        int sum = 0;
-        for (Reservation reservation : reservations) {
-            sum += reservation.getGuestNumber();
+        // Change strategy to EateryBusinessTimeStrategy
+        reservationContext.setReservationStrategy(new EateryBusinessTimeStrategy());
+        if (!reservationContext.isReservable(eatery, reservationDateTime, guestNumber)) {
+            throw new ReservationBadRequestException(reservationDateTime);
         }
-        return sum;
+
+        // Change strategy to EateryCapacityStrategy
+        reservationContext.setReservationStrategy(new EateryCapacityStrategy());
+        if (!reservationContext.isReservable(eatery, reservationDateTime, guestNumber)) {
+            throw new ReservationBadRequestException(guestNumber);
+        }
     }
 
     /**

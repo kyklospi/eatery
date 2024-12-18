@@ -1,6 +1,6 @@
 package com.eatery.api.controller;
 
-import com.eatery.api.dto.UpdateUserRequest;
+import com.eatery.api.dto.UpdatePersonRequest;
 import com.eatery.exception.EateryManagerNotFoundException;
 import com.eatery.entity.EateryManager;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -35,7 +35,7 @@ class EateryManagerControllerIntegrationTest {
     private EateryManagerController eateryManagerController;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private UpdateUserRequest managerRequest;
+    private UpdatePersonRequest managerRequest;
 
     /**
      * Set up method to initialize test data before each test.
@@ -43,7 +43,7 @@ class EateryManagerControllerIntegrationTest {
      */
     @BeforeEach
     void setUp() {
-        managerRequest = new UpdateUserRequest(
+        managerRequest = new UpdatePersonRequest(
                 "firstName",
                 "lastName",
                 "email",
@@ -147,7 +147,7 @@ class EateryManagerControllerIntegrationTest {
         // GIVEN
         EateryManager savedManager = eateryManagerController.create(managerRequest);
         Long savedManagerId = savedManager.getId();
-        UpdateUserRequest updateManagerRequest = new UpdateUserRequest(
+        UpdatePersonRequest updateManagerRequest = new UpdatePersonRequest(
                 "updateFirstName",
                 "updateLastName",
                 "updateEmail",

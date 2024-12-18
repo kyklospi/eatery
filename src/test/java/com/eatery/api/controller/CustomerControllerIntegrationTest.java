@@ -1,6 +1,6 @@
 package com.eatery.api.controller;
 
-import com.eatery.api.dto.UpdateUserRequest;
+import com.eatery.api.dto.UpdatePersonRequest;
 import com.eatery.entity.Customer;
 import com.eatery.exception.CustomerNotFoundException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -35,7 +35,7 @@ class CustomerControllerIntegrationTest {
     private CustomerController customerController;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private UpdateUserRequest customerRequest;
+    private UpdatePersonRequest customerRequest;
 
     /**
      * Set up method to initialize test data before each test.
@@ -43,7 +43,7 @@ class CustomerControllerIntegrationTest {
      */
     @BeforeEach
     void setUp() {
-        customerRequest = new UpdateUserRequest(
+        customerRequest = new UpdatePersonRequest(
                 "firstName",
                 "lastName",
                 "email",
@@ -122,7 +122,7 @@ class CustomerControllerIntegrationTest {
     void replace() throws Exception {
         Customer savedCustomer = customerController.create(customerRequest);
         Long savedCustomerId = savedCustomer.getId();
-        UpdateUserRequest updateCustomerRequest = new UpdateUserRequest(
+        UpdatePersonRequest updateCustomerRequest = new UpdatePersonRequest(
                 "updateFirstName",
                 "updateLastName",
                 "updateEmail",

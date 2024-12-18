@@ -1,7 +1,10 @@
-package com.eatery.service;
+package com.eatery.validator;
 
+import com.eatery.entity.Eatery;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -12,7 +15,7 @@ public class ReservationContext {
         this.reservationStrategy = reservationStrategy;
     }
 
-    public boolean isReservable(boolean isValidReservationTime, boolean isOpen, boolean isFullyBooked) {
-        return reservationStrategy.isReservable(isValidReservationTime, isOpen, isFullyBooked);
+    public boolean isReservable(Eatery eatery, LocalDateTime reservationTime, int guestNumber) {
+        return reservationStrategy.isReservable(eatery, reservationTime, guestNumber);
     }
 }

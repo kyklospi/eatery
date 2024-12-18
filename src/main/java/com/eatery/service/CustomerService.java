@@ -1,6 +1,6 @@
 package com.eatery.service;
 
-import com.eatery.api.dto.UpdateUserRequest;
+import com.eatery.api.dto.UpdatePersonRequest;
 import com.eatery.exception.CustomerBadRequestException;
 import com.eatery.exception.CustomerNotFoundException;
 import com.eatery.entity.Customer;
@@ -33,7 +33,7 @@ public class CustomerService {
      * @return The created customer object.
      * @throws CustomerBadRequestException if the provided customer data is invalid.
      */
-    public Customer create(UpdateUserRequest newCustomerRequest) {
+    public Customer create(UpdatePersonRequest newCustomerRequest) {
         validateCustomer(newCustomerRequest);
         Customer customer = new Customer(
                 newCustomerRequest.getFirstName(),
@@ -71,7 +71,7 @@ public class CustomerService {
      * @param newCustomer The customer object to be validated.
      * @throws CustomerBadRequestException if any required field is missing or empty.
      */
-    public Customer replace(UpdateUserRequest newCustomer, Long id) {
+    public Customer replace(UpdatePersonRequest newCustomer, Long id) {
         validateCustomer(newCustomer);
         return customerRepository.findById(id)
                 .map(customer -> {
@@ -84,7 +84,7 @@ public class CustomerService {
                 .orElseThrow(CustomerNotFoundException::new);
     }
 
-    private void validateCustomer(UpdateUserRequest customer) {
+    private void validateCustomer(UpdatePersonRequest customer) {
         if (customer == null) {
             throw new CustomerBadRequestException("Customer request must not be null.");
         }
