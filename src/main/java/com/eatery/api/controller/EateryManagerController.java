@@ -2,7 +2,7 @@ package com.eatery.api.controller;
 
 import com.eatery.api.dto.UpdateUserRequest;
 import com.eatery.entity.EateryManager;
-import com.eatery.api.service.EateryManagerService;
+import com.eatery.service.EateryManagerService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;

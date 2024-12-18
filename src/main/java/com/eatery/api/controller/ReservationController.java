@@ -3,7 +3,7 @@ package com.eatery.api.controller;
 import com.eatery.api.dto.CreateReservationRequest;
 import com.eatery.api.dto.UpdateReservationRequest;
 import com.eatery.entity.Reservation;
-import com.eatery.api.service.ReservationService;
+import com.eatery.service.ReservationService;
 import com.eatery.entity.ReservationHistory;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
