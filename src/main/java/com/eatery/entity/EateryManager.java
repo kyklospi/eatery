@@ -16,7 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EateryManager extends AppUser {
+public class EateryManager extends Person {
     @Column(unique = true, nullable = false)
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 

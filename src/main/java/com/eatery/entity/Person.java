@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AppUser {
+public class Person {
     private String firstName;
     private String lastName;
     private String email;
@@ -28,7 +28,7 @@ public class AppUser {
      * @param email      Email address of the user.
      * @param phoneNumber Phone number of the user.
      */
-    public AppUser(String firstName, String lastName, String email, String phoneNumber) {
+    public Person(String firstName, String lastName, String email, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

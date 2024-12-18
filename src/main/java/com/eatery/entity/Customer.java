@@ -17,7 +17,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Customer extends AppUser {
+public class Customer extends Person {
     @Column(unique = true, nullable = false)
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 

@@ -19,7 +19,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Eatery implements Reservable {
+public class Eatery {
     @Column(unique = true, nullable = false)
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
@@ -78,56 +78,6 @@ public class Eatery implements Reservable {
                         it.openDay().equals(LocalDateTime.now().getDayOfWeek()) &&
                         LocalTime.now().isAfter(it.openTime()) && LocalTime.now().isBefore(it.closeTime())
                 );
-    }
-
-    /**
-     * Strategy pattern implementation
-     * Checks if eatery is open at reservation time
-     * @param reservationTime reservation time
-     * @return true when eatery is open at reservation time
-     */
-    @Override
-    public boolean isOpenAt(LocalDateTime reservationTime) {
-        return this.businessDayTimes.stream()
-                .anyMatch(it ->
-                        it.openDay().equals(reservationTime.getDayOfWeek()) &&
-                                reservationTime.getHour() >= it.openTime().getHour() &&
-                                reservationTime.getMinute() >= it.openTime().getMinute() &&
-                                reservationTime.getHour() <= it.closeTime().getHour() &&
-                                reservationTime.getMinute() <= it.closeTime().getMinute()
-                );
-    }
-
-    /**
-     * Strategy pattern implementation
-     * Checks if eatery guest capacity is reached from 2 hours before reservation time until 2 hours after reservation time
-     * @param atTime new entry of reservation time
-     * @return true when eatery guest capacity is reached
-     */
-    @Override
-    public boolean isFullyBooked(LocalDateTime atTime, int newGuestNumber) {
-        List<Reservation> confirmedReservationsAtDuration = getConfirmedReservationsAtTimeSlot(atTime.minusHours(2), atTime.plusHours(2));
-        int totalGuestNumberAtDuration = countGuestNumber(confirmedReservationsAtDuration);
-
-        return (totalGuestNumberAtDuration + newGuestNumber) > this.guestCapacity;
-    }
-
-    private List<Reservation> getConfirmedReservationsAtTimeSlot(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return this.reservationList.stream()
-                .filter(eateryReservation -> eateryReservation.getReservationDateTime().isAfter(startDateTime) &&
-                        eateryReservation.getReservationDateTime().isBefore(endDateTime) &&
-                        eateryReservation.getStatus().equals(Reservation.Status.CONFIRMED)
-                )
-                .toList();
-
-    }
-
-    private int countGuestNumber(List<Reservation> reservations) {
-        int sum = 0;
-        for (Reservation reservation : reservations) {
-            sum += reservation.getGuestNumber();
-        }
-        return sum;
     }
 
     @Override

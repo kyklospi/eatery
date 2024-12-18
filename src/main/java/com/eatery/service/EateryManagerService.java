@@ -1,4 +1,4 @@
-package com.eatery.api.service;
+package com.eatery.service;
 
 import com.eatery.api.dto.UpdateUserRequest;
 import com.eatery.exception.EateryManagerBadRequestException;
