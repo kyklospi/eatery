@@ -1,0 +1,12 @@
+@startuml
+class Review {
+- Long id
+- long eateryId
+- long customerId
+- String message
+- int rating
++ String toString()
+}
+
+
+@enduml

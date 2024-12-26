@@ -1,0 +1,6 @@
+@startuml
+enum PaymentMethod {
++  CASH
++  CREDIT_CARD
+}
+@enduml
