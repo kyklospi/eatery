@@ -6,8 +6,6 @@ class EateryManager {
 - String email
 - String phoneNumber
 - Long eateryId
-- String jobTitle
-- Set<WorkSchedule> workSchedules
 + boolean equals(Object)
 + int hashCode()
 + String toString()
