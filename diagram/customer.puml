@@ -6,6 +6,8 @@ class Customer {
 - String email
 - String phoneNumber
 - List<Reservation> reservations
+- PaymentMethod paymentMethod
+- List<Review> reviews
 + boolean equals(Object)
 + int hashCode()
 + String toString()

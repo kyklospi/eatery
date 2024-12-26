@@ -1,0 +1,12 @@
+@startuml
+class Notification {
+- Long id
+- Long customerId
+- Long reservationId
+- String message
+- Date createdAt
++ boolean equals(Object)
++ int hashCode()
++ String toString()
+}
+@enduml
