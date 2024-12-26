@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Represents the manager of an eatery.
@@ -26,15 +29,26 @@ public class EateryManager extends Person {
      */
     private long eateryId;
 
+    private String jobTitle;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Set<WorkSchedule> workSchedules = Set.of();
+
     /**
      * Constructor to create an `EateryManager` with the given user details.
      * @param firstName  The first name of the manager.
      * @param lastName   The last name of the manager.
      * @param email      The email address of the manager.
      * @param phoneNumber The phone number of the manager.
+     * @param eateryId The eatery id associated with the manager
+     * @param jobTitle The job title of the manager
+     * @param workSchedules The work schedule of the manager
      */
-    public EateryManager(String firstName, String lastName, String email, String phoneNumber) {
+    public EateryManager(String firstName, String lastName, String email, String phoneNumber, long eateryId, String jobTitle, Set<WorkSchedule> workSchedules) {
         super(firstName, lastName, email, phoneNumber);
+        this.eateryId = eateryId;
+        this.jobTitle = jobTitle;
+        this.workSchedules = workSchedules;
     }
 
     /**
@@ -73,7 +87,9 @@ public class EateryManager extends Person {
                 ", lastName='" + this.getLastName() + '\'' +
                 ", email='" + this.getEmail() + '\'' +
                 ", phoneNumber='" + this.getPhoneNumber() + '\'' +
-                "eateryId=" + eateryId +
+                ", eateryId=" + eateryId + '\'' +
+                ", jobTitle=" + jobTitle + '\'' +
+                ", workSchedule=" + workSchedules +
                 '}';
     }
 }

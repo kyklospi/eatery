@@ -1,7 +1,8 @@
 package com.eatery.api.controller;
 
-import com.eatery.api.dto.UpdatePersonRequest;
+import com.eatery.api.dto.UpdateCustomerRequest;
 import com.eatery.entity.Customer;
+import com.eatery.entity.PaymentMethod;
 import com.eatery.exception.CustomerNotFoundException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,7 +36,7 @@ class CustomerControllerIntegrationTest {
     private CustomerController customerController;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private UpdatePersonRequest customerRequest;
+    private UpdateCustomerRequest customerRequest;
 
     /**
      * Set up method to initialize test data before each test.
@@ -43,11 +44,12 @@ class CustomerControllerIntegrationTest {
      */
     @BeforeEach
     void setUp() {
-        customerRequest = new UpdatePersonRequest(
+        customerRequest = new UpdateCustomerRequest(
                 "firstName",
                 "lastName",
                 "email",
-                "phoneNumber"
+                "phoneNumber",
+                PaymentMethod.CASH
         );
     }
 
@@ -122,11 +124,12 @@ class CustomerControllerIntegrationTest {
     void replace() throws Exception {
         Customer savedCustomer = customerController.create(customerRequest);
         Long savedCustomerId = savedCustomer.getId();
-        UpdatePersonRequest updateCustomerRequest = new UpdatePersonRequest(
+        UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest(
                 "updateFirstName",
                 "updateLastName",
                 "updateEmail",
-                "updatePhone"
+                "updatePhone",
+                PaymentMethod.CASH
         );
 
         MvcResult result = mockMvc.perform(

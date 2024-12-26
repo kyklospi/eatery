@@ -23,11 +23,21 @@ public class Customer extends Person {
 
     /**
      * List of reservations associated with the customer.
-     * This is a one-to-many relationship where the `Reservation` entity contains a `customer` field
+     * This is a one-to-many relationship where the `Reservation` entity contains a `customerId` field
      * mapped to this class.
      */
     @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
+
+    private PaymentMethod payment = PaymentMethod.CASH;
+
+    /**
+     * List of reviews associated with the customer.
+     * This is a one-to-many relationship where the `Review` entity contains a `customerId` field
+     * mapped to this class.
+     */
+    @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL)
+    private List<Review> reviews;
 
     /**
      * Constructs a new Customer with the specified details.
@@ -35,9 +45,11 @@ public class Customer extends Person {
      * @param lastName   The last name of the customer.
      * @param email      The email address of the customer.
      * @param phoneNumber The phone number of the customer.
+     * @param payment The payment method chosen by the customer.
      */
-    public Customer(String firstName, String lastName, String email, String phoneNumber) {
+    public Customer(String firstName, String lastName, String email, String phoneNumber, PaymentMethod payment) {
         super(firstName, lastName, email, phoneNumber);
+        this.payment = payment;
     }
 
     /**
@@ -52,7 +64,9 @@ public class Customer extends Person {
                 ", lastName='" + this.getLastName() + '\'' +
                 ", email='" + this.getEmail() + '\'' +
                 ", phoneNumber='" + this.getPhoneNumber() + '\'' +
-                ", reservations=" + reservations +
+                ", reservations=" + reservations + '\'' +
+                ", payment=" + payment + '\'' +
+                ", reviews=" + reviews +
                 '}';
     }
 
@@ -62,10 +76,5 @@ public class Customer extends Person {
         if (!(o instanceof Customer customer)) return false;
         if (!super.equals(o)) return false;
         return Objects.equals(reservations, customer.reservations);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), reservations);
     }
 }

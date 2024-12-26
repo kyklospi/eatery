@@ -1,6 +1,7 @@
 package com.eatery.api.controller;
 
-import com.eatery.api.dto.UpdatePersonRequest;
+import com.eatery.api.dto.UpdateManagerRequest;
+import com.eatery.entity.WorkSchedule;
 import com.eatery.exception.EateryManagerNotFoundException;
 import com.eatery.entity.EateryManager;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -16,7 +17,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,7 +39,7 @@ class EateryManagerControllerIntegrationTest {
     private EateryManagerController eateryManagerController;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private UpdatePersonRequest managerRequest;
+    private UpdateManagerRequest managerRequest;
 
     /**
      * Set up method to initialize test data before each test.
@@ -43,11 +47,20 @@ class EateryManagerControllerIntegrationTest {
      */
     @BeforeEach
     void setUp() {
-        managerRequest = new UpdatePersonRequest(
+        managerRequest = new UpdateManagerRequest(
                 "firstName",
                 "lastName",
                 "email",
-                "phoneNumber"
+                "phoneNumber",
+                1,
+                "jobTitle",
+                Set.of(
+                        new WorkSchedule(
+                                DayOfWeek.MONDAY,
+                                LocalTime.of(18, 0),
+                                LocalTime.of(23, 0)
+                        )
+                )
         );
     }
 
@@ -147,11 +160,20 @@ class EateryManagerControllerIntegrationTest {
         // GIVEN
         EateryManager savedManager = eateryManagerController.create(managerRequest);
         Long savedManagerId = savedManager.getId();
-        UpdatePersonRequest updateManagerRequest = new UpdatePersonRequest(
+        UpdateManagerRequest updateManagerRequest = new UpdateManagerRequest(
                 "updateFirstName",
                 "updateLastName",
                 "updateEmail",
-                "updatePhone"
+                "updatePhone",
+                1,
+                "updateJobTitle",
+                Set.of(
+                        new WorkSchedule(
+                                DayOfWeek.MONDAY,
+                                LocalTime.of(18, 0),
+                                LocalTime.of(23, 0)
+                        )
+                )
         );
 
         // WHEN
