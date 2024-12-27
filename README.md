@@ -39,6 +39,17 @@ mvn test
 * [OpenAPI Definition](http://localhost:8080/v3/api-docs)
 * [Swagger API Documentation](http://localhost:8080/swagger-ui/index.html)
 
+### Git-Crypt
+* Git-Crypt must be installed on your machine
+* Unlock a repository (for decryption):
+```
+git crypt unlock
+```
+* Check which files are encrypted:
+```
+git crypt status
+```
+
 ### Contributing
 1. Fork the repository.
 2. Create a feature branch `git checkout -b feature-branch`. 
