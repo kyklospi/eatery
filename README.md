@@ -41,7 +41,7 @@ mvn test
 
 ### Git-Crypt
 * Git-Crypt must be installed on your machine
-* Unlock a repository (for decryption):
+* Unlock repository (for decryption):
 ```
 git crypt unlock
 ```
