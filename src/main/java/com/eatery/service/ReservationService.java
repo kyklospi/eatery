@@ -290,11 +290,11 @@ public class ReservationService {
      */
     private static String getTemplateMessage(Reservation reservation) {
         LocalDateTime reservationDateTime = reservation.getReservationDateTime();
+        String reservationTime = reservationDateTime.toString().split("T")[1];
 
         // Example: Your reservation on Monday, 1 January 2025 at 17:00 for 4 persons is CONFIRMED
         return "Your reservation on " + reservationDateTime.getDayOfWeek() + ", " +
-                reservationDateTime.getDayOfMonth() + " " + reservationDateTime.getMonth().getValue() + " " + reservationDateTime.getYear() +
-                " at " + reservationDateTime.getHour() + ":" + reservationDateTime.getMinute() +
-                " for " + reservation.getGuestNumber() + " persons is ";
+                reservationDateTime.getDayOfMonth() + " " + reservationDateTime.getMonth() + " " + reservationDateTime.getYear() +
+                " at " + reservationTime + " for " + reservation.getGuestNumber() + " persons is ";
     }
 }
