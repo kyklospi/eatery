@@ -23,6 +23,7 @@ public class SMSCommand {
     public boolean send(String customerPhoneNumber, String text) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
+                // replace customer number with your own number for testing
                 new PhoneNumber(customerPhoneNumber),
                 new PhoneNumber(TWILIO_NUMBER),
                 text

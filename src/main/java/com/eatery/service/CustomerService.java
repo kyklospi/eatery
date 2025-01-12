@@ -1,6 +1,6 @@
 package com.eatery.service;
 
-import com.eatery.api.dto.UpdatePersonRequest;
+import com.eatery.api.dto.UpdateCustomerRequest;
 import com.eatery.exception.CustomerBadRequestException;
 import com.eatery.exception.CustomerNotFoundException;
 import com.eatery.entity.Customer;
@@ -33,13 +33,14 @@ public class CustomerService {
      * @return The created customer object.
      * @throws CustomerBadRequestException if the provided customer data is invalid.
      */
-    public Customer create(UpdatePersonRequest newCustomerRequest) {
+    public Customer create(UpdateCustomerRequest newCustomerRequest) {
         validateCustomer(newCustomerRequest);
         Customer customer = new Customer(
                 newCustomerRequest.getFirstName(),
                 newCustomerRequest.getLastName(),
                 newCustomerRequest.getEmail(),
-                newCustomerRequest.getPhoneNumber()
+                newCustomerRequest.getPhoneNumber(),
+                newCustomerRequest.getPaymentMethod()
         );
         return customerRepository.save(customer);
     }
@@ -71,7 +72,7 @@ public class CustomerService {
      * @param newCustomer The customer object to be validated.
      * @throws CustomerBadRequestException if any required field is missing or empty.
      */
-    public Customer replace(UpdatePersonRequest newCustomer, Long id) {
+    public Customer replace(UpdateCustomerRequest newCustomer, Long id) {
         validateCustomer(newCustomer);
         return customerRepository.findById(id)
                 .map(customer -> {
@@ -79,12 +80,13 @@ public class CustomerService {
                     customer.setLastName(newCustomer.getLastName());
                     customer.setEmail(newCustomer.getEmail());
                     customer.setPhoneNumber(newCustomer.getPhoneNumber());
+                    customer.setPayment(newCustomer.getPaymentMethod());
                     return customerRepository.save(customer);
                 })
                 .orElseThrow(CustomerNotFoundException::new);
     }
 
-    private void validateCustomer(UpdatePersonRequest customer) {
+    private void validateCustomer(UpdateCustomerRequest customer) {
         if (customer == null) {
             throw new CustomerBadRequestException("Customer request must not be null.");
         }

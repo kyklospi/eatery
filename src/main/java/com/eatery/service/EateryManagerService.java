@@ -1,6 +1,6 @@
 package com.eatery.service;
 
-import com.eatery.api.dto.UpdatePersonRequest;
+import com.eatery.api.dto.UpdateManagerRequest;
 import com.eatery.exception.EateryManagerBadRequestException;
 import com.eatery.exception.EateryManagerNotFoundException;
 import com.eatery.entity.EateryManager;
@@ -33,12 +33,15 @@ public class EateryManagerService {
      * @return The created EateryManager object.
      * @throws EateryManagerBadRequestException if the provided manager data is invalid.
      */
-    public EateryManager create(UpdatePersonRequest newManager) {
+    public EateryManager create(UpdateManagerRequest newManager) {
         EateryManager manager = new EateryManager(
                 newManager.getFirstName(),
                 newManager.getLastName(),
                 newManager.getEmail(),
-                newManager.getPhoneNumber()
+                newManager.getPhoneNumber(),
+                newManager.getEateryId(),
+                newManager.getJobTitle(),
+                newManager.getWorkSchedules()
         );
         validateEateryManager(manager); // Validierung vor dem Speichern
         return eateryManagerRepository.save(manager);
@@ -65,13 +68,15 @@ public class EateryManagerService {
      * @throws EateryManagerNotFoundException if the manager with the specified ID does not exist.
      * @throws EateryManagerBadRequestException if the provided manager data is invalid.
      */
-    public EateryManager replace(UpdatePersonRequest newManager, Long id) {
+    public EateryManager replace(UpdateManagerRequest newManager, Long id) {
         return eateryManagerRepository.findById(id)
                 .map(eateryManager -> {
                     eateryManager.setFirstName(newManager.getFirstName());
                     eateryManager.setLastName(newManager.getLastName());
                     eateryManager.setEmail(newManager.getEmail());
                     eateryManager.setPhoneNumber(newManager.getPhoneNumber());
+                    eateryManager.setJobTitle(newManager.getJobTitle());
+                    eateryManager.setWorkSchedules(newManager.getWorkSchedules());
                     validateEateryManager(eateryManager); // Validierung vor dem Speichern
                     return eateryManagerRepository.save(eateryManager);
                 })

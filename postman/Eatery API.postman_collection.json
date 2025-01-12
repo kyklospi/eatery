@@ -153,7 +153,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    \"email\": \"cjohnson@mail.uk\",\n    \"phoneNumber\": \"0154-1234-5678\"\n}",
+							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    \"email\": \"cjohnson@mail.uk\",\n    \"phoneNumber\": \"0154-1234-5678\",\n    \"paymentMethod\": \"CASH\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -182,7 +182,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    \"email\": \"c.johnson@mail.uk\",\n    \"phoneNumber\": \"0154-1234-5678\"\n}",
+							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    \"email\": \"c.johnson@mail.uk\",\n    \"phoneNumber\": \"0154-1234-5678\",\n    \"paymentMethod\": \"CASH\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -462,7 +462,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Blume\", \n    \"email\": \"blume-mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\"\n}",
+							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Blume\", \n    \"email\": \"blume-mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\",\n    \"eateryId\": 1,\n    \"jobTitle\": \"Receptionist\",\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"16:00:00\",\n            \"endTime\": \"22:00:00\"            \n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -491,7 +491,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Blume\", \n    \"email\": \"blume.mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\"\n}",
+							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Blume\", \n    \"email\": \"blume.mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\",\n        \"eateryId\": 1,\n    \"jobTitle\": \"Receptionist\",\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"16:00:00\",\n            \"endTime\": \"22:00:00\"            \n        }\n    ]\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -1,9 +1,6 @@
 package com.eatery.config;
 
-import com.eatery.entity.BusinessDayTime;
-import com.eatery.entity.Customer;
-import com.eatery.entity.Eatery;
-import com.eatery.entity.EateryManager;
+import com.eatery.entity.*;
 import com.eatery.repository.EateryManagerRepository;
 import com.eatery.repository.CustomerRepository;
 import com.eatery.repository.EateryRepository;
@@ -109,7 +106,8 @@ public class EateryDatabase {
                             "Max",
                             "Mustermann",
                             "mustermann@example.com",
-                            "0152-1234-5678"
+                            "0152-1234-5678",
+                            PaymentMethod.CASH
                     )
             ));
 
@@ -119,16 +117,26 @@ public class EateryDatabase {
                             "Alexandra",
                             "Ullrich",
                             "ullrich-alexandra@test.de",
-                            "0153-1234-5678"
+                            "0153-1234-5678",
+                            PaymentMethod.CREDIT_CARD
                     )
             ));
 
+            // Create BusinessDayTime instance for a manager 1 work schedule
+            WorkSchedule manager1Schedule = new WorkSchedule(
+                    DayOfWeek.MONDAY,
+                    LocalTime.of(18, 0),
+                    LocalTime.of(23, 0)
+            );
             logger.info("Preloading {}", eateryManagerRepository.save(
                     new EateryManager(
                             "Erika",
                             "Müller",
                             "mueller@home.de",
-                            "0175-1234-5678"
+                            "0175-1234-5678",
+                            1,
+                            "Receptionist",
+                            Set.of(manager1Schedule)
                     )
             ));
         };
