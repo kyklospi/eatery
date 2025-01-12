@@ -3,6 +3,7 @@ package com.eatery.notification;
 import com.eatery.entity.Notification;
 import com.eatery.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class NotificationHandler implements NotificationCommand {
+    @Value("${notification.enabled}")
+    private boolean enabled;
     @Autowired
     private SMSCommand smsCommand;
     @Autowired
@@ -20,12 +23,18 @@ public class NotificationHandler implements NotificationCommand {
 
     @Override
     public boolean sendSMS(String customerPhoneNumber, String text) {
-        return smsCommand.send(customerPhoneNumber, text);
+        if (enabled) {
+            return smsCommand.send(customerPhoneNumber, text);
+        }
+        return true;
     }
 
     @Override
     public boolean sendMMS(String customerPhoneNumber, String text, String mediaURL) {
-        return mmsCommand.send(customerPhoneNumber, text, mediaURL);
+        if (enabled) {
+            return mmsCommand.send(customerPhoneNumber, text, mediaURL);
+        }
+        return true;
     }
 
     public void save(Long customerId, Long reservationId, String message) {
