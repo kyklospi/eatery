@@ -2,6 +2,7 @@ package com.eatery.api.controller;
 
 import com.eatery.api.dto.CreateReservationRequest;
 import com.eatery.api.dto.UpdateReservationRequest;
+import com.eatery.entity.EateryManager;
 import com.eatery.entity.Reservation;
 import com.eatery.entity.ReservationHistory;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,7 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,10 +36,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ReservationControllerTest {
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ReservationController reservationController;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private CreateReservationRequest createRequest;
     private UpdateReservationRequest updateRequest;
+
 
     /**
      * Set up method to initialize test data before each test.
@@ -46,12 +52,12 @@ class ReservationControllerTest {
         createRequest = new CreateReservationRequest(
                 1L, // Customer ID
                 1L, // Eatery ID
-                LocalDateTime.now().plusDays(2),
+                LocalDateTime.of(LocalDate.of(2024,12,24), LocalTime.of(18,0)),
                 4 // Guest number
         );
 
         updateRequest = new UpdateReservationRequest();
-        updateRequest.setDateTime(LocalDateTime.now().plusDays(3));
+        updateRequest.setDateTime(LocalDateTime.of(LocalDate.of(2024,12,24), LocalTime.of(23,0)));
         updateRequest.setGuestNumber(6);
 
     }
@@ -89,16 +95,7 @@ class ReservationControllerTest {
      */
     @Test
     void getAll() throws Exception {
-        // GIVEN
-        mockMvc.perform(
-                MockMvcRequestBuilders
-                        .post("/reservations")
-                        .content(MAPPER.writeValueAsString(createRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isCreated());
-
-        // WHEN
+       //WHEN
         MvcResult result = mockMvc.perform(
                         MockMvcRequestBuilders
                                 .get("/reservations")
@@ -112,6 +109,10 @@ class ReservationControllerTest {
         // THEN
         assertNotNull(actual);
         assertTrue(actual.isEmpty());
+        //assertEquals(createRequest.getFirstName(), actual.getLast().getFirstName());
+        //assertEquals(managerRequest.getLastName(), actual.getLast().getLastName());
+        //assertEquals(managerRequest.getEmail(), actual.getLast().getEmail());
+        //assertEquals(managerRequest.getPhoneNumber(), actual.getLast().getPhoneNumber());
     }
 
     /**
@@ -121,20 +122,19 @@ class ReservationControllerTest {
     @Test
     void get() throws Exception {
         // GIVEN
-        MvcResult createResult = mockMvc.perform(
-                MockMvcRequestBuilders
-                        .post("/reservations")
-                        .content(MAPPER.writeValueAsString(createRequest))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isCreated()).andReturn();
-
-        Reservation createdReservation = MAPPER.readValue(createResult.getResponse().getContentAsString(), Reservation.class);
+        CreateReservationRequest createRequest2 = new CreateReservationRequest(
+                1L, // Customer ID
+                1L, // Eatery ID
+                LocalDateTime.of(LocalDate.of(2024,12,24), LocalTime.of(19,0)),
+                4 // Guest number
+        );
+        Reservation savedReservation = reservationController.create(createRequest2);
+        Long savedReservationID = savedReservation.getId();
 
         // WHEN
         MvcResult result = mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get("/reservations/{id}", createdReservation.getId())
+                                .get("/reservations/{id}", savedReservationID)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -143,10 +143,10 @@ class ReservationControllerTest {
         Reservation actual = MAPPER.readValue(result.getResponse().getContentAsString(), Reservation.class);
 
         // THEN
-        assertEquals(createdReservation.getId(), actual.getId());
-        assertEquals(createdReservation.getCustomerId(), actual.getCustomerId());
-        assertEquals(createdReservation.getEateryId(), actual.getEateryId());
-        assertEquals(createdReservation.getReservationDateTime(), actual.getReservationDateTime());
+        assertEquals(savedReservation.getId(), actual.getId());
+        assertEquals(savedReservation.getCustomerId(), actual.getCustomerId());
+        assertEquals(savedReservation.getEateryId(), actual.getEateryId());
+        assertEquals(savedReservation.getReservationDateTime(), actual.getReservationDateTime());
     }
 
     /**

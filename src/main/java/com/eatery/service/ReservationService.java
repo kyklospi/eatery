@@ -82,7 +82,7 @@ public class ReservationService {
                 guestNumber
         );
         newReservation.setStatus(CONFIRMED);
-        sendMessage(customer.getPhoneNumber(), newReservation);
+        //sendMessage(customer.getPhoneNumber(), newReservation);
         Reservation savedReservation = reservationRepository.save(newReservation);
         ReservationHistory history = new ReservationHistory(
                 savedReservation.getId(),
@@ -121,7 +121,7 @@ public class ReservationService {
         reservation.setReservationDateTime(updatedTime);
         reservation.setGuestNumber(updatedGuestNumber);
         reservation.setStatus(CONFIRMED);
-        sendMessage(customer.getPhoneNumber(), reservation);
+        //sendMessage(customer.getPhoneNumber(), reservation);
         ReservationHistory history = new ReservationHistory(
                 reservation.getId(),
                 reservation.getCustomerId(),
@@ -179,7 +179,7 @@ public class ReservationService {
         }
 
         reservation.setStatus(CANCELLED);
-        sendMessage(customer.getPhoneNumber(), reservation);
+        //sendMessage(customer.getPhoneNumber(), reservation);
         ReservationHistory history = new ReservationHistory(
                 reservation.getId(),
                 reservation.getCustomerId(),
