@@ -21,11 +21,11 @@ spring:
 notification:
   enabled: false
 
-# Twilio account config is saved in GitHub secret
+# Twilio account config is saved as GitHub secrets
 twilio:
   account:
-    id: ${TWILIO_ACCOUNT_ID}
+    id: "TWILIO_ACCOUNT_ID"
   auth:
-    token: ${TWILIO_AUTH_TOKEN}
+    token: "TWILIO_AUTH_TOKEN"
   phone:
-    number: ${TWILIO_PHONE_NUMBER}
+    number: "TWILIO_PHONE_NUMBER"
