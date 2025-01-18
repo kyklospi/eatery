@@ -36,7 +36,9 @@ public class Eatery {
     private String phoneNumber;
     private int guestCapacity;
 
-    @OneToMany(mappedBy = "eateryId")
+    // ensures the collection is fetched when the parent entity is loaded,
+    // to access the collection without encountering LazyInitializationException.
+    @OneToMany(mappedBy = "eateryId", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Reservation> reservationList;
 
     @JdbcTypeCode(SqlTypes.JSON)

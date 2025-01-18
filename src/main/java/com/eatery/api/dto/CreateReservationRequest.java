@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +17,8 @@ import java.time.LocalDateTime;
  * This class captures the data necessary for making a reservation request.
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateReservationRequest {
     private long customerId;
     private long eateryId;

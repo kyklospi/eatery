@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("local")
 @AutoConfigureMockMvc
-class CustomerControllerIntegrationTest {
+class CustomerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -91,11 +91,11 @@ class CustomerControllerIntegrationTest {
         List<Customer> actual = MAPPER.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
 
         assertNotNull(actual);
-        assertNotNull(actual.get(actual.size() - 1).getId());
-        assertEquals(customerRequest.getFirstName(), actual.get(actual.size() - 1).getFirstName());
-        assertEquals(customerRequest.getLastName(), actual.get(actual.size() - 1).getLastName());
-        assertEquals(customerRequest.getEmail(), actual.get(actual.size() - 1).getEmail());
-        assertEquals(customerRequest.getPhoneNumber(), actual.get(actual.size() - 1).getPhoneNumber());
+        assertNotNull(actual.getLast().getId());
+        assertEquals(customerRequest.getFirstName(), actual.getLast().getFirstName());
+        assertEquals(customerRequest.getLastName(), actual.getLast().getLastName());
+        assertEquals(customerRequest.getEmail(), actual.getLast().getEmail());
+        assertEquals(customerRequest.getPhoneNumber(), actual.getLast().getPhoneNumber());
     }
 
     @Test

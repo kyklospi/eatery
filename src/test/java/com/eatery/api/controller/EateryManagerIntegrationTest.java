@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("local")
 @AutoConfigureMockMvc
-class EateryManagerControllerIntegrationTest {
+class EateryManagerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired

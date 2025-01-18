@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ActiveProfiles("local")
 @AutoConfigureMockMvc
-class EateryControllerIntegrationTest {
+class EateryIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
