@@ -18,6 +18,7 @@ import java.util.List;
  * retrieving a customer by ID, and deleting a customer.
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(path = "/customers")
 public class CustomerController {
     @Autowired
