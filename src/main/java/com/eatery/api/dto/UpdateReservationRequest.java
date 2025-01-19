@@ -22,6 +22,6 @@ public class UpdateReservationRequest {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
-    private LocalDateTime dateTime;
+    private LocalDateTime reservationDateTime;
     private int guestNumber;
 }

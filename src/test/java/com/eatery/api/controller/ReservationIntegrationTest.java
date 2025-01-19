@@ -154,7 +154,7 @@ public class ReservationIntegrationTest {
 
         // THEN
         assertEquals(savedReservationId, actual.getId());
-        assertEquals(updateReservationRequest.getDateTime(), actual.getReservationDateTime());
+        assertEquals(updateReservationRequest.getReservationDateTime(), actual.getReservationDateTime());
         assertEquals(updateReservationRequest.getGuestNumber(), actual.getGuestNumber());
     }
 

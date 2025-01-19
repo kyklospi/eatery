@@ -105,7 +105,7 @@ public class ReservationService {
      * @throws ReservationNotFoundException if the reservation with the specified ID does not exist.
      */
     public Reservation replace(UpdateReservationRequest updateReservation, Long id) {
-        LocalDateTime updatedTime = updateReservation.getDateTime();
+        LocalDateTime updatedTime = updateReservation.getReservationDateTime();
         int updatedGuestNumber = updateReservation.getGuestNumber();
 
         Reservation reservation = reservationRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
