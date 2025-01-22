@@ -25,10 +25,43 @@ The backend integrates with an H2 and PostgreSQL database through JPA for data p
 #### Installation
 1. Clone the repository
 2. Build the project with Maven
-3. Run the application
+3. Package the project with Maven
+```
+mvn -B package --file pom.xml
+```
+
+#### Running Application
+The application can be run with H2 database or PostgreSQL database:
+1. Run with H2 database
+```
+mvn spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+2. Run with PostgreSQL
+* Install [Docker](https://www.docker.com) and Docker CLI
+* Start PostgreSQL and pgAdmin docker containers
+```
+cd postgresql
+docker-compose up
+```
+
+* Open pgAdmin http://localhost:15433 and log in using the email and password specified in `docker-compose.yml`.
+* Click on “Add New Server” under the “Quick Links” section. 
+* In the “General” tab, enter a name for the server. 
+* In the “Connection” tab, use the following details:
+```
+Host name/address: postgres
+Username: The user specified in docker-compose.yml file
+Password: The password specified in the docker-compose.yml file
+```
+
+* Click “Save” to add the server
+* Run application
 ```
 mvn spring-boot:run
 ```
+
+* Check all the data stored in PostgreSQL database at `{serverName} -> Schemas -> public -> Tables`
 
 #### Running Tests
 ```

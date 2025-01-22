@@ -36,7 +36,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"type\": \"RESTAURANT\",\n    \"name\": \"restaurant-2\",\n    \"address\": \"address-restaurant-2\",\n    \"email\": \"info@restaurant-2.com\",\n    \"phoneNumber\": \"020-123-456\",\n    \"guestCapacity\": \"80\",\n    \"businessDayTimes\": [\n        {\n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"16:00:00\",\n            \"closeTime\": \"22:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"12:00:00\",\n            \"closeTime\": \"18:00:00\"     \n        }\n    ]\n}",
+							"raw": "{\n    \"type\": \"CAFE\",\n    \"name\": \"Schwarzes Café\",\n    \"address\": \"Kantstrasse 148, 10623 Berlin\",\n    \"email\": \"info@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"030 3138038\",\n    \"guestCapacity\": \"100\",\n    \"businessDayTimes\": [\n        {            \n            \"openDay\": \"MONDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"\n        },\n        {            \n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"\n        },\n        {\n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"24:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"THURSDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        },\n        {\n            \"openDay\": \"THURSDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"FRIDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        },\n        {\n            \"openDay\": \"FRIDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"SATURDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"SUNDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -65,7 +65,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"type\": \"RESTAURANT\",\n    \"name\": \"restaurant-2\",\n    \"address\": \"address-restaurant-2\",\n    \"email\": \"info@restaurant-2.de\",\n    \"phoneNumber\": \"020-123-456\",\n    \"guestCapacity\": \"80\",\n    \"businessDayTimes\": [\n        {\n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"16:00:00\",\n            \"closeTime\": \"22:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"12:00:00\",\n            \"closeTime\": \"18:00:00\"     \n        }\n    ]\n}",
+							"raw": "{\n    \"type\": \"CAFE\",\n    \"name\": \"Schwarzes Café\",\n    \"address\": \"Kantstrasse 148, 10623 Berlin\",\n    \"email\": \"info@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"030 3138038\",\n    // update guest capacity\n    \"guestCapacity\": \"80\",\n    \"businessDayTimes\": [\n        {            \n            \"openDay\": \"MONDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"\n        },\n        {            \n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"\n        },\n        {\n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"24:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"THURSDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        },\n        {\n            \"openDay\": \"THURSDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"FRIDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        },\n        {\n            \"openDay\": \"FRIDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"SATURDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"SUNDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -153,7 +153,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    \"email\": \"cjohnson@mail.uk\",\n    \"phoneNumber\": \"0154-1234-5678\",\n    \"paymentMethod\": \"CASH\"\n}",
+							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    \"email\": \"cjohnson@mail.uk\",\n    \"phoneNumber\": \"+4915412345678\",\n    \"paymentMethod\": \"CASH\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -498,7 +498,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Blume\", \n    \"email\": \"blume-mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\",\n    \"eateryId\": 1,\n    \"jobTitle\": \"Receptionist\",\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"16:00:00\",\n            \"endTime\": \"22:00:00\"            \n        }\n    ]\n}",
+							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    \"email\": \"willner-mark@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"+4915123456789\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"10:00:00\",\n            \"endTime\": \"18:00:00\"            \n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -527,7 +527,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Blume\", \n    \"email\": \"blume.mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\",\n        \"eateryId\": 1,\n    \"jobTitle\": \"Receptionist\",\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"16:00:00\",\n            \"endTime\": \"22:00:00\"            \n        }\n    ]\n\n}",
+							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    // update email address\n    \"email\": \"willner.mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    // update work schedule\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"15:00:00\",\n            \"endTime\": \"23:00:00\"            \n        }\n    ]\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"

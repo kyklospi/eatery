@@ -14,8 +14,9 @@ services:
     ports:
       - "5432:5432"
 
-    env_file:
-      - .env # The name of your environment file
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
 
     # The `volumes` tag allows to share a folder with the container
     # [folder path on host machine]:[folder path to retrieve in the container]
@@ -31,8 +32,10 @@ services:
     # Map port between host machine 15432 and container 80.
     ports:
       - "15433:80"
-    env_file:
-      - .env
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminPassword
     depends_on:
       - postgres
     volumes:

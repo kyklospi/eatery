@@ -34,64 +34,129 @@ public class EateryDatabase {
     CommandLineRunner initDatabase(EateryRepository eateryRepository, CustomerRepository customerRepository, EateryManagerRepository eateryManagerRepository) {
         return args -> {
             // Create BusinessDayTime instance for a restaurant's opening hours
-            BusinessDayTime restaurant1Opening = new BusinessDayTime(
+            BusinessDayTime restaurantOpening1 = new BusinessDayTime(
                     DayOfWeek.MONDAY,
-                    LocalTime.of(18, 0),
+                    LocalTime.of(11, 30),
+                    LocalTime.of(22, 0)
+            );
+            BusinessDayTime restaurantOpening2 = new BusinessDayTime(
+                    DayOfWeek.TUESDAY,
+                    LocalTime.of(11, 30),
+                    LocalTime.of(22, 0)
+            );
+            BusinessDayTime restaurantOpening3 = new BusinessDayTime(
+                    DayOfWeek.WEDNESDAY,
+                    LocalTime.of(11, 30),
+                    LocalTime.of(22, 0)
+            );
+            BusinessDayTime restaurantOpening4 = new BusinessDayTime(
+                    DayOfWeek.THURSDAY,
+                    LocalTime.of(11, 30),
+                    LocalTime.of(22, 0)
+            );
+            BusinessDayTime restaurantOpening5 = new BusinessDayTime(
+                    DayOfWeek.FRIDAY,
+                    LocalTime.of(11, 30),
                     LocalTime.of(23, 0)
+            );
+            BusinessDayTime restaurantOpening6 = new BusinessDayTime(
+                    DayOfWeek.SATURDAY,
+                    LocalTime.of(11, 30),
+                    LocalTime.of(23, 0)
+            );
+            BusinessDayTime restaurantOpening7 = new BusinessDayTime(
+                    DayOfWeek.SUNDAY,
+                    LocalTime.of(11, 30),
+                    LocalTime.of(22, 0)
             );
             // Preload a restaurant entity into the database
             logger.info("Preloading {}", eateryRepository.save(
                     new Eatery(
                             Eatery.Type.RESTAURANT,
-                            "restaurant-1",
-                            "address-restaurant-1",
-                            Set.of(restaurant1Opening),
-                            100,
-                            "service@restaurant-1.com",
-                            "030-123-456"
+                            "Jim Block",
+                            "Jungfernstieg 1-3, 20095 Hamburg",
+                            Set.of(
+                                    restaurantOpening1, restaurantOpening2, restaurantOpening3, restaurantOpening4,
+                                    restaurantOpening5, restaurantOpening6, restaurantOpening7
+                            ),
+                            80,
+                            "info@jim-block.de",
+                            "040 30382217"
                     )
             ));
 
-            // Create BusinessDayTime instances for a bar's opening hours on Saturday and Sunday
-            BusinessDayTime bar1Opening1 = new BusinessDayTime(
-                    DayOfWeek.SATURDAY,
-                    LocalTime.of(18, 0),
+            // Create BusinessDayTime instances for a bar's opening hours
+            BusinessDayTime barOpening1 = new BusinessDayTime(
+                    DayOfWeek.FRIDAY,
+                    LocalTime.of(19, 0),
                     LocalTime.MAX
             );
-            BusinessDayTime bar1Opening2 = new BusinessDayTime(
+            BusinessDayTime barOpening2 = new BusinessDayTime(
+                    DayOfWeek.SATURDAY,
+                    LocalTime.MIDNIGHT,
+                    LocalTime.of(3, 0)
+            );
+            BusinessDayTime barOpening3 = new BusinessDayTime(
+                    DayOfWeek.SATURDAY,
+                    LocalTime.of(19, 0),
+                    LocalTime.MAX
+            );
+            BusinessDayTime barOpening4 = new BusinessDayTime(
                     DayOfWeek.SUNDAY,
                     LocalTime.MIDNIGHT,
-                    LocalTime.of(4, 0)
+                    LocalTime.of(3, 0)
             );
+            BusinessDayTime barOpening5 = new BusinessDayTime(
+                    DayOfWeek.SUNDAY,
+                    LocalTime.of(20, 0),
+                    LocalTime.MAX
+            );
+
             // Preload a bar entity into the database
             logger.info("Preloading {}", eateryRepository.save(
                     new Eatery(
                             Eatery.Type.BAR,
-                            "bar-1",
-                            "address-bar-1",
-                            Set.of(bar1Opening1, bar1Opening2),
+                            "Pusser's",
+                            "Falkenturmstraße 9, 80331 München",
+                            Set.of(barOpening1, barOpening2, barOpening3, barOpening4, barOpening5),
                             50,
-                            "hello@bar-1.de",
-                            "069-123-456"
+                            "cocktails@pussers.info",
+                            "089 220500"
                     )
             ));
 
             // Create BusinessDayTime instance for a cafe's opening hours
-            BusinessDayTime cafe1Opening = new BusinessDayTime(
-                    DayOfWeek.FRIDAY,
-                    LocalTime.of(7, 0),
-                    LocalTime.of(15, 0)
+            BusinessDayTime cafeOpening1 = new BusinessDayTime(
+                    DayOfWeek.MONDAY,
+                    LocalTime.of(9, 0),
+                    LocalTime.of(21, 0)
             );
+            BusinessDayTime cafeOpening2 = new BusinessDayTime(
+                    DayOfWeek.TUESDAY,
+                    LocalTime.of(9, 0),
+                    LocalTime.of(21, 0)
+            );
+            BusinessDayTime cafeOpening3 = new BusinessDayTime(
+                    DayOfWeek.WEDNESDAY,
+                    LocalTime.of(9, 0),
+                    LocalTime.of(21, 0)
+            );
+            BusinessDayTime cafeOpening4 = new BusinessDayTime(
+                    DayOfWeek.THURSDAY,
+                    LocalTime.of(9, 0),
+                    LocalTime.of(21, 0)
+            );
+
             // Preload a cafe entity into the database
             logger.info("Preloading {}", eateryRepository.save(
                     new Eatery(
                             Eatery.Type.CAFE,
-                            "cafe-1",
-                            "address-cafe-1",
-                            Set.of(cafe1Opening),
-                            20,
-                            "kontakt@cafe-1.com",
-                            "040-123-456"
+                            "Café Anna Blume",
+                            "Kollwitzstrasse 83, 10435 Berlin",
+                            Set.of(cafeOpening1, cafeOpening2, cafeOpening3, cafeOpening4),
+                            50,
+                            "info@cafe-anna-blume.de",
+                            "030 44048749"
                     )
             ));
 
@@ -100,38 +165,81 @@ public class EateryDatabase {
                     new Customer(
                             "Max",
                             "Mustermann",
-                            "mustermann@example.com",
-                            "0152-1234-5678",
+                            "mustermann@yahoo.com",
+                            "+4915212345678",
                             PaymentMethod.CASH
                     )
             ));
-
-            // Preload an eatery manager entity into the database
             logger.info("Preloading {}", customerRepository.save(
                     new Customer(
                             "Alexandra",
                             "Ullrich",
-                            "ullrich-alexandra@test.de",
-                            "0153-1234-5678",
+                            "ullrich-alexandra@gmail.com",
+                            "+4915312345678",
                             PaymentMethod.CREDIT_CARD
                     )
             ));
 
-            // Create BusinessDayTime instance for a manager 1 work schedule
-            WorkSchedule manager1Schedule = new WorkSchedule(
-                    DayOfWeek.MONDAY,
-                    LocalTime.of(18, 0),
-                    LocalTime.of(23, 0)
+            // Create BusinessDayTime instance for a manager of restaurant
+            WorkSchedule managerSchedule1 = new WorkSchedule(
+                    DayOfWeek.FRIDAY,
+                    LocalTime.of(11, 30),
+                    LocalTime.of(19, 30)
             );
+            WorkSchedule managerSchedule2 = new WorkSchedule(
+                    DayOfWeek.SATURDAY,
+                    LocalTime.of(11, 30),
+                    LocalTime.of(19, 30)
+            );
+            WorkSchedule managerSchedule3 = new WorkSchedule(
+                    DayOfWeek.SUNDAY,
+                    LocalTime.of(11, 30),
+                    LocalTime.of(19, 30)
+            );
+            // Preload an eatery manager entity of restaurant into the database
             logger.info("Preloading {}", eateryManagerRepository.save(
                     new EateryManager(
                             "Erika",
                             "Müller",
-                            "mueller@home.de",
-                            "0175-1234-5678",
+                            "mueller.erika@jim-block.de",
+                            "+4917512345678",
                             1,
                             "Receptionist",
-                            Set.of(manager1Schedule)
+                            Set.of(managerSchedule1, managerSchedule2, managerSchedule3)
+                    )
+            ));
+
+            // Create BusinessDayTime instance for a manager of bar
+            WorkSchedule barManagerSchedule1 = new WorkSchedule(
+                    DayOfWeek.FRIDAY,
+                    LocalTime.of(19, 0),
+                    LocalTime.MAX
+            );
+            WorkSchedule barManagerSchedule2 = new WorkSchedule(
+                    DayOfWeek.SATURDAY,
+                    LocalTime.MIDNIGHT,
+                    LocalTime.of(3, 0)
+            );
+            WorkSchedule barManagerSchedule3 = new WorkSchedule(
+                    DayOfWeek.SATURDAY,
+                    LocalTime.of(19, 0),
+                    LocalTime.MAX
+            );
+            WorkSchedule barManagerSchedule4 = new WorkSchedule(
+                    DayOfWeek.SUNDAY,
+                    LocalTime.MIDNIGHT,
+                    LocalTime.of(3, 0)
+            );
+            // Preload an eatery manager entity into the database
+            logger.info("Preloading {}", eateryManagerRepository.save(
+                    new EateryManager(
+                            "Tina",
+                            "Lindner",
+                            "lindner-tina@pussers.info",
+                            "+4917623456789",
+                            2,
+                            "Bar Manager",
+                            Set.of(barManagerSchedule1, barManagerSchedule2, barManagerSchedule3, barManagerSchedule4)
                     )
             ));
         };
