@@ -95,4 +95,20 @@ public class EateryManagerController {
     void delete(@PathVariable Long id) {
         eateryManagerService.delete(id);
     }
+
+    /**
+     * Fetches an eatery manager by their username and password.
+     * @param username The username of the eatery manager to retrieve.
+     * @param password The password of the eatery manager to retrieve.
+     * @return The eatery manager with the specified username and password.
+     */
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully returned"),
+            @ApiResponse(responseCode = "404", description = "Eatery manager not found"),
+            @ApiResponse(responseCode = "500", description = "Eatery manager could not be fetched")
+    })
+    @GetMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    EateryManager login(String username, String password) {
+        return eateryManagerService.get(username, password);
+    }
 }

@@ -19,6 +19,8 @@ public class Person {
     private String lastName;
     private String email;
     private String phoneNumber;
+    private String username;
+    private String password;
 
     /**
      * Parameterized constructor to initialize an AppUser object.
@@ -28,10 +30,12 @@ public class Person {
      * @param email      Email address of the user.
      * @param phoneNumber Phone number of the user.
      */
-    public Person(String firstName, String lastName, String email, String phoneNumber) {
+    public Person(String firstName, String lastName, String email, String phoneNumber, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.username = username;
+        this.password = password;
     }
 }

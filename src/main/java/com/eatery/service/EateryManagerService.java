@@ -1,6 +1,7 @@
 package com.eatery.service;
 
 import com.eatery.api.dto.UpdateManagerRequest;
+import com.eatery.exception.CustomerNotFoundException;
 import com.eatery.exception.EateryManagerBadRequestException;
 import com.eatery.exception.EateryManagerNotFoundException;
 import com.eatery.entity.EateryManager;
@@ -39,6 +40,8 @@ public class EateryManagerService {
                 newManager.getLastName(),
                 newManager.getEmail(),
                 newManager.getPhoneNumber(),
+                newManager.getUsername(),
+                newManager.getPassword(),
                 newManager.getEateryId(),
                 newManager.getJobTitle(),
                 newManager.getWorkSchedules()
@@ -60,6 +63,22 @@ public class EateryManagerService {
     }
 
     /**
+     * Retrieves an eatery manager by their username and password.
+     * @param username user name
+     * @param password password
+     * @return The eatery manager object with the specified username and password.
+     * @throws CustomerNotFoundException if the eatery manager with the specified username and password does not exist.
+     */
+    public EateryManager get(String username, String password) {
+        return eateryManagerRepository.findAll().stream()
+                .filter(eateryManager ->
+                        eateryManager.getUsername().equals(username) && eateryManager.getPassword().equals(password)
+                )
+                .findFirst()
+                .orElseThrow(EateryManagerNotFoundException::new);
+    }
+
+    /**
      * Replaces an existing EateryManager's information with the provided update request.
      * Performs validation before saving the updated manager to the repository.
      * @param newManager The update request containing new manager information.
@@ -75,6 +94,8 @@ public class EateryManagerService {
                     eateryManager.setLastName(newManager.getLastName());
                     eateryManager.setEmail(newManager.getEmail());
                     eateryManager.setPhoneNumber(newManager.getPhoneNumber());
+                    eateryManager.setUsername(newManager.getUsername());
+                    eateryManager.setPassword(newManager.getPassword());
                     eateryManager.setJobTitle(newManager.getJobTitle());
                     eateryManager.setWorkSchedules(newManager.getWorkSchedules());
                     validateEateryManager(eateryManager); // Validierung vor dem Speichern
@@ -100,6 +121,12 @@ public class EateryManagerService {
         }
         if (manager.getPhoneNumber() == null || manager.getPhoneNumber().isBlank()) {
             throw new EateryManagerBadRequestException("Phone Number cannot be null or empty.");
+        }
+        if (manager.getUsername() == null || manager.getUsername().isBlank()) {
+            throw new EateryManagerBadRequestException("Username cannot be null or empty.");
+        }
+        if (manager.getPassword() == null || manager.getPassword().isBlank()) {
+            throw new EateryManagerBadRequestException("Password cannot be null or empty.");
         }
     }
 

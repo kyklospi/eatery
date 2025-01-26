@@ -100,4 +100,20 @@ public class CustomerController {
     void delete(@PathVariable Long id) {
         customerService.delete(id);
     }
+
+    /**
+     * Fetches a customer by their username and password.
+     * @param username The username of the customer to retrieve.
+     * @param password The password of the customer to retrieve.
+     * @return The customer with the specified username and password.
+     */
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully returned"),
+            @ApiResponse(responseCode = "404", description = "Customer not found"),
+            @ApiResponse(responseCode = "500", description = "Customer could not be fetched")
+    })
+    @GetMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    Customer login(String username, String password) {
+        return customerService.get(username, password);
+    }
 }

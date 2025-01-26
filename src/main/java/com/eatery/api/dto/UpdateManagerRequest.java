@@ -19,6 +19,8 @@ public class UpdateManagerRequest {
     private String lastName;
     private String email;
     private String phoneNumber;
+    private String username;
+    private String password;
     private long eateryId;
     private String jobTitle;
     private Set<WorkSchedule> workSchedules;

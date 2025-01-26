@@ -47,8 +47,16 @@ public class Customer extends Person {
      * @param phoneNumber The phone number of the customer.
      * @param payment The payment method chosen by the customer.
      */
-    public Customer(String firstName, String lastName, String email, String phoneNumber, PaymentMethod payment) {
-        super(firstName, lastName, email, phoneNumber);
+    public Customer(
+            String firstName,
+            String lastName,
+            String email,
+            String phoneNumber,
+            String username,
+            String password,
+            PaymentMethod payment
+    ) {
+        super(firstName, lastName, email, phoneNumber, username, password);
         this.payment = payment;
     }
 

@@ -5,6 +5,8 @@ class Customer {
 - String lastName
 - String email
 - String phoneNumber
+- String username
+- String password
 - List<Reservation> reservations
 - PaymentMethod paymentMethod
 - List<Review> reviews

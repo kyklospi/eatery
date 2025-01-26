@@ -40,6 +40,8 @@ public class CustomerService {
                 newCustomerRequest.getLastName(),
                 newCustomerRequest.getEmail(),
                 newCustomerRequest.getPhoneNumber(),
+                newCustomerRequest.getUsername(),
+                newCustomerRequest.getPassword(),
                 newCustomerRequest.getPaymentMethod()
         );
         return customerRepository.save(customer);
@@ -68,6 +70,22 @@ public class CustomerService {
     }
 
     /**
+     * Retrieves a customer by their username and password.
+     * @param username user name
+     * @param password password
+     * @return The customer object with the specified username and password.
+     * @throws CustomerNotFoundException if the customer with the specified username and password does not exist.
+     */
+    public Customer get(String username, String password) {
+        return customerRepository.findAll().stream()
+                .filter(customer ->
+                        customer.getUsername().equals(username) && customer.getPassword().equals(password)
+                )
+                .findFirst()
+                .orElseThrow(CustomerNotFoundException::new);
+    }
+
+    /**
      * Validates the customer data to ensure required fields are not null or empty.
      * @param newCustomer The customer object to be validated.
      * @throws CustomerBadRequestException if any required field is missing or empty.
@@ -80,6 +98,8 @@ public class CustomerService {
                     customer.setLastName(newCustomer.getLastName());
                     customer.setEmail(newCustomer.getEmail());
                     customer.setPhoneNumber(newCustomer.getPhoneNumber());
+                    customer.setUsername(newCustomer.getUsername());
+                    customer.setPassword(newCustomer.getPassword());
                     customer.setPayment(newCustomer.getPaymentMethod());
                     return customerRepository.save(customer);
                 })
@@ -101,6 +121,12 @@ public class CustomerService {
         }
         if (customer.getPhoneNumber() == null || customer.getPhoneNumber().isBlank()) {
             throw new CustomerBadRequestException("Phone Number must not be null or empty.");
+        }
+        if (customer.getUsername() == null || customer.getUsername().isBlank()) {
+            throw new CustomerBadRequestException("Username must not be null or empty.");
+        }
+        if (customer.getPassword() == null || customer.getPassword().isBlank()) {
+            throw new CustomerBadRequestException("Password must not be null or empty.");
         }
     }
 }

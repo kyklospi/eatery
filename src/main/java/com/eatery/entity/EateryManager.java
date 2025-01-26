@@ -44,8 +44,18 @@ public class EateryManager extends Person {
      * @param jobTitle The job title of the manager
      * @param workSchedules The work schedule of the manager
      */
-    public EateryManager(String firstName, String lastName, String email, String phoneNumber, long eateryId, String jobTitle, Set<WorkSchedule> workSchedules) {
-        super(firstName, lastName, email, phoneNumber);
+    public EateryManager(
+            String firstName,
+            String lastName,
+            String email,
+            String phoneNumber,
+            String username,
+            String password,
+            long eateryId,
+            String jobTitle,
+            Set<WorkSchedule> workSchedules
+    ) {
+        super(firstName, lastName, email, phoneNumber, username, password);
         this.eateryId = eateryId;
         this.jobTitle = jobTitle;
         this.workSchedules = workSchedules;

@@ -167,6 +167,8 @@ public class EateryDatabase {
                             "Mustermann",
                             "mustermann@yahoo.com",
                             "+4915212345678",
+                            "maxMustermann",
+                            "max1985",
                             PaymentMethod.CASH
                     )
             ));
@@ -176,6 +178,8 @@ public class EateryDatabase {
                             "Ullrich",
                             "ullrich-alexandra@gmail.com",
                             "+4915312345678",
+                            "ullrich-A",
+                            "p455w0rd",
                             PaymentMethod.CREDIT_CARD
                     )
             ));
@@ -203,6 +207,8 @@ public class EateryDatabase {
                             "Müller",
                             "mueller.erika@jim-block.de",
                             "+4917512345678",
+                            "erikamüller",
+                            "13353Ber",
                             1,
                             "Receptionist",
                             Set.of(managerSchedule1, managerSchedule2, managerSchedule3)
@@ -237,6 +243,8 @@ public class EateryDatabase {
                             "Lindner",
                             "lindner-tina@pussers.info",
                             "+4917623456789",
+                            "lindner.tina",
+                            "12345Abc!",
                             2,
                             "Bar Manager",
                             Set.of(barManagerSchedule1, barManagerSchedule2, barManagerSchedule3, barManagerSchedule4)

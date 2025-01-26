@@ -49,6 +49,8 @@ class CustomerIntegrationTest {
                 "lastName",
                 "email",
                 "phoneNumber",
+                "userName",
+                "password",
                 PaymentMethod.CASH
         );
     }
@@ -74,6 +76,8 @@ class CustomerIntegrationTest {
         assertEquals(customerRequest.getLastName(), actual.getLastName());
         assertEquals(customerRequest.getEmail(), actual.getEmail());
         assertEquals(customerRequest.getPhoneNumber(), actual.getPhoneNumber());
+        assertEquals(customerRequest.getUsername(), actual.getUsername());
+        assertEquals(customerRequest.getPassword(), actual.getPassword());
     }
 
     @Test
@@ -96,6 +100,8 @@ class CustomerIntegrationTest {
         assertEquals(customerRequest.getLastName(), actual.getLast().getLastName());
         assertEquals(customerRequest.getEmail(), actual.getLast().getEmail());
         assertEquals(customerRequest.getPhoneNumber(), actual.getLast().getPhoneNumber());
+        assertEquals(customerRequest.getUsername(), actual.getLast().getUsername());
+        assertEquals(customerRequest.getPassword(), actual.getLast().getPassword());
     }
 
     @Test
@@ -118,6 +124,8 @@ class CustomerIntegrationTest {
         assertEquals(savedCustomer.getLastName(), actual.getLastName());
         assertEquals(savedCustomer.getEmail(), actual.getEmail());
         assertEquals(savedCustomer.getPhoneNumber(), actual.getPhoneNumber());
+        assertEquals(savedCustomer.getUsername(), actual.getUsername());
+        assertEquals(savedCustomer.getPassword(), actual.getPassword());
     }
 
     @Test
@@ -129,6 +137,8 @@ class CustomerIntegrationTest {
                 "updateLastName",
                 "updateEmail",
                 "updatePhone",
+                "updateUserName",
+                "updatePassword",
                 PaymentMethod.CASH
         );
 
@@ -150,6 +160,8 @@ class CustomerIntegrationTest {
         assertEquals(updateCustomerRequest.getLastName(), actual.getLastName());
         assertEquals(updateCustomerRequest.getEmail(), actual.getEmail());
         assertEquals(updateCustomerRequest.getPhoneNumber(), actual.getPhoneNumber());
+        assertEquals(updateCustomerRequest.getUsername(), actual.getUsername());
+        assertEquals(updateCustomerRequest.getPassword(), actual.getPassword());
     }
 
     @Test
@@ -166,5 +178,31 @@ class CustomerIntegrationTest {
                 .andReturn();
 
         assertThrows(CustomerNotFoundException.class, () -> customerController.get(savedCustomerId));
+    }
+
+    @Test
+    void login() throws Exception {
+        Customer savedCustomer = customerController.create(customerRequest);
+        String savedUsername = savedCustomer.getUsername();
+        String savedPassword = savedCustomer.getPassword();
+
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/customers/login")
+                                .param("username", savedUsername)
+                                .param("password", savedPassword)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Customer actual = MAPPER.readValue(result.getResponse().getContentAsString(), Customer.class);
+
+        assertEquals(savedCustomer.getFirstName(), actual.getFirstName());
+        assertEquals(savedCustomer.getLastName(), actual.getLastName());
+        assertEquals(savedCustomer.getEmail(), actual.getEmail());
+        assertEquals(savedCustomer.getPhoneNumber(), actual.getPhoneNumber());
+        assertEquals(savedCustomer.getUsername(), actual.getUsername());
+        assertEquals(savedCustomer.getPassword(), actual.getPassword());
     }
 }

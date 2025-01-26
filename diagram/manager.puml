@@ -5,6 +5,8 @@ class EateryManager {
 - String lastName
 - String email
 - String phoneNumber
+- String username
+- String password
 - Long eateryId
 - String jobTitle
 - Set<WorkSchedule> workSchedules

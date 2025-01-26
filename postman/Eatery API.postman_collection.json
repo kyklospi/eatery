@@ -153,7 +153,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    \"email\": \"cjohnson@mail.uk\",\n    \"phoneNumber\": \"+4915412345678\",\n    \"paymentMethod\": \"CASH\"\n}",
+							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    \"email\": \"cjohnson@mail.uk\",\n    \"phoneNumber\": \"+4915412345678\",\n    \"username\": \"cjohnson\",\n    \"password\": \"c01/01/1980\",\n    \"paymentMethod\": \"CASH\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -182,7 +182,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    \"email\": \"c.johnson@mail.uk\",\n    \"phoneNumber\": \"0154-1234-5678\",\n    \"paymentMethod\": \"CASH\"\n}",
+							"raw": "{\n    \"firstName\": \"Clarke\",\n    \"lastName\": \"Johnson\", \n    // email update\n    \"email\": \"c.johnson@mail.uk\",\n    \"phoneNumber\": \"0154-1234-5678\",\n    \"username\": \"cjohnson\",\n    \"password\": \"c01/01/1980\",\n    \"paymentMethod\": \"CASH\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -232,6 +232,37 @@
 								{
 									"key": "id",
 									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/customers/login?username=cjohnson&password=c01/01/1980",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"customers",
+								"login"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "cjohnson"
+								},
+								{
+									"key": "password",
+									"value": "c01/01/1980"
 								}
 							]
 						}
@@ -498,7 +529,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    \"email\": \"willner-mark@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"+4915123456789\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"10:00:00\",\n            \"endTime\": \"18:00:00\"            \n        }\n    ]\n}",
+							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    \"email\": \"willner-mark@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"+4915123456789\",\n    \"username\": \"willner-mark\",\n    \"password\": \"wm!1234\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"10:00:00\",\n            \"endTime\": \"18:00:00\"            \n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -527,7 +558,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    // update email address\n    \"email\": \"willner.mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    // update work schedule\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"15:00:00\",\n            \"endTime\": \"23:00:00\"            \n        }\n    ]\n\n}",
+							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    // update email address\n    \"email\": \"willner.mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\",\n    \"username\": \"willner-mark\",\n    \"password\": \"wm!1234\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    // update work schedule\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"15:00:00\",\n            \"endTime\": \"23:00:00\"            \n        }\n    ]\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -577,6 +608,37 @@
 								{
 									"key": "id",
 									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/managers/login?username=willner-mark&password=wm!1234",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"managers",
+								"login"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "willner-mark"
+								},
+								{
+									"key": "password",
+									"value": "wm!1234"
 								}
 							]
 						}
