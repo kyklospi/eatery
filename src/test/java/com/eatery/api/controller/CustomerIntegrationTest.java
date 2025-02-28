@@ -2,7 +2,6 @@ package com.eatery.api.controller;
 
 import com.eatery.api.dto.UpdateCustomerRequest;
 import com.eatery.entity.Customer;
-import com.eatery.entity.PaymentMethod;
 import com.eatery.exception.CustomerNotFoundException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,11 +46,9 @@ class CustomerIntegrationTest {
         customerRequest = new UpdateCustomerRequest(
                 "firstName",
                 "lastName",
-                "email",
                 "phoneNumber",
                 "userName",
-                "password",
-                PaymentMethod.CASH
+                "password"
         );
     }
 
@@ -74,7 +71,6 @@ class CustomerIntegrationTest {
         assertNotNull(actual.getId());
         assertEquals(customerRequest.getFirstName(), actual.getFirstName());
         assertEquals(customerRequest.getLastName(), actual.getLastName());
-        assertEquals(customerRequest.getEmail(), actual.getEmail());
         assertEquals(customerRequest.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(customerRequest.getUsername(), actual.getUsername());
         assertEquals(customerRequest.getPassword(), actual.getPassword());
@@ -98,7 +94,6 @@ class CustomerIntegrationTest {
         assertNotNull(actual.getLast().getId());
         assertEquals(customerRequest.getFirstName(), actual.getLast().getFirstName());
         assertEquals(customerRequest.getLastName(), actual.getLast().getLastName());
-        assertEquals(customerRequest.getEmail(), actual.getLast().getEmail());
         assertEquals(customerRequest.getPhoneNumber(), actual.getLast().getPhoneNumber());
         assertEquals(customerRequest.getUsername(), actual.getLast().getUsername());
         assertEquals(customerRequest.getPassword(), actual.getLast().getPassword());
@@ -122,7 +117,6 @@ class CustomerIntegrationTest {
         assertEquals(savedCustomerId, actual.getId());
         assertEquals(savedCustomer.getFirstName(), actual.getFirstName());
         assertEquals(savedCustomer.getLastName(), actual.getLastName());
-        assertEquals(savedCustomer.getEmail(), actual.getEmail());
         assertEquals(savedCustomer.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(savedCustomer.getUsername(), actual.getUsername());
         assertEquals(savedCustomer.getPassword(), actual.getPassword());
@@ -135,11 +129,9 @@ class CustomerIntegrationTest {
         UpdateCustomerRequest updateCustomerRequest = new UpdateCustomerRequest(
                 "updateFirstName",
                 "updateLastName",
-                "updateEmail",
                 "updatePhone",
                 "updateUserName",
-                "updatePassword",
-                PaymentMethod.CASH
+                "updatePassword"
         );
 
         MvcResult result = mockMvc.perform(
@@ -158,7 +150,6 @@ class CustomerIntegrationTest {
 
         assertEquals(updateCustomerRequest.getFirstName(), actual.getFirstName());
         assertEquals(updateCustomerRequest.getLastName(), actual.getLastName());
-        assertEquals(updateCustomerRequest.getEmail(), actual.getEmail());
         assertEquals(updateCustomerRequest.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(updateCustomerRequest.getUsername(), actual.getUsername());
         assertEquals(updateCustomerRequest.getPassword(), actual.getPassword());
@@ -200,7 +191,6 @@ class CustomerIntegrationTest {
 
         assertEquals(savedCustomer.getFirstName(), actual.getFirstName());
         assertEquals(savedCustomer.getLastName(), actual.getLastName());
-        assertEquals(savedCustomer.getEmail(), actual.getEmail());
         assertEquals(savedCustomer.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(savedCustomer.getUsername(), actual.getUsername());
         assertEquals(savedCustomer.getPassword(), actual.getPassword());

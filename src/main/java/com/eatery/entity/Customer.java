@@ -21,6 +21,8 @@ public class Customer extends Person {
     @Column(unique = true, nullable = false)
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
+    private String phoneNumber;
+
     /**
      * List of reservations associated with the customer.
      * This is a one-to-many relationship where the `Reservation` entity contains a `customerId` field
@@ -28,8 +30,6 @@ public class Customer extends Person {
      */
     @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
-
-    private PaymentMethod payment = PaymentMethod.CASH;
 
     /**
      * List of reviews associated with the customer.
@@ -43,21 +43,17 @@ public class Customer extends Person {
      * Constructs a new Customer with the specified details.
      * @param firstName  The first name of the customer.
      * @param lastName   The last name of the customer.
-     * @param email      The email address of the customer.
      * @param phoneNumber The phone number of the customer.
-     * @param payment The payment method chosen by the customer.
      */
     public Customer(
             String firstName,
             String lastName,
-            String email,
-            String phoneNumber,
             String username,
             String password,
-            PaymentMethod payment
+            String phoneNumber
     ) {
-        super(firstName, lastName, email, phoneNumber, username, password);
-        this.payment = payment;
+        super(firstName, lastName, username, password);
+        this.phoneNumber = phoneNumber;
     }
 
     /**
@@ -70,10 +66,10 @@ public class Customer extends Person {
                 "id=" + this.getId() +
                 ", firstName='" + this.getFirstName() + '\'' +
                 ", lastName='" + this.getLastName() + '\'' +
-                ", email='" + this.getEmail() + '\'' +
-                ", phoneNumber='" + this.getPhoneNumber() + '\'' +
+                ", username='" + this.getUsername() + '\'' +
+                ", password='" + this.getPassword() + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", reservations=" + reservations + '\'' +
-                ", payment=" + payment + '\'' +
                 ", reviews=" + reviews +
                 '}';
     }

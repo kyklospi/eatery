@@ -165,37 +165,33 @@ public class EateryDatabase {
                     new Customer(
                             "Max",
                             "Mustermann",
-                            "mustermann@yahoo.com",
                             "+4915212345678",
                             "maxMustermann",
-                            "max1985",
-                            PaymentMethod.CASH
+                            "max1985"
                     )
             ));
             logger.info("Preloading {}", customerRepository.save(
                     new Customer(
                             "Alexandra",
                             "Ullrich",
-                            "ullrich-alexandra@gmail.com",
                             "+4915312345678",
                             "ullrich-A",
-                            "p455w0rd",
-                            PaymentMethod.CREDIT_CARD
+                            "p455w0rd"
                     )
             ));
 
             // Create BusinessDayTime instance for a manager of restaurant
-            WorkSchedule managerSchedule1 = new WorkSchedule(
+            BusinessDayTime managerSchedule1 = new BusinessDayTime(
                     DayOfWeek.FRIDAY,
                     LocalTime.of(11, 30),
                     LocalTime.of(19, 30)
             );
-            WorkSchedule managerSchedule2 = new WorkSchedule(
+            BusinessDayTime managerSchedule2 = new BusinessDayTime(
                     DayOfWeek.SATURDAY,
                     LocalTime.of(11, 30),
                     LocalTime.of(19, 30)
             );
-            WorkSchedule managerSchedule3 = new WorkSchedule(
+            BusinessDayTime managerSchedule3 = new BusinessDayTime(
                     DayOfWeek.SUNDAY,
                     LocalTime.of(11, 30),
                     LocalTime.of(19, 30)
@@ -205,8 +201,6 @@ public class EateryDatabase {
                     new EateryManager(
                             "Erika",
                             "Müller",
-                            "mueller.erika@jim-block.de",
-                            "+4917512345678",
                             "erikamüller",
                             "13353Ber",
                             1,
@@ -216,22 +210,22 @@ public class EateryDatabase {
             ));
 
             // Create BusinessDayTime instance for a manager of bar
-            WorkSchedule barManagerSchedule1 = new WorkSchedule(
+            BusinessDayTime barManagerSchedule1 = new BusinessDayTime(
                     DayOfWeek.FRIDAY,
                     LocalTime.of(19, 0),
                     LocalTime.MAX
             );
-            WorkSchedule barManagerSchedule2 = new WorkSchedule(
+            BusinessDayTime barManagerSchedule2 = new BusinessDayTime(
                     DayOfWeek.SATURDAY,
                     LocalTime.MIDNIGHT,
                     LocalTime.of(3, 0)
             );
-            WorkSchedule barManagerSchedule3 = new WorkSchedule(
+            BusinessDayTime barManagerSchedule3 = new BusinessDayTime(
                     DayOfWeek.SATURDAY,
                     LocalTime.of(19, 0),
                     LocalTime.MAX
             );
-            WorkSchedule barManagerSchedule4 = new WorkSchedule(
+            BusinessDayTime barManagerSchedule4 = new BusinessDayTime(
                     DayOfWeek.SUNDAY,
                     LocalTime.MIDNIGHT,
                     LocalTime.of(3, 0)
@@ -241,8 +235,6 @@ public class EateryDatabase {
                     new EateryManager(
                             "Tina",
                             "Lindner",
-                            "lindner-tina@pussers.info",
-                            "+4917623456789",
                             "lindner.tina",
                             "12345Abc!",
                             2,

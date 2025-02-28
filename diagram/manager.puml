@@ -3,13 +3,11 @@ class EateryManager {
 - Long id
 - String firstName
 - String lastName
-- String email
-- String phoneNumber
 - String username
 - String password
 - Long eateryId
 - String jobTitle
-- Set<WorkSchedule> workSchedules
+- Set<BusinessDayTime> workSchedules
 + boolean equals(Object)
 + int hashCode()
 + String toString()

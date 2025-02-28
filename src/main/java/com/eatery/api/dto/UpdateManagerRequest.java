@@ -1,6 +1,6 @@
 package com.eatery.api.dto;
 
-import com.eatery.entity.WorkSchedule;
+import com.eatery.entity.BusinessDayTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +17,9 @@ import java.util.Set;
 public class UpdateManagerRequest {
     private String firstName;
     private String lastName;
-    private String email;
-    private String phoneNumber;
     private String username;
     private String password;
     private long eateryId;
     private String jobTitle;
-    private Set<WorkSchedule> workSchedules;
+    private Set<BusinessDayTime> workSchedules;
 }

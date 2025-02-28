@@ -9,6 +9,7 @@ class Eatery {
 - int guestCapacity
 - List<Reservation> reservationList
 - Set<BusinessDayTime> businessDayTimes
+- List<Review> reviews
 - Long managerId
 + boolean isOpen()
 + boolean isFullyBooked(LocalDateTime,int)

@@ -11,22 +11,23 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 /**
- * Record representing the opening and closing times of a business on a specific day.
+ * Record representing the start and end times of a business on a specific day.
  * This immutable data structure stores information about the day of the week,
- * opening time, and closing time for a business.
+ * opening time & closing time for an eatery and
+ * start time & end time for eatery manager work schedule.
  */
 public record BusinessDayTime(
-        DayOfWeek openDay,
+        DayOfWeek day,
 
         @JsonDeserialize(using = LocalTimeDeserializer.class)
         @JsonSerialize(using = LocalTimeSerializer.class)
         @JsonFormat(pattern = "HH:mm:ss", shape = JsonFormat.Shape.STRING)
-        LocalTime openTime,
+        LocalTime startTime,
 
         @JsonDeserialize(using = LocalTimeDeserializer.class)
         @JsonSerialize(using = LocalTimeSerializer.class)
         @JsonFormat(pattern = "HH:mm:ss", shape = JsonFormat.Shape.STRING)
-        LocalTime closeTime
+        LocalTime endTime
 ) {
 
     /**
@@ -38,7 +39,7 @@ public record BusinessDayTime(
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BusinessDayTime that)) return false;
-        return openDay == that.openDay && Objects.equals(openTime, that.openTime) && Objects.equals(closeTime, that.closeTime);
+        return day == that.day && Objects.equals(startTime, that.startTime) && Objects.equals(endTime, that.endTime);
     }
 
     /**
@@ -48,9 +49,9 @@ public record BusinessDayTime(
     @Override
     public String toString() {
         return "BusinessDayTime{" +
-                "openDay=" + openDay +
-                ", openTime=" + openTime +
-                ", closeTime=" + closeTime +
+                "day=" + day +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 '}';
     }
 }

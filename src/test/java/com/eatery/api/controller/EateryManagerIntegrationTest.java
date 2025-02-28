@@ -1,7 +1,7 @@
 package com.eatery.api.controller;
 
 import com.eatery.api.dto.UpdateManagerRequest;
-import com.eatery.entity.WorkSchedule;
+import com.eatery.entity.BusinessDayTime;
 import com.eatery.exception.EateryManagerNotFoundException;
 import com.eatery.entity.EateryManager;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -50,14 +50,12 @@ class EateryManagerIntegrationTest {
         managerRequest = new UpdateManagerRequest(
                 "firstName",
                 "lastName",
-                "email",
-                "phoneNumber",
                 "userName",
                 "password",
                 1,
                 "jobTitle",
                 Set.of(
-                        new WorkSchedule(
+                        new BusinessDayTime(
                                 DayOfWeek.MONDAY,
                                 LocalTime.of(18, 0),
                                 LocalTime.of(23, 0)
@@ -91,8 +89,6 @@ class EateryManagerIntegrationTest {
         assertNotNull(actual.getId());
         assertEquals(managerRequest.getFirstName(), actual.getFirstName());
         assertEquals(managerRequest.getLastName(), actual.getLastName());
-        assertEquals(managerRequest.getEmail(), actual.getEmail());
-        assertEquals(managerRequest.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(managerRequest.getUsername(), actual.getUsername());
         assertEquals(managerRequest.getPassword(), actual.getPassword());
     }
@@ -122,8 +118,6 @@ class EateryManagerIntegrationTest {
         assertNotNull(actual.getLast().getId());
         assertEquals(managerRequest.getFirstName(), actual.getLast().getFirstName());
         assertEquals(managerRequest.getLastName(), actual.getLast().getLastName());
-        assertEquals(managerRequest.getEmail(), actual.getLast().getEmail());
-        assertEquals(managerRequest.getPhoneNumber(), actual.getLast().getPhoneNumber());
         assertEquals(managerRequest.getUsername(), actual.getLast().getUsername());
         assertEquals(managerRequest.getPassword(), actual.getLast().getPassword());
     }
@@ -153,8 +147,6 @@ class EateryManagerIntegrationTest {
         assertEquals(savedManagerId, actual.getId());
         assertEquals(savedManager.getFirstName(), actual.getFirstName());
         assertEquals(savedManager.getLastName(), actual.getLastName());
-        assertEquals(savedManager.getEmail(), actual.getEmail());
-        assertEquals(savedManager.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(savedManager.getUsername(), actual.getUsername());
         assertEquals(savedManager.getPassword(), actual.getPassword());
     }
@@ -171,14 +163,12 @@ class EateryManagerIntegrationTest {
         UpdateManagerRequest updateManagerRequest = new UpdateManagerRequest(
                 "updateFirstName",
                 "updateLastName",
-                "updateEmail",
-                "updatePhone",
                 "userName",
                 "password",
                 1,
                 "updateJobTitle",
                 Set.of(
-                        new WorkSchedule(
+                        new BusinessDayTime(
                                 DayOfWeek.MONDAY,
                                 LocalTime.of(18, 0),
                                 LocalTime.of(23, 0)
@@ -204,8 +194,6 @@ class EateryManagerIntegrationTest {
         // THEN
         assertEquals(updateManagerRequest.getFirstName(), actual.getFirstName());
         assertEquals(updateManagerRequest.getLastName(), actual.getLastName());
-        assertEquals(updateManagerRequest.getEmail(), actual.getEmail());
-        assertEquals(updateManagerRequest.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(updateManagerRequest.getUsername(), actual.getUsername());
         assertEquals(updateManagerRequest.getPassword(), actual.getPassword());
     }
@@ -258,8 +246,6 @@ class EateryManagerIntegrationTest {
         // THEN
         assertEquals(savedManager.getFirstName(), actual.getFirstName());
         assertEquals(savedManager.getLastName(), actual.getLastName());
-        assertEquals(savedManager.getEmail(), actual.getEmail());
-        assertEquals(savedManager.getPhoneNumber(), actual.getPhoneNumber());
         assertEquals(savedManager.getUsername(), actual.getUsername());
         assertEquals(savedManager.getPassword(), actual.getPassword());
     }

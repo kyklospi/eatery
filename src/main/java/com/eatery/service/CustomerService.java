@@ -38,11 +38,9 @@ public class CustomerService {
         Customer customer = new Customer(
                 newCustomerRequest.getFirstName(),
                 newCustomerRequest.getLastName(),
-                newCustomerRequest.getEmail(),
-                newCustomerRequest.getPhoneNumber(),
                 newCustomerRequest.getUsername(),
                 newCustomerRequest.getPassword(),
-                newCustomerRequest.getPaymentMethod()
+                newCustomerRequest.getPhoneNumber()
         );
         return customerRepository.save(customer);
     }
@@ -96,11 +94,9 @@ public class CustomerService {
                 .map(customer -> {
                     customer.setFirstName(newCustomer.getFirstName());
                     customer.setLastName(newCustomer.getLastName());
-                    customer.setEmail(newCustomer.getEmail());
-                    customer.setPhoneNumber(newCustomer.getPhoneNumber());
                     customer.setUsername(newCustomer.getUsername());
                     customer.setPassword(newCustomer.getPassword());
-                    customer.setPayment(newCustomer.getPaymentMethod());
+                    customer.setPhoneNumber(newCustomer.getPhoneNumber());
                     return customerRepository.save(customer);
                 })
                 .orElseThrow(CustomerNotFoundException::new);
@@ -109,9 +105,6 @@ public class CustomerService {
     private void validateCustomer(UpdateCustomerRequest customer) {
         if (customer == null) {
             throw new CustomerBadRequestException("Customer request must not be null.");
-        }
-        if (customer.getEmail() == null || customer.getEmail().isBlank()) {
-            throw new CustomerBadRequestException("Email must not be null or empty.");
         }
         if (customer.getFirstName() == null || customer.getFirstName().isBlank()) {
             throw new CustomerBadRequestException("First Name must not be null or empty.");

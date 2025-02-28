@@ -3,12 +3,10 @@ class Customer {
 - Long id
 - String firstName
 - String lastName
-- String email
 - String phoneNumber
 - String username
 - String password
 - List<Reservation> reservations
-- PaymentMethod paymentMethod
 - List<Review> reviews
 + boolean equals(Object)
 + int hashCode()

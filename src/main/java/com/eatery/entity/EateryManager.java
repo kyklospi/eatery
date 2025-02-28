@@ -32,14 +32,12 @@ public class EateryManager extends Person {
     private String jobTitle;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    private Set<WorkSchedule> workSchedules = Set.of();
+    private Set<BusinessDayTime> workSchedules = Set.of();
 
     /**
      * Constructor to create an `EateryManager` with the given user details.
      * @param firstName  The first name of the manager.
      * @param lastName   The last name of the manager.
-     * @param email      The email address of the manager.
-     * @param phoneNumber The phone number of the manager.
      * @param eateryId The eatery id associated with the manager
      * @param jobTitle The job title of the manager
      * @param workSchedules The work schedule of the manager
@@ -47,15 +45,13 @@ public class EateryManager extends Person {
     public EateryManager(
             String firstName,
             String lastName,
-            String email,
-            String phoneNumber,
             String username,
             String password,
             long eateryId,
             String jobTitle,
-            Set<WorkSchedule> workSchedules
+            Set<BusinessDayTime> workSchedules
     ) {
-        super(firstName, lastName, email, phoneNumber, username, password);
+        super(firstName, lastName, username, password);
         this.eateryId = eateryId;
         this.jobTitle = jobTitle;
         this.workSchedules = workSchedules;
@@ -95,8 +91,8 @@ public class EateryManager extends Person {
                 "id=" + this.getId() +
                 ", firstName='" + this.getFirstName() + '\'' +
                 ", lastName='" + this.getLastName() + '\'' +
-                ", email='" + this.getEmail() + '\'' +
-                ", phoneNumber='" + this.getPhoneNumber() + '\'' +
+                ", username='" + this.getUsername() + '\'' +
+                ", password='" + this.getPassword() + '\'' +
                 ", eateryId=" + eateryId + '\'' +
                 ", jobTitle=" + jobTitle + '\'' +
                 ", workSchedule=" + workSchedules +

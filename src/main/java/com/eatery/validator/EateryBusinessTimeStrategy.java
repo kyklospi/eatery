@@ -19,9 +19,9 @@ public class EateryBusinessTimeStrategy implements ReservationStrategy {
     public boolean isReservable(Eatery eatery, LocalDateTime reservationTime, int guestNumber) {
         return eatery.getBusinessDayTimes().stream()
                 .anyMatch(eateryBusinessDayTime ->
-                                reservationTime.getDayOfWeek().equals( eateryBusinessDayTime.openDay()) &&
-                                reservationTime.toLocalTime().isAfter(eateryBusinessDayTime.openTime()) &&
-                                reservationTime.toLocalTime().isBefore(eateryBusinessDayTime.closeTime())
+                                reservationTime.getDayOfWeek().equals( eateryBusinessDayTime.day()) &&
+                                reservationTime.toLocalTime().isAfter(eateryBusinessDayTime.startTime()) &&
+                                reservationTime.toLocalTime().isBefore(eateryBusinessDayTime.endTime())
                 );
     }
 }

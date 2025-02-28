@@ -38,8 +38,6 @@ public class EateryManagerService {
         EateryManager manager = new EateryManager(
                 newManager.getFirstName(),
                 newManager.getLastName(),
-                newManager.getEmail(),
-                newManager.getPhoneNumber(),
                 newManager.getUsername(),
                 newManager.getPassword(),
                 newManager.getEateryId(),
@@ -92,8 +90,6 @@ public class EateryManagerService {
                 .map(eateryManager -> {
                     eateryManager.setFirstName(newManager.getFirstName());
                     eateryManager.setLastName(newManager.getLastName());
-                    eateryManager.setEmail(newManager.getEmail());
-                    eateryManager.setPhoneNumber(newManager.getPhoneNumber());
                     eateryManager.setUsername(newManager.getUsername());
                     eateryManager.setPassword(newManager.getPassword());
                     eateryManager.setJobTitle(newManager.getJobTitle());
@@ -110,17 +106,11 @@ public class EateryManagerService {
      * @throws EateryManagerBadRequestException if any required field is missing or empty.
      */
     private void validateEateryManager(EateryManager manager) {
-        if (manager.getEmail() == null || manager.getEmail().isBlank()) {
-            throw new EateryManagerBadRequestException("Email cannot be null or empty.");
-        }
         if (manager.getFirstName() == null || manager.getFirstName().isBlank()) {
             throw new EateryManagerBadRequestException("First Name cannot be null or empty.");
         }
         if (manager.getLastName() == null || manager.getLastName().isBlank()) {
             throw new EateryManagerBadRequestException("Last Name cannot be null or empty.");
-        }
-        if (manager.getPhoneNumber() == null || manager.getPhoneNumber().isBlank()) {
-            throw new EateryManagerBadRequestException("Phone Number cannot be null or empty.");
         }
         if (manager.getUsername() == null || manager.getUsername().isBlank()) {
             throw new EateryManagerBadRequestException("Username cannot be null or empty.");

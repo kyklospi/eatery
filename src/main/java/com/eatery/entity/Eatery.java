@@ -44,6 +44,14 @@ public class Eatery {
     @JdbcTypeCode(SqlTypes.JSON)
     private Set<BusinessDayTime> businessDayTimes = Set.of();
 
+    /**
+     * List of reviews associated with the eatery.
+     * This is a one-to-many relationship where the `Review` entity contains a `eateryId` field
+     * mapped to this class.
+     */
+    @OneToMany(mappedBy = "eateryId", cascade = CascadeType.ALL)
+    private List<Review> reviews;
+
     private long managerId;
 
     public Eatery(Type type, String name, String address, Set<BusinessDayTime> businessDayTimes, int guestCapacity, String email, String phoneNumber) {
@@ -77,8 +85,8 @@ public class Eatery {
     public boolean isOpen() {
         return this.businessDayTimes.stream()
                 .anyMatch(it ->
-                        it.openDay().equals(LocalDateTime.now().getDayOfWeek()) &&
-                        LocalTime.now().isAfter(it.openTime()) && LocalTime.now().isBefore(it.closeTime())
+                        it.day().equals(LocalDateTime.now().getDayOfWeek()) &&
+                        LocalTime.now().isAfter(it.startTime()) && LocalTime.now().isBefore(it.endTime())
                 );
     }
 
@@ -109,6 +117,7 @@ public class Eatery {
                 ", guestCapacity=" + guestCapacity +
                 ", reservationList=" + reservationList +
                 ", businessDayTimes=" + businessDayTimes +
+                ", reviews=" + reviews +
                 ", eateryManagerId=" + managerId +
                 '}';
     }
