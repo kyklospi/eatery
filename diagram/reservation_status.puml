@@ -3,6 +3,7 @@ enum Status {
 +  CONFIRMED
 +  COMPLETED
 +  CANCELLED
++  ABSENT
 +  DELETED
 }
 @enduml

@@ -193,7 +193,7 @@ public class ReservationService {
     }
 
     /**
-     * Deletes a reservation if it has been completed or cancelled.
+     * Deletes a reservation if it has been completed, cancelled or absent.
      * @param id The ID of the reservation to delete.
      * @throws ReservationNotFoundException if the reservation with the specified ID does not exist.
      */
@@ -201,8 +201,7 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(ReservationNotFoundException::new);
 
-        if (reservation.getStatus().equals(Reservation.Status.COMPLETED) ||
-                reservation.getStatus().equals(CANCELLED)) {
+        if (reservation.getStatus().equals(COMPLETED) || reservation.getStatus().equals(CANCELLED) || reservation.getStatus().equals(ABSENT)) {
 
             reservation.setStatus(DELETED);
             ReservationHistory history = new ReservationHistory(
