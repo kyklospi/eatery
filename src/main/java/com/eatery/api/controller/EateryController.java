@@ -2,6 +2,8 @@ package com.eatery.api.controller;
 
 import com.eatery.api.dto.UpdateEateryRequest;
 import com.eatery.entity.Eatery;
+import com.eatery.exception.EateryBadRequestException;
+import com.eatery.exception.EateryNotFoundException;
 import com.eatery.service.EateryService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -118,5 +120,28 @@ public class EateryController {
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
         eateryService.delete(id);
+    }
+
+
+    /**
+     * Exception handlers for handling Eatery-related exceptions.
+     * Below methods handle exceptions related to Eatery and sends the appropriate HTTP responses.
+     */
+    @ExceptionHandler(EateryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String handle(EateryNotFoundException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(EateryBadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String handle(EateryBadRequestException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    String handle(RuntimeException e) {
+        return e.getMessage();
     }
 }

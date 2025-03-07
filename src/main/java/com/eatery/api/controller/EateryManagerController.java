@@ -2,6 +2,8 @@ package com.eatery.api.controller;
 
 import com.eatery.api.dto.UpdateManagerRequest;
 import com.eatery.entity.EateryManager;
+import com.eatery.exception.EateryManagerBadRequestException;
+import com.eatery.exception.EateryManagerNotFoundException;
 import com.eatery.service.EateryManagerService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -110,5 +112,27 @@ public class EateryManagerController {
     @GetMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     EateryManager login(String username, String password) {
         return eateryManagerService.get(username, password);
+    }
+
+    /**
+     * Exception handlers for EateryManager-related exceptions.
+     * Below methods handle exceptions related to EateryManager and sends the appropriate HTTP responses.
+     */
+    @ExceptionHandler(EateryManagerNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String handle(EateryManagerNotFoundException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(EateryManagerBadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String handle(EateryManagerBadRequestException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    String handle(RuntimeException e) {
+        return e.getMessage();
     }
 }

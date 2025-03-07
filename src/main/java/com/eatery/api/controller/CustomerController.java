@@ -1,6 +1,8 @@
 package com.eatery.api.controller;
 
 import com.eatery.api.dto.UpdateCustomerRequest;
+import com.eatery.exception.CustomerBadRequestException;
+import com.eatery.exception.CustomerNotFoundException;
 import com.eatery.service.CustomerService;
 import com.eatery.entity.Customer;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -115,5 +117,26 @@ public class CustomerController {
     @GetMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     Customer login(String username, String password) {
         return customerService.get(username, password);
+    }
+
+    /**
+     * Exception handlers for Customer-related exceptions.
+     * Below methods handle exceptions related to Customer and sends the appropriate HTTP responses.
+     */
+    @ExceptionHandler(CustomerNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String handle(CustomerNotFoundException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(CustomerBadRequestException.class)
+    String handle(CustomerBadRequestException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    String handle(RuntimeException e) {
+        return e.getMessage();
     }
 }

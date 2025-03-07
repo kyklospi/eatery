@@ -3,6 +3,8 @@ package com.eatery.api.controller;
 import com.eatery.api.dto.CreateReviewRequest;
 import com.eatery.api.dto.UpdateReviewRequest;
 import com.eatery.entity.Review;
+import com.eatery.exception.ReviewBadRequestException;
+import com.eatery.exception.ReviewNotFoundException;
 import com.eatery.service.ReviewService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -100,5 +102,27 @@ public class ReviewController {
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     void delete(@PathVariable Long id) {
         reviewService.delete(id);
+    }
+
+    /**
+     * Exception handlers for Review-related exceptions.
+     * Below methods handle exceptions related to Review and sends the appropriate HTTP responses.
+     */
+    @ExceptionHandler(ReviewNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String handle(ReviewNotFoundException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(ReviewBadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String handle(ReviewBadRequestException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    String handle(RuntimeException e) {
+        return e.getMessage();
     }
 }

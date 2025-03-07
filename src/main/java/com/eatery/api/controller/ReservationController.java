@@ -3,6 +3,8 @@ package com.eatery.api.controller;
 import com.eatery.api.dto.CreateReservationRequest;
 import com.eatery.api.dto.UpdateReservationRequest;
 import com.eatery.entity.Reservation;
+import com.eatery.exception.ReservationBadRequestException;
+import com.eatery.exception.ReservationNotFoundException;
 import com.eatery.service.ReservationService;
 import com.eatery.entity.ReservationHistory;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -135,5 +137,27 @@ public class ReservationController {
     @GetMapping(path = "{id}/history", produces = MediaType.APPLICATION_JSON_VALUE)
     List<ReservationHistory> getHistory(@PathVariable Long id) {
        return reservationService.history(id);
+    }
+
+    /**
+     * Exception handlers for Reservation-related exceptions.
+     * Below methods handle exceptions related to Reservation and sends the appropriate HTTP responses.
+     */
+    @ExceptionHandler(ReservationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    String handle(ReservationNotFoundException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(ReservationBadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String handle(ReservationBadRequestException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    String handle(RuntimeException e) {
+        return e.getMessage();
     }
 }
