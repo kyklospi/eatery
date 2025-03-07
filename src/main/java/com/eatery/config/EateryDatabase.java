@@ -4,6 +4,7 @@ import com.eatery.entity.*;
 import com.eatery.repository.EateryManagerRepository;
 import com.eatery.repository.CustomerRepository;
 import com.eatery.repository.EateryRepository;
+import com.eatery.repository.ReviewRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -31,7 +32,7 @@ public class EateryDatabase {
      * @return CommandLineRunner that initializes the database with predefined data
      */
     @Bean
-    CommandLineRunner initDatabase(EateryRepository eateryRepository, CustomerRepository customerRepository, EateryManagerRepository eateryManagerRepository) {
+    CommandLineRunner initDatabase(EateryRepository eateryRepository, CustomerRepository customerRepository, EateryManagerRepository eateryManagerRepository, ReviewRepository reviewRepository) {
         return args -> {
             // Create BusinessDayTime instance for a restaurant's opening hours
             BusinessDayTime restaurantOpening1 = new BusinessDayTime(
@@ -160,7 +161,7 @@ public class EateryDatabase {
                     )
             ));
 
-            // Preload a customer entity into the database
+            // Preload customer entities into the database
             logger.info("Preloading {}", customerRepository.save(
                     new Customer(
                             "Max",
@@ -178,6 +179,13 @@ public class EateryDatabase {
                             "ullrich-A",
                             "p455w0rd"
                     )
+            ));
+            // Preload customer review entities for an eatery
+            logger.info("Preloading {}", reviewRepository.save(
+                    new Review(1, 1, "Best place in town", 5)
+            ));
+            logger.info("Preloading {}", reviewRepository.save(
+                    new Review(2, 2, "the cocktails taste average", 3)
             ));
 
             // Create BusinessDayTime instance for a manager of restaurant

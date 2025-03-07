@@ -52,6 +52,8 @@ public class Eatery {
     @OneToMany(mappedBy = "eateryId", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
+    private int rating;
+
     private long managerId;
 
     public Eatery(Type type, String name, String address, Set<BusinessDayTime> businessDayTimes, int guestCapacity, String email, String phoneNumber) {
@@ -90,6 +92,13 @@ public class Eatery {
                 );
     }
 
+    public int getRating() {
+        if (this.reviews.isEmpty()) {
+            return 0;
+        }
+        return this.reviews.stream().mapToInt(Review::getRating).sum() / reviews.size();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -119,6 +128,8 @@ public class Eatery {
                 ", businessDayTimes=" + businessDayTimes +
                 ", reviews=" + reviews +
                 ", eateryManagerId=" + managerId +
+                ", manager=" + managerId +
+                ", rating=" + rating +
                 '}';
     }
 
