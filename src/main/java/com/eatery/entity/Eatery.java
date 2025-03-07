@@ -10,6 +10,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -64,6 +65,7 @@ public class Eatery {
         this.guestCapacity = guestCapacity;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.reviews = new ArrayList<>();
     }
 
     private Eatery(Type type, String name, String address) {
