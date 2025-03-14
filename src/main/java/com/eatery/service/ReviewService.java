@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class responsible for handling business logic related to reviews.
@@ -26,6 +27,30 @@ public class ReviewService {
      */
     public List<Review> getAll() {
         return reviewRepository.findAll();
+    }
+
+    /**
+     * Retrieves all reviews with eatery id from the database.
+     * @param id eatery id
+     * @return A list of all reviews with eatery id.
+     */
+    public List<Review> getAllByEateryId(Long id) {
+        return reviewRepository.findAll()
+                .stream()
+                .filter(review -> review.getEateryId() == id)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves all reviews with customer id from the database.
+     * @param id customer id
+     * @return A list of all reviews with customer id.
+     */
+    public List<Review> getAllByCustomerId(Long id) {
+        return reviewRepository.findAll()
+                .stream()
+                .filter(review -> review.getCustomerId() == id)
+                .collect(Collectors.toList());
     }
 
     /**

@@ -166,18 +166,18 @@ public class EateryDatabase {
                     new Customer(
                             "Max",
                             "Mustermann",
-                            "+4915212345678",
                             "maxMustermann",
-                            "max1985"
+                            "max1985",
+                            "+4915212345678"
                     )
             ));
             logger.info("Preloading {}", customerRepository.save(
                     new Customer(
                             "Alexandra",
                             "Ullrich",
-                            "+4915312345678",
                             "ullrich-A",
-                            "p455w0rd"
+                            "p455w0rd",
+                            "+4915312345678"
                     )
             ));
             // Preload customer review entities for an eatery

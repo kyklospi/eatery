@@ -42,6 +42,26 @@ public class ReviewController {
     }
 
     /**
+     * Fetches all reviews by eatery id.
+     * @return A list of all reviews with eatery id.
+     */
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully returned")})
+    @GetMapping(path = "/eatery/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<Review> getAllByEateryId(@PathVariable Long id) {
+        return reviewService.getAllByEateryId(id);
+    }
+
+    /**
+     * Fetches all reviews by customer id.
+     * @return A list of all reviews with customer id.
+     */
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully returned")})
+    @GetMapping(path = "/customer/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<Review> getAllByCustomerId(@PathVariable Long id) {
+        return reviewService.getAllByCustomerId(id);
+    }
+
+    /**
      * Creates a new review based on the provided details.
      * @param newReview The review data to create a new review.
      * @return The created review.

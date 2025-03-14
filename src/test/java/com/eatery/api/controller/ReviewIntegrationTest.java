@@ -98,6 +98,50 @@ public class ReviewIntegrationTest {
     }
 
     @Test
+    void getAllByEateryId() throws Exception {
+        reviewController.create(reviewRequest);
+
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/reviews/eatery/{eateryId}", reviewRequest.getEateryId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<Review> actual = MAPPER.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+
+        assertNotNull(actual);
+        assertNotNull(actual.getLast().getId());
+        assertEquals(reviewRequest.getCustomerId(), actual.getLast().getCustomerId());
+        assertEquals(reviewRequest.getEateryId(), actual.getLast().getEateryId());
+        assertEquals(reviewRequest.getMessage(), actual.getLast().getMessage());
+        assertEquals(reviewRequest.getRating(), actual.getLast().getRating());
+    }
+
+    @Test
+    void getAllByCustomerId() throws Exception {
+        reviewController.create(reviewRequest);
+
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .get("/reviews/customer/{customerId}", reviewRequest.getCustomerId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andReturn();
+
+        List<Review> actual = MAPPER.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {});
+
+        assertNotNull(actual);
+        assertNotNull(actual.getLast().getId());
+        assertEquals(reviewRequest.getCustomerId(), actual.getLast().getCustomerId());
+        assertEquals(reviewRequest.getEateryId(), actual.getLast().getEateryId());
+        assertEquals(reviewRequest.getMessage(), actual.getLast().getMessage());
+        assertEquals(reviewRequest.getRating(), actual.getLast().getRating());
+    }
+
+    @Test
     void get() throws Exception {
         Review savedReview = reviewController.create(reviewRequest);
         Long savedReviewId = savedReview.getId();
