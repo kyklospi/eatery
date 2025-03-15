@@ -95,7 +95,7 @@ public class Eatery {
     }
 
     public int getRating() {
-        if (this.reviews.isEmpty()) {
+        if (this.reviews == null || this.reviews.isEmpty()) {
             return 0;
         }
         return this.reviews.stream().mapToInt(Review::getRating).sum() / reviews.size();

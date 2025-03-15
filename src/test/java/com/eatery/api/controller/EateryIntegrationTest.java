@@ -120,7 +120,7 @@ class EateryIntegrationTest {
         // WHEN
         MvcResult result = mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get("/eateries")
+                                .get("/eateries/search")
                                 .param("name", "restaurantName")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )

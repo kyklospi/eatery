@@ -6,8 +6,6 @@ import com.eatery.exception.EateryNotFoundException;
 import com.eatery.entity.Eatery;
 import com.eatery.repository.EateryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,26 +49,11 @@ public class EateryService {
      * @throws EateryNotFoundException if an invalid eatery type is provided.
      */
     public List<Eatery> search(String name, String address, String type) {
-        Eatery.Type eateryType = null;
-        ExampleMatcher caseInsensitiveMatcher = ExampleMatcher.matchingAny()
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withMatcher("address", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-                .withMatcher("type", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-
-        // If a type is provided, validate and set it
-        if (type != null) {
-            try {
-                eateryType = Eatery.Type.valueOf(type.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new EateryNotFoundException("type " + type);
-            }
-        }
-
-        // Create an example for search and execute the search
-        Example<Eatery> searchSample = Example.of(Eatery.from(eateryType, name, address), caseInsensitiveMatcher);
-        return eateryRepository.findAll(searchSample);
-
-
+        return eateryRepository.findAll().stream()
+                .filter(eatery -> (name == null || eatery.getName().equalsIgnoreCase(name)) &&
+                        (address == null || eatery.getAddress().equalsIgnoreCase(address)) &&
+                        (type == null || eatery.getType().equals(Eatery.Type.valueOf(type.toUpperCase()))))
+                .toList();
     }
 
     /**
