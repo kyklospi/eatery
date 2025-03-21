@@ -25,7 +25,6 @@ public class EateryManager extends Person {
 
     /**
      * The eatery managed by this manager.
-     * A one-to-one relationship with the `Eatery` entity.
      */
     private long eateryId;
 

@@ -1,9 +1,12 @@
 package com.eatery.api.controller;
 
+import com.eatery.api.dto.CreateEateryRequest;
 import com.eatery.api.dto.UpdateEateryRequest;
 import com.eatery.entity.BusinessDayTime;
 import com.eatery.entity.Eatery;
+import com.eatery.entity.EateryManager;
 import com.eatery.exception.EateryNotFoundException;
+import com.eatery.repository.EateryManagerRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,11 +38,23 @@ class EateryIntegrationTest {
     private EateryController eateryController;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private UpdateEateryRequest eateryRequest;
+    private CreateEateryRequest eateryRequest;
+    @Autowired
+    private EateryManagerRepository eateryManagerRepository;
 
     @BeforeEach
     void setUp() {
-        eateryRequest = new UpdateEateryRequest(
+        EateryManager eateryManager = new EateryManager(
+                "firstName",
+                "lastName",
+                "username",
+                "password",
+                0,
+                "jobTitle",
+                Set.of()
+        );
+        EateryManager savedManager = eateryManagerRepository.save(eateryManager);
+        eateryRequest = new CreateEateryRequest(
                 "RESTAURANT",
                 "restaurantName",
                 "restaurantAddress",
@@ -52,7 +67,8 @@ class EateryIntegrationTest {
                                 LocalTime.of(15, 0),
                                 LocalTime.of(23, 0)
                         )
-                )
+                ),
+                savedManager.getId()
         );
     }
 

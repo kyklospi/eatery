@@ -7,6 +7,181 @@
 	},
 	"item": [
 		{
+			"name": "managers",
+			"item": [
+				{
+					"name": "managers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/managers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"managers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create manager",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    \"email\": \"willner-mark@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"+4915123456789\",\n    \"username\": \"willner-mark\",\n    \"password\": \"wm!1234\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    \"workSchedules\": [\n        {\n            \"day\": \"TUESDAY\",\n            \"startTime\": \"10:00:00\",\n            \"endTime\": \"18:00:00\"            \n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/managers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"managers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update manager",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    // update email address\n    \"email\": \"willner.mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\",\n    \"username\": \"willner-mark\",\n    \"password\": \"wm!1234\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    // update work schedule\n    \"workSchedules\": [\n        {\n            \"day\": \"TUESDAY\",\n            \"startTime\": \"15:00:00\",\n            \"endTime\": \"23:00:00\"            \n        }\n    ]\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/managers/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"managers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/managers/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"managers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/managers/login?username=willner-mark&password=wm!1234",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"managers",
+								"login"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "willner-mark"
+								},
+								{
+									"key": "password",
+									"value": "wm!1234"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/managers/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"managers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "eateries",
 			"item": [
 				{
@@ -36,7 +211,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"type\": \"CAFE\",\n    \"name\": \"Schwarzes Café\",\n    \"address\": \"Kantstrasse 148, 10623 Berlin\",\n    \"email\": \"info@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"030 3138038\",\n    \"guestCapacity\": \"100\",\n    \"businessDayTimes\": [\n        {            \n            \"openDay\": \"MONDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"\n        },\n        {            \n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"\n        },\n        {\n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"24:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"THURSDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        },\n        {\n            \"openDay\": \"THURSDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"FRIDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        },\n        {\n            \"openDay\": \"FRIDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"SATURDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"SUNDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        }\n    ]\n}",
+							"raw": "{\n    \"type\": \"CAFE\",\n    \"name\": \"Schwarzes Café\",\n    \"address\": \"Kantstrasse 148, 10623 Berlin\",\n    \"email\": \"info@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"030 3138038\",\n    \"guestCapacity\": \"100\",\n    \"businessDayTimes\": [\n        {            \n            \"day\": \"MONDAY\",\n            \"startTime\": \"08:00:00\",\n            \"endTime\": \"24:00:00\"\n        },\n        {            \n            \"day\": \"TUESDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"\n        },\n        {\n            \"day\": \"TUESDAY\",\n            \"startTime\": \"10:00:00\",\n            \"endTime\": \"24:00:00\"            \n        },\n        {\n            \"day\": \"WEDNESDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"            \n        },\n        {\n            \"day\": \"WEDNESDAY\",\n            \"startTime\": \"08:00:00\",\n            \"endTime\": \"24:00:00\"     \n        },\n        {\n            \"day\": \"THURSDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"     \n        },\n        {\n            \"day\": \"THURSDAY\",\n            \"startTime\": \"08:00:00\",\n            \"endTime\": \"24:00:00\"     \n        },\n        {\n            \"day\": \"FRIDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"     \n        },\n        {\n            \"day\": \"FRIDAY\",\n            \"startTime\": \"08:00:00\",\n            \"endTime\": \"24:00:00\"     \n        },\n        {\n            \"day\": \"SATURDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"24:00:00\"     \n        },\n        {\n            \"day\": \"SUNDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"     \n        }\n    ],\n    \"managerId\": 4\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -65,7 +240,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"type\": \"CAFE\",\n    \"name\": \"Schwarzes Café\",\n    \"address\": \"Kantstrasse 148, 10623 Berlin\",\n    \"email\": \"info@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"030 3138038\",\n    // update guest capacity\n    \"guestCapacity\": \"80\",\n    \"businessDayTimes\": [\n        {            \n            \"openDay\": \"MONDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"\n        },\n        {            \n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"\n        },\n        {\n            \"openDay\": \"TUESDAY\",\n            \"openTime\": \"10:00:00\",\n            \"closeTime\": \"24:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"            \n        },\n        {\n            \"openDay\": \"WEDNESDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"THURSDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        },\n        {\n            \"openDay\": \"THURSDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"FRIDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        },\n        {\n            \"openDay\": \"FRIDAY\",\n            \"openTime\": \"08:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"SATURDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"24:00:00\"     \n        },\n        {\n            \"openDay\": \"SUNDAY\",\n            \"openTime\": \"00:00:00\",\n            \"closeTime\": \"03:00:00\"     \n        }\n    ]\n}",
+							"raw": "{\n    \"type\": \"CAFE\",\n    \"name\": \"Schwarzes Café\",\n    \"address\": \"Kantstrasse 148, 10623 Berlin\",\n    \"email\": \"info@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"030 3138038\",\n    // update guest capacity\n    \"guestCapacity\": \"80\",\n    \"businessDayTimes\": [\n        {            \n            \"day\": \"MONDAY\",\n            \"startTime\": \"08:00:00\",\n            \"endTime\": \"24:00:00\"\n        },\n        {            \n            \"day\": \"TUESDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"\n        },\n        {\n            \"day\": \"TUESDAY\",\n            \"startTime\": \"10:00:00\",\n            \"endTime\": \"24:00:00\"            \n        },\n        {\n            \"day\": \"WEDNESDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"            \n        },\n        {\n            \"day\": \"WEDNESDAY\",\n            \"startTime\": \"08:00:00\",\n            \"endTime\": \"24:00:00\"     \n        },\n        {\n            \"day\": \"THURSDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"     \n        },\n        {\n            \"day\": \"THURSDAY\",\n            \"startTime\": \"08:00:00\",\n            \"endTime\": \"24:00:00\"     \n        },\n        {\n            \"day\": \"FRIDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"     \n        },\n        {\n            \"day\": \"FRIDAY\",\n            \"startTime\": \"08:00:00\",\n            \"endTime\": \"24:00:00\"     \n        },\n        {\n            \"day\": \"SATURDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"24:00:00\"     \n        },\n        {\n            \"day\": \"SUNDAY\",\n            \"startTime\": \"00:00:00\",\n            \"endTime\": \"03:00:00\"     \n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -326,6 +501,144 @@
 			]
 		},
 		{
+			"name": "reviews",
+			"item": [
+				{
+					"name": "reviews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/reviews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reviews",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"eateryId\": 1,\n    \"customerId\": 1,\n    \"message\": \"I love it!\",\n    \"rating\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/reviews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reviews",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": \"I love this place!\",\n    \"rating\": 5\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/reviews/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"reviews",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "review",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/reviews/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"reviews",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "review",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/reviews/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"reviews",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "reservations",
 			"item": [
 				{
@@ -540,319 +853,6 @@
 								"reservations",
 								":id",
 								"complete"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "managers",
-			"item": [
-				{
-					"name": "managers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/managers",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"managers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "create manager",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    \"email\": \"willner-mark@schwarzescafe-berlin.de\",\n    \"phoneNumber\": \"+4915123456789\",\n    \"username\": \"willner-mark\",\n    \"password\": \"wm!1234\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"10:00:00\",\n            \"endTime\": \"18:00:00\"            \n        }\n    ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/managers",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"managers"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update manager",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Mark\",\n    \"lastName\": \"Willner\", \n    // update email address\n    \"email\": \"willner.mark@bar-1.de\",\n    \"phoneNumber\": \"0176-1234-5678\",\n    \"username\": \"willner-mark\",\n    \"password\": \"wm!1234\",\n    \"eateryId\": 4,\n    \"jobTitle\": \"Receptionist\",\n    // update work schedule\n    \"workSchedules\": [\n        {\n            \"workDay\": \"TUESDAY\",\n            \"startTime\": \"15:00:00\",\n            \"endTime\": \"23:00:00\"            \n        }\n    ]\n\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/managers/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"managers",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "manager",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/managers/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"managers",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "login",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/managers/login?username=willner-mark&password=wm!1234",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"managers",
-								"login"
-							],
-							"query": [
-								{
-									"key": "username",
-									"value": "willner-mark"
-								},
-								{
-									"key": "password",
-									"value": "wm!1234"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "manager",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/managers/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"managers",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "reviews",
-			"item": [
-				{
-					"name": "reviews",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/reviews",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"reviews"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "reviews",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"eateryId\": 1,\n    \"customerId\": 1,\n    \"message\": \"I love it!\",\n    \"rating\": 5\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/reviews",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"reviews"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "reviews",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"message\": \"I love this place!\",\n    \"rating\": 5\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/reviews/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"reviews",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "review",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/reviews/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"reviews",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "review",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/reviews/:id",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"reviews",
-								":id"
 							],
 							"variable": [
 								{

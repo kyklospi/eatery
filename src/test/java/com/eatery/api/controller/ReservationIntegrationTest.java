@@ -225,6 +225,8 @@ public class ReservationIntegrationTest {
     @Test
     void getHistory() throws Exception {
         // GIVEN
+        // allow non-parallel creation when running all tests together
+        Thread.sleep(500);
         Reservation savedReservation = reservationController.create(createReservationRequest);
         Long savedReservationId = savedReservation.getId();
         reservationController.complete(savedReservationId);

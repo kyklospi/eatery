@@ -1,5 +1,6 @@
 package com.eatery.api.controller;
 
+import com.eatery.api.dto.CreateEateryRequest;
 import com.eatery.api.dto.UpdateEateryRequest;
 import com.eatery.entity.Eatery;
 import com.eatery.exception.EateryBadRequestException;
@@ -71,7 +72,7 @@ public class EateryController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    Eatery create(@RequestBody UpdateEateryRequest newEatery) {
+    Eatery create(@RequestBody CreateEateryRequest newEatery) {
         return eateryService.create(newEatery);
     }
 
