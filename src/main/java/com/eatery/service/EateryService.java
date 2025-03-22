@@ -85,6 +85,7 @@ public class EateryService {
         eatery.setManagerId(newEatery.getManagerId());
         Eatery createdEatery = eateryRepository.save(eatery);
         manager.setEateryId(createdEatery.getId());
+        eateryManagerRepository.save(manager);
 
         return createdEatery;
     }
@@ -157,9 +158,6 @@ public class EateryService {
         }
         if (eatery.getPhoneNumber() == null || eatery.getPhoneNumber().isBlank()) {
             throw new EateryBadRequestException("Phone Number must not be null or empty.");
-        }
-        if (eatery.getBusinessDayTimes() == null || eatery.getBusinessDayTimes().isEmpty()) {
-            throw new EateryBadRequestException("Business day times must not be null or empty.");
         }
         if (eatery.getManagerId() == 0) {
             throw new EateryBadRequestException("Manager id must not be null or empty.");

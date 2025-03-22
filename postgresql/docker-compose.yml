@@ -29,7 +29,7 @@ services:
   # Access postgreSQL database via a browser and quickly inspect or manage data from there.
   pgadmin:
     image: dpage/pgadmin4:latest
-    # Map port between host machine 15432 and container 80.
+    # Map port between host machine 15433 and container 80.
     ports:
       - "15433:80"
 

@@ -53,7 +53,7 @@ public class Eatery {
     @OneToMany(mappedBy = "eateryId", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
-    private int rating;
+    private Integer rating;
 
     private long managerId;
 
@@ -66,6 +66,7 @@ public class Eatery {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.reviews = new ArrayList<>();
+        this.rating = 0;
     }
 
     private Eatery(Type type, String name, String address) {
@@ -130,7 +131,7 @@ public class Eatery {
                 ", businessDayTimes=" + businessDayTimes +
                 ", reviews=" + reviews +
                 ", eateryManagerId=" + managerId +
-                ", manager=" + managerId +
+                ", managerId=" + managerId +
                 ", rating=" + rating +
                 '}';
     }
