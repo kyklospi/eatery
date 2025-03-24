@@ -234,7 +234,7 @@ public class ReservationIntegrationTest {
         // WHEN
         MvcResult result = mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get("/reservations/{id}/history", savedReservationId)
+                                .get("/reservations/{id}/history", 1)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
