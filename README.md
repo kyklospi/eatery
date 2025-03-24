@@ -19,7 +19,7 @@ The backend integrates with an H2 and PostgreSQL database through JPA for data p
 
 ### Getting Started
 #### Prerequisites
-* Java 17+
+* Java 21+
 * Maven as build tool
 
 #### Installation
@@ -38,7 +38,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
 2. Run with PostgreSQL
-* Install [Docker](https://www.docker.com) and Docker CLI
+* Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), [Docker CLI](https://docs.docker.com/engine/cli/completion/) and [Docker Compose](https://docs.docker.com/compose/install)
 * Start PostgreSQL and pgAdmin docker containers
 ```
 cd postgresql

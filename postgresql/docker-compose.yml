@@ -3,8 +3,8 @@
 services:
 
   postgres:
-    # Official Postgres latest image from DockerHub
-    image: 'postgres:latest'
+    # Official Postgres image from DockerHub
+    image: 'postgres:15'
     restart: always
 
     # Postgres database is running by default on the 5432 port.
