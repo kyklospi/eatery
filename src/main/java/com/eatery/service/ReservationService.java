@@ -217,9 +217,9 @@ public class ReservationService {
         }
     }
 
-    public List<ReservationHistory> history(Long id) {
+    public List<ReservationHistory> history(Long eateryId) {
         return historyRepository.findAll().stream()
-                .filter(record -> record.getEateryId().equals(id))
+                .filter(record -> record.getEateryId().equals(eateryId))
                 .sorted()
                 .toList();
     }

@@ -134,9 +134,9 @@ public class ReservationController {
             @ApiResponse(responseCode = "200", description = "Successfully returned"),
             @ApiResponse(responseCode = "500", description = "Reservation history could not be fetched")
     })
-    @GetMapping(path = "{id}/history", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<ReservationHistory> getHistory(@PathVariable Long id) {
-       return reservationService.history(id);
+    @GetMapping(path = "/history", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<ReservationHistory> getHistory(@RequestParam Long eateryId) {
+       return reservationService.history(eateryId);
     }
 
     /**

@@ -234,7 +234,8 @@ public class ReservationIntegrationTest {
         // WHEN
         MvcResult result = mockMvc.perform(
                         MockMvcRequestBuilders
-                                .get("/reservations/{id}/history", 1)
+                                .get("/reservations/history")
+                                .param("eateryId", "1")
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
