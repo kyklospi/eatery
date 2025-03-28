@@ -31,18 +31,18 @@ mvn -B package --file pom.xml
 ```
 
 #### Running Application
-The application can be run with H2 database or PostgreSQL database:
-1. Run with H2 database
+The application can be run locally with H2 database or PostgreSQL database:
+1. Run with H2 database without Twilio Notification using `application-local.yml`
 ```
 mvn spring-boot:run -Dspring-boot.run.profiles=local
 ```
 
-2. Run with PostgreSQL
+2. Run with PostgreSQL with Twilio Notification using `application.yml`
 * Install [Docker Desktop](https://www.docker.com/products/docker-desktop/), [Docker CLI](https://docs.docker.com/engine/cli/completion/) and [Docker Compose](https://docs.docker.com/compose/install)
 * Start PostgreSQL and pgAdmin docker containers
 ```
 cd postgresql
-docker-compose up
+docker compose up
 ```
 
 * Open pgAdmin http://localhost:15433 and log in using the email and password specified in `docker-compose.yml`.
@@ -56,12 +56,19 @@ Password: The password specified in the docker-compose.yml file
 ```
 
 * Click “Save” to add the server
+* Register [Twilio](https://www.twilio.com/de-de) account to get account id, token and phone number
+* Put your Twilio account id, token & phone number and enable notification in `application.yml`
 * Run application
 ```
 mvn spring-boot:run
 ```
 
 * Check all the data stored in PostgreSQL database at `{serverName} -> Schemas -> public -> Tables`
+* Once you finish running the application, do not forget to shutdown PostgreSQL & pgAdmin container
+```
+cd postgresql
+docker compose down
+```
 
 #### Running Tests
 ```
